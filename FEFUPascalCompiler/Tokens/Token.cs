@@ -17,7 +17,7 @@ namespace FEFUPascalCompiler.Tokens
 
         public string Text { get; set; }
 
-        public Token(int line, int column, TokenType tokenType, string text)
+        protected Token(int line, int column, TokenType tokenType, string text)
         {
             _line = line;
             _column = column;
@@ -28,7 +28,33 @@ namespace FEFUPascalCompiler.Tokens
 
     public class IntegerValueToken : Token
     {
-        public IntegerValueToken(int line, int column, TokenType tokenType, string text)
+        private int _value;
+
+        public int Value { get; set; }
+
+        public IntegerValueToken(int line, int column, TokenType tokenType, int value, string text)
+            : base(line, column, tokenType, text)
+        {
+            _value = value;
+        }
+    }
+
+    public class DoubleValueToken : Token
+    {
+        private double _value;
+
+        public double Value { get; set; }
+        
+        public DoubleValueToken(int line, int column, TokenType tokenType, double value, string text)
+            : base(line, column, tokenType, text)
+        {
+            _value = value;
+        }
+    }
+
+    public class IdentValueToken : Token
+    {
+        public IdentValueToken(int line, int column, TokenType tokenType, string text)
             : base(line, column, tokenType, text)
         {
         }
