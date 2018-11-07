@@ -17,11 +17,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Tests\test_01.in" />
+      <None Remove="LexerTests\test_01.in" />
       <EmbeddedResource Include="LexerTests\test_01.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
-      <None Remove="Tests\test_01.out" />
+      <None Remove="LexerTests\test_01.out" />
       <EmbeddedResource Include="LexerTests\test_01.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
