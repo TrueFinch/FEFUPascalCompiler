@@ -15,6 +15,18 @@ namespace FEFUPascalCompiler.Lexer
             Column = column;
             Lexeme = lexeme;
         }
-        
+    }
+
+    public class UnexpectedSymbol : LexerException
+    {
+        public UnexpectedSymbol(int line, int column, string lexeme) : base(line, column, lexeme)
+        {
+            Message = string.Format("({0},{1}) Unexpected symbol: {2}",
+                line.ToString(),
+                column.ToString(),
+                lexeme);
+        }
+
+        public override string Message { get; }
     }
 }
