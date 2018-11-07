@@ -74,7 +74,6 @@ namespace FEFUPascalCompiler.Lexer
                     throw new ArgumentOutOfRangeException(nameof(lexerState), lexerState, null);
             }
 
-
             return token;
         }
 
@@ -184,17 +183,20 @@ namespace FEFUPascalCompiler.Lexer
         private int _line;
         private int _column;
         private LexerStateType _stateType;
-        private readonly StreamReader _input;
-        private Token _currentToken;
+        private StreamReader _input;
+        private Token _currentToken = null;
 
         public LexerDFA(StreamReader input)
         {
-            _line = 1;
-            _column = 1;
+            SetInput(input);
             _stateType = 0;
-            _input = input;
             InitTransitions();
             NextToken();
+        }
+
+        public LexerDFA()
+        {
+            _currentToken = null;
         }
 
         private void InitTransitions()
@@ -242,13 +244,16 @@ namespace FEFUPascalCompiler.Lexer
 
                 line = sr.ReadLine();
             }
-
-            return;
         }
 
-        public void NextToken()
+        public bool NextToken()
         {
+            if ((_currentToken is EOFToken) || ((_currentToken == null) && (_input == null)))
+            {
+                return false;
+            }
             _currentToken = Parse();
+            return true;
         }
 
         private Token Parse()
@@ -264,6 +269,8 @@ namespace FEFUPascalCompiler.Lexer
                 if (!currState.Transitions.ContainsKey((char) _input.Peek()))
                 {
                     //TODO: throw exception unexpected symbol
+                    text.Append((char) _input.Peek());
+                    throw new UnexpectedSymbol(line, column + 1, text.ToString());
                 }
 
                 lastState = currState;
@@ -297,6 +304,7 @@ namespace FEFUPascalCompiler.Lexer
 
             if ((currState.Type == LexerStateType.LexemeEnd) && (!lastState.Terminal))
             {
+                throw new UnexpectedSymbol(line, column, text.ToString());
                 //TODO throw exception unexpected symbol
             }
 
@@ -308,6 +316,14 @@ namespace FEFUPascalCompiler.Lexer
         public Token PeekToken()
         {
             return _currentToken;
+        }
+
+        public void SetInput(StreamReader input)
+        {
+            _line = 1;
+            _column = 1;
+            _input = input;
+            _currentToken = null;
         }
     }
 }
