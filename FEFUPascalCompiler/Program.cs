@@ -6,13 +6,24 @@ using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler
 {
-    internal class FEFUPascalCompiler
+    public class FEFUPascalCompiler
     {
         private LexerDFA _lexer;
 
         public FEFUPascalCompiler(StreamReader input)
         {
-            _lexer = new LexerDFA(input);
+            _lexer = new LexerDFA();
+            _lexer.SetInput(input);
+        }
+
+        public FEFUPascalCompiler()
+        {
+            _lexer = new LexerDFA();
+        }
+        
+        public void SetInput(StreamReader input)
+        {
+            _lexer.SetInput(input);
         }
 
         public void Next()
@@ -38,16 +49,21 @@ namespace FEFUPascalCompiler
         
         public static int Main(string[] args)
         {
-            if (args.Length == 0)
-            {
-                Help();
-                return 0;
-            }
+//            if (args.Length == 0)
+//            {
+//                Help();
+//                return 0;
+//            }
 
-            var inputFilePath = args[args.Length - 1];
+//            var inputFilePath = args[args.Length - 1];
+            string inputFilePath = @"project.pas";
             try
             {
                 var inputStream = File.OpenText(inputFilePath);
+//                while (!inputStream.EndOfStream)
+//                {
+//                    Console.Write((char)inputStream.Read());
+//                }
                 FEFUPascalCompiler compiler = new FEFUPascalCompiler(inputStream);
 
                 Token token = null;
@@ -57,7 +73,7 @@ namespace FEFUPascalCompiler
                     {
                         token = compiler.Peek();
                         compiler.Next();
-                        Console.WriteLine("{0},{1}\t{2}\t{3}\t{4}", 
+                        Console.WriteLine("{0},{1}\t{2}\t\t{3}\t\t{4}", 
                             token.Line.ToString(), 
                             token.Column.ToString(),
                             token.TokenType.ToString(),
@@ -66,7 +82,8 @@ namespace FEFUPascalCompiler
                     }
                     catch (LexerException exception) 
                     {
-                        Console.WriteLine(exception.Message());
+                        Console.WriteLine(exception.Message);
+                        break;
                     }
                 }
             }
