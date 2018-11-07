@@ -11,48 +11,65 @@ namespace FEFUPascalCompiler.Tokens
         MUL,
         DIV,
         POW,
-        UNAR_MINUS,
+
         //Assign operators
         ASSIGN,
         SUM_ASSIGN,
         DIF_ASSIGN,
         MUL_ASSIGN,
         DIV_ASSIGN,
+
         //Separator operators
         DOT,
         COMMA,
         SEMICOLON,
+        COLON,
         SPACE,
+
         //data types
         TYPE_INTEGER,
-        
+
         //Identifiers
-        VARIABLE,
-       // keywords
-        BEGIN,
-        END,
+        IDENT,
+
+        // keywords
         PROGRAM,
         VAR,
+        BEGIN,
+        END,
         
-        
+        //special tokenTypes
+        NEWLINE,
+        EOF,
     }
 
     internal static class Dictionaries
     {
-        internal static readonly Dictionary<string, TokenType> keyWords = new Dictionary<string, TokenType>
+        internal static readonly Dictionary<string, TokenType> KeyWords = new Dictionary<string, TokenType>
         {
             {"begin", TokenType.BEGIN},
             {"end", TokenType.END},
             {"program", TokenType.PROGRAM},
             {"var", TokenType.VAR}
         };
-    }
-    
-    public interface IToken
-    {
-        int Line { get; set; }
-        int Column { get; set; }
-        TokenType TokenType { get; set; }
-        string Text { get; set; }
+
+        internal static readonly Dictionary<string, TokenType> BinArithmeticOperators =
+            new Dictionary<string, TokenType>
+            {
+                {"+", TokenType.SUM},
+                {"-", TokenType.DIF},
+                {"*", TokenType.MUL},
+                {"/", TokenType.DIV},
+                {"**", TokenType.POW}
+            };
+        
+        internal static readonly Dictionary<string, TokenType> Assigns = new Dictionary<string, TokenType>
+        {
+            {":=", TokenType.ASSIGN},
+            {"+=", TokenType.SUM_ASSIGN},
+            {"-=", TokenType.DIF_ASSIGN},
+            {"*=", TokenType.MUL_ASSIGN},
+            {"/=", TokenType.DIV_ASSIGN},
+        };
     }
 }

@@ -1,62 +1,153 @@
+using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using FEFUPascalCompiler.Lexer;
 
 namespace FEFUPascalCompiler.Tokens
 {
-    public abstract class Token : IToken
+    public abstract class Token
     {
-        private int _line;
-        private int _column;
-        private TokenType _tokenType;
-        private string _text;
+        public int Line { get; }
 
-        public virtual int Line { get; set; }
+        public int Column { get; }
 
-        public virtual int Column { get; set; }
+        public TokenType TokenType { get; }
 
-        public virtual TokenType TokenType { get; set; }
+        public string Text { get; }
 
-        public string Text { get; set; }
+        public string StrValue { get; set; }
 
         protected Token(int line, int column, TokenType tokenType, string text)
         {
-            _line = line;
-            _column = column;
-            _tokenType = tokenType;
-            _text = text;
+            Line = line;
+            Column = column;
+            TokenType = tokenType;
+            Text = text;
         }
     }
 
-    public class IntegerValueToken : Token
+    public class IntegerToken : Token
     {
-        private int _value;
+        public int Value { get; }
 
-        public int Value { get; set; }
-
-        public IntegerValueToken(int line, int column, TokenType tokenType, int value, string text)
+        public IntegerToken(int line, int column, TokenType tokenType, string text)
             : base(line, column, tokenType, text)
         {
-            _value = value;
+            int val;
+            if (int.TryParse(text.ToCharArray(), out val))
+            {
+                //TODO: add cast from bin/oct/hex format to decimal
+                Value = val;
+            }
+            else
+            {
+                //TODO: throw exception of integer overflowing
+            }
+
+            StrValue = Value.ToString();
         }
     }
 
-    public class DoubleValueToken : Token
+    public class DoubleToken : Token
     {
         private double _value;
 
-        public double Value { get; set; }
-        
-        public DoubleValueToken(int line, int column, TokenType tokenType, double value, string text)
+        public double Value { get; }
+
+        public DoubleToken(int line, int column, TokenType tokenType, string text)
             : base(line, column, tokenType, text)
         {
-            _value = value;
+            double val;
+            if (double.TryParse(text.ToCharArray(), out val))
+            {
+                _value = val;
+            }
+            else
+            {
+                //TODO: add throw exception of double overflowing
+            }
+
+            StrValue = _value.ToString();
         }
     }
 
-    public class IdentValueToken : Token
+    public class IdentToken : Token
     {
-        public IdentValueToken(int line, int column, TokenType tokenType, string text)
+        public string Value { get; }
+
+        public IdentToken(int line, int column, TokenType tokenType, string text)
             : base(line, column, tokenType, text)
         {
+            Value = text.ToLower();
+            StrValue = Value.ToString();
+        }
+    }
+
+    public class KeyWordToken : Token
+    {
+        public string Value { get; }
+
+        public KeyWordToken(int line, int column, TokenType tokenType, string text)
+            : base(line, column, tokenType, text)
+        {
+            Value = text.ToLower();
+            StrValue = Value.ToString();
+        }
+    }
+
+    public class ArithmeticOperationToken : Token
+    {
+        public ArithmeticOperationToken(int line, int column, TokenType tokenType, string text)
+            : base(line, column, tokenType, text)
+        {
+            StrValue = text;
+        }
+    }
+
+    public class EOFToken : Token
+    {
+        public int Value { get; }
+        public EOFToken(int line, int column, TokenType tokenType, string text)
+            : base(line, column, tokenType, text)
+        {
+            Value = -1;
+            StrValue = Value.ToString();
+        }
+    }
+
+    public class SemiColonToken : Token
+    {
+        public SemiColonToken(int line, int column, TokenType tokenType, string text)
+            : base(line, column, tokenType, text)
+        {
+            StrValue = ";";
+        }
+    }
+
+    public class ColonToken : Token
+    {
+        public ColonToken(int line, int column, TokenType tokenType, string text)
+            : base(line, column, tokenType, text)
+        {
+            StrValue = ":";
+        }
+    }
+
+    public class AssignToken : Token
+    {
+        public AssignToken(int line, int column, TokenType tokenType, string text)
+            : base(line, column, tokenType, text)
+        {
+            StrValue = text;
+        }
+    }
+
+    public class DotToken : Token
+    {
+        public DotToken(int line, int column, TokenType tokenType, string text)
+            : base(line, column, tokenType, text)
+        {
+            StrValue = ".";
         }
     }
 }
