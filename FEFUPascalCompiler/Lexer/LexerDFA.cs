@@ -68,7 +68,7 @@ namespace FEFUPascalCompiler.Lexer
                     token = new AssignToken(line, column, Dictionaries.Assigns[text], text);
                     break;
                 case LexerStateType.EOF:
-                    token = new EOFToken(line, column, TokenType.EOF, text);
+                    token = new EOFToken(line, column, TokenType.EOF, "-1");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(lexerState), lexerState, null);
@@ -186,24 +186,28 @@ namespace FEFUPascalCompiler.Lexer
         private StreamReader _input;
         private Token _currentToken = null;
 
-        public LexerDFA(StreamReader input)
-        {
-            SetInput(input);
-            _stateType = 0;
-            InitTransitions();
-            NextToken();
-        }
-
         public LexerDFA()
         {
+            InitTransitions();
             _currentToken = null;
         }
 
         private void InitTransitions()
         {
-            for (int i = 0; i < _statesList.Capacity - 1; ++i)
+            _statesList.Add(new Node(LexerStateType.Start, TerminalStates[LexerStateType.Start]));
+            _statesList[0].Transitions.Add('\n', new Pair<LexerStateType, int>(LexerStateType.Start, 1));
+            _statesList[0].Transitions.Add(' ', new Pair<LexerStateType, int>(LexerStateType.Start, 1));
+            _statesList[0].Transitions.Add('\uffff', new Pair<LexerStateType, int>(LexerStateType.LexemeEnd, 1));
+
+            for (int i = 1; i < _statesList.Capacity - 1; ++i)
             {
                 _statesList.Add(new Node((LexerStateType) i, TerminalStates[(LexerStateType) i]));
+                _statesList[_statesList.Count - 1].Transitions.Add('\n',
+                    new Pair<LexerStateType, int>(LexerStateType.LexemeEnd, 1));
+                _statesList[_statesList.Count - 1].Transitions.Add(' ',
+                    new Pair<LexerStateType, int>(LexerStateType.LexemeEnd, 1));
+                _statesList[_statesList.Count - 1].Transitions.Add('\uffff',
+                    new Pair<LexerStateType, int>(LexerStateType.LexemeEnd, 1));
             }
 
             StreamReader sr = new StreamReader(@"Lexer/Transitions");
@@ -214,25 +218,8 @@ namespace FEFUPascalCompiler.Lexer
                 {
                     continue;
                 }
-
-//                Console.WriteLine(line);
+                
                 string[] words = line.Split(" ");
-                /*
-                 * replace \n with \\n because \\ is representation of character \
-                 */
-                if (words[1] == "\\n")
-                {
-                    _statesList[(int) StrToLexerStateType[words[0]]].Transitions.Add('\n',
-                        new Pair<LexerStateType, int>(StrToLexerStateType[words[2]], int.Parse(words[3]))
-                    );
-                }
-                else if (words[1] == "32")
-                {
-                    _statesList[(int) StrToLexerStateType[words[0]]].Transitions.Add(' ',
-                        new Pair<LexerStateType, int>(StrToLexerStateType[words[2]], int.Parse(words[3]))
-                    );
-                }
-                else
                 {
                     foreach (char ch in words[1])
                     {
@@ -252,6 +239,7 @@ namespace FEFUPascalCompiler.Lexer
             {
                 return false;
             }
+
             _currentToken = Parse();
             return true;
         }
@@ -264,17 +252,15 @@ namespace FEFUPascalCompiler.Lexer
             int line = _line;
             int column = _column;
 
-            while ((currState.Type != LexerStateType.LexemeEnd) && (!_input.EndOfStream))
+            while (currState.Type != LexerStateType.LexemeEnd)
             {
                 if (!currState.Transitions.ContainsKey((char) _input.Peek()))
                 {
-                    //TODO: throw exception unexpected symbol
                     text.Append((char) _input.Peek());
                     throw new UnexpectedSymbol(line, column + 1, text.ToString());
                 }
 
                 lastState = currState;
-//                Console.WriteLine((char) _input.Peek());
                 var transition = lastState.Transitions[(char) _input.Peek()];
                 currState = _statesList[(int) transition.StateType];
 
@@ -305,10 +291,9 @@ namespace FEFUPascalCompiler.Lexer
             if ((currState.Type == LexerStateType.LexemeEnd) && (!lastState.Terminal))
             {
                 throw new UnexpectedSymbol(line, column, text.ToString());
-                //TODO throw exception unexpected symbol
             }
 
-            return _input.EndOfStream
+            return text.Length == 0
                 ? GetToken(line, column, "", LexerStateType.EOF)
                 : GetToken(line, column, text.ToString(), lastState.Type);
         }
@@ -324,6 +309,8 @@ namespace FEFUPascalCompiler.Lexer
             _column = 1;
             _input = input;
             _currentToken = null;
+            _stateType = 0;
+            NextToken();
         }
     }
 }
