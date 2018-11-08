@@ -218,7 +218,7 @@ namespace FEFUPascalCompiler.Lexer
                 {
                     continue;
                 }
-                
+
                 string[] words = line.Split(" ");
                 {
                     foreach (char ch in words[1])
@@ -247,17 +247,19 @@ namespace FEFUPascalCompiler.Lexer
         private Token Parse()
         {
             StringBuilder text = new StringBuilder();
-            _stateType = LexerStateType.Start;
-            Node lastState = _statesList[(int) _stateType], currState = _statesList[(int) _stateType];
-            int line = _line;
-            int column = _column;
+            Node lastState = _statesList[(int) LexerStateType.Start],
+                currState = _statesList[(int) LexerStateType.Start];
+            int line = _line, column = _column;
 
             while (currState.Type != LexerStateType.LexemeEnd)
             {
                 if (!currState.Transitions.ContainsKey((char) _input.Peek()))
                 {
                     text.Append((char) _input.Peek());
-                    throw new UnexpectedSymbol(line, column + 1, text.ToString());
+                    _input.ReadLine();
+                    ++_line;
+                    _column = 1;
+                    throw new UnexpectedSymbolException(line, column + 1, text.ToString());
                 }
 
                 lastState = currState;
@@ -290,11 +292,11 @@ namespace FEFUPascalCompiler.Lexer
 
             if ((currState.Type == LexerStateType.LexemeEnd) && (!lastState.Terminal))
             {
-                throw new UnexpectedSymbol(line, column, text.ToString());
+                throw new UnexpectedSymbolException(line, column, text.ToString());
             }
 
             return text.Length == 0
-                ? GetToken(line, column, "", LexerStateType.EOF)
+                ? null
                 : GetToken(line, column, text.ToString(), lastState.Type);
         }
 
