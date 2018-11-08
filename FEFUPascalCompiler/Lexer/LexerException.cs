@@ -2,13 +2,23 @@ using System;
 
 namespace FEFUPascalCompiler.Lexer
 {
-    public abstract class LexerException : Exception
+    [Serializable]
+    public abstract class LexerException : ApplicationException
     {
-        public int Line { get; }
-        public int Column { get; }
-        public string Lexeme { get; }
-        public override abstract string Message { get; }
+        private int Line { get; }
+        private int Column { get; }
+        private string Lexeme { get; }
+        public abstract override string Message { get; }
 
+        protected LexerException(): base() {}
+        protected LexerException(string message) : base(message) { }
+        protected LexerException(string message, System.Exception inner) : base(message, inner) { }
+
+        // A constructor is needed for serialization when an
+        // exception propagates from a remoting server to the client. 
+        protected LexerException(System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        
         protected LexerException(int line, int column, string lexeme)
         {
             Line = line;
@@ -16,15 +26,38 @@ namespace FEFUPascalCompiler.Lexer
             Lexeme = lexeme;
         }
     }
-
-    public class UnexpectedSymbol : LexerException
+    
+    [Serializable]
+    public class UnexpectedSymbolException : LexerException
     {
-        public UnexpectedSymbol(int line, int column, string lexeme) : base(line, column, lexeme)
+        public UnexpectedSymbolException() {}
+        public UnexpectedSymbolException(string message) : base(message)
+        {
+        }
+        public UnexpectedSymbolException(int line, int column, string lexeme) : base(line, column, lexeme)
         {
             Message = string.Format("({0},{1}) Unexpected symbol: {2}",
-                line.ToString(),
-                column.ToString(),
-                lexeme);
+                line.ToString(), column.ToString(), lexeme);
+        }
+
+        public override string Message { get; }
+    }
+       
+    [Serializable]
+    public class StrToIntConvertException : LexerException
+    {
+        public StrToIntConvertException()
+        {
+        }
+
+        public StrToIntConvertException(string message) : base(message)
+        {
+        }
+
+        public StrToIntConvertException(int line, int column, string lexeme) : base(line, column, lexeme)
+        {
+            Message = $"({line.ToString()},{column.ToString()}) Invalid string to convert to integer: {lexeme}. " +
+                      $"Value must be between {int.MinValue} and {int.MaxValue}";
         }
 
         public override string Message { get; }
