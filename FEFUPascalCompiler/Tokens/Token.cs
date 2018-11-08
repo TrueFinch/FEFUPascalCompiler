@@ -5,6 +5,7 @@ using FEFUPascalCompiler.Lexer;
 
 namespace FEFUPascalCompiler.Tokens
 {
+    //TODO: refactor structure of Token class and it's children to make them usable in unit testing
     public abstract class Token
     {
         public int Line { get; }
@@ -41,6 +42,7 @@ namespace FEFUPascalCompiler.Tokens
             }
             else
             {
+                throw new StrToIntConvertException(line, column, text);
                 //TODO: throw exception of integer overflowing
             }
 
