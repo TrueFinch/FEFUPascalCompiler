@@ -1,0 +1,6 @@
+program project;
+var a: Integer;
+begin
+  a := 2;
+  12;
+end.
