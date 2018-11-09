@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="nunit" Version="3.10.1" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FEFUPascalCompiler\FEFUPascalCompiler.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="LexerTests\test_01.in" />
+      <EmbeddedResource Include="LexerTests\test_01.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\test_01.out" />
+      <EmbeddedResource Include="LexerTests\test_01.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\test_02.in" />
+      <EmbeddedResource Include="LexerTests\test_02.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\test_02.out" />
+      <None Remove="LexerTests\test_03.in" />
+      <EmbeddedResource Include="LexerTests\test_03.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\test_03.out" />
+      <None Remove="LexerTests\test_04.in" />
+      <EmbeddedResource Include="LexerTests\test_04.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\test_04.out" />
+      <EmbeddedResource Include="LexerTests\test_04.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
+</Project>
