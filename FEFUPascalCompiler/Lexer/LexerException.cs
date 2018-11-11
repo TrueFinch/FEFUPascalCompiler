@@ -52,12 +52,7 @@ namespace FEFUPascalCompiler.Lexer
 
         public StrToIntConvertException(string message) : base(message)
         {
-        }
-
-        public StrToIntConvertException(int line, int column, string lexeme) : base(line, column, lexeme)
-        {
-            Message = $"({line.ToString()},{column.ToString()}) Invalid string to convert to integer: {lexeme}. " +
-                      $"Value must be between {int.MinValue} and {int.MaxValue}";
+            Message = message;
         }
 
         public override string Message { get; }

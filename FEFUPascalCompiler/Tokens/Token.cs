@@ -29,24 +29,35 @@ namespace FEFUPascalCompiler.Tokens
 
     public class IntegerToken : Token
     {
-        public int Value { get; }
+        //base if the number system
+        private static Dictionary<char, int> basis = new Dictionary<char, int>
+        {
+            {'%', 2}, {'&', 8}, {'$', 16},
+            {'0', 10}, {'1', 10}, {'2', 10}, {'3', 10}, {'4', 10}, {'5', 10}, {'6', 10}, {'7', 10}, {'8', 10}, {'9', 10}
+        };
 
         public IntegerToken(int line, int column, TokenType tokenType, string text)
             : base(line, column, tokenType, text)
         {
-            int val;
-            if (int.TryParse(text.ToCharArray(), out val))
+            try
             {
-                //TODO: add cast from bin/oct/hex format to decimal
-                Value = val;
+                if (text[0] == '-')
+                {
+                    StrValue = (-1 * Convert.ToInt64(text.Substring(2), basis[text[1]])).ToString();
+                }
+                else
+                {
+                    StrValue = Convert.ToUInt64(text.Substring(1), basis[text[0]]).ToString();
+                }
             }
-            else
+            catch (FormatException exception)
             {
-                throw new StrToIntConvertException(line, column, text);
-                //TODO: throw exception of integer overflowing
+                throw new StrToIntConvertException($"Error ({line},{column}) in {text}: {exception.Message}");
             }
-
-            StrValue = Value.ToString();
+            catch (OverflowException exception)
+            {
+                throw new StrToIntConvertException($"Error ({line},{column}) in {text}: {exception.Message}");
+            }
         }
     }
 
@@ -109,6 +120,7 @@ namespace FEFUPascalCompiler.Tokens
     public class EOFToken : Token
     {
         public int Value { get; }
+
         public EOFToken(int line, int column, TokenType tokenType, string text)
             : base(line, column, tokenType, text)
         {
