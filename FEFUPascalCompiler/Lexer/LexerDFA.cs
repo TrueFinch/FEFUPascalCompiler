@@ -43,19 +43,9 @@ namespace FEFUPascalCompiler.Lexer
                     break;
                 case LexerStateType.BinArithmeticOperator:
                     break;
-                case LexerStateType.Percent:
-                    break;
-                case LexerStateType.BinNumber:
-                    break;
                 case LexerStateType.Ampersand:
                     break;
-                case LexerStateType.OctNumber:
-                    break;
-                case LexerStateType.Dollar:
-                    break;
-                case LexerStateType.HexNumber:
-                    break;
-                case LexerStateType.DecNumber:
+                case LexerStateType.Number:
                     token = new IntegerToken(line, column, TokenType.TYPE_INTEGER, text);
                     break;
                 case LexerStateType.DoubleNumberStart:
@@ -87,13 +77,8 @@ namespace FEFUPascalCompiler.Lexer
             Dot,
             Comma,
             BinArithmeticOperator,
-            Percent,
-            BinNumber,
             Ampersand,
-            OctNumber,
-            Dollar,
-            HexNumber,
-            DecNumber,
+            Number,
             DoubleNumberStart,
             DoubleNumber,
             LexemeEnd,
@@ -112,13 +97,8 @@ namespace FEFUPascalCompiler.Lexer
                 {"Dot", LexerStateType.Dot},
                 {"Comma", LexerStateType.Comma},
                 {"BinArithmeticOperator", LexerStateType.BinArithmeticOperator},
-                {"Percent", LexerStateType.Percent},
-                {"BinNumber", LexerStateType.BinNumber},
                 {"Ampersand", LexerStateType.Ampersand},
-                {"OctNumber", LexerStateType.OctNumber},
-                {"Dollar", LexerStateType.Dollar},
-                {"HexNumber", LexerStateType.HexNumber},
-                {"DecNumber", LexerStateType.DecNumber},
+                {"Number", LexerStateType.Number},
                 {"DoubleNumberStart", LexerStateType.DoubleNumberStart},
                 {"DoubleNumber", LexerStateType.DoubleNumber},
                 {"LexemeEnd", LexerStateType.LexemeEnd},
@@ -136,13 +116,8 @@ namespace FEFUPascalCompiler.Lexer
             {LexerStateType.Dot, true},
             {LexerStateType.Comma, true},
             {LexerStateType.BinArithmeticOperator, true},
-            {LexerStateType.Percent, false},
-            {LexerStateType.BinNumber, true},
             {LexerStateType.Ampersand, false},
-            {LexerStateType.OctNumber, true},
-            {LexerStateType.Dollar, false},
-            {LexerStateType.HexNumber, true},
-            {LexerStateType.DecNumber, true},
+            {LexerStateType.Number, true},
             {LexerStateType.DoubleNumberStart, false},
             {LexerStateType.DoubleNumber, true},
             {LexerStateType.LexemeEnd, true},
