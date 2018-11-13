@@ -43,6 +43,14 @@
       <EmbeddedResource Include="LexerTests\test_04.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="LexerTests\test_00.out" />
+      <EmbeddedResource Include="LexerTests\test_00.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\test_00.in" />
+      <EmbeddedResource Include="LexerTests\test_00.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>
