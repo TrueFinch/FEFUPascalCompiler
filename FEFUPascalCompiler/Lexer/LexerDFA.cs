@@ -10,63 +10,6 @@ namespace FEFUPascalCompiler.Lexer
 {
     internal class LexerDFA
     {
-        internal static Token GetToken(int line, int column, string text, LexerStateType lexerState)
-        {
-            Token token = null;
-            switch (lexerState)
-            {
-                case LexerStateType.InvalidExpr:
-                    break;
-                case LexerStateType.Start:
-                    break;
-                case LexerStateType.Ident:
-                    if (Dictionaries.KeyWords.ContainsKey(text.ToLower()))
-                    {
-                        token = new KeyWordToken(line, column, Dictionaries.KeyWords[text.ToLower()], text);
-                    }
-                    else
-                    {
-                        token = new IdentToken(line, column, TokenType.IDENT, text);
-                    }
-
-                    break;
-                case LexerStateType.SemiColon:
-                    token = new SemiColonToken(line, column, TokenType.SEMICOLON, text);
-                    break;
-                case LexerStateType.Colon:
-                    token = new ColonToken(line, column, TokenType.COLON, text);
-                    break;
-                case LexerStateType.Dot:
-                    token = new DotToken(line, column, TokenType.DOT, text);
-                    break;
-                case LexerStateType.Comma:
-                    break;
-                case LexerStateType.BinArithmeticOperator:
-                    break;
-                case LexerStateType.Ampersand:
-                    break;
-                case LexerStateType.Number:
-                    token = new IntegerToken(line, column, TokenType.TYPE_INTEGER, text);
-                    break;
-                case LexerStateType.DoubleNumberStart:
-                    break;
-                case LexerStateType.DoubleNumber:
-                    break;
-                case LexerStateType.LexemeEnd:
-                    break;
-                case LexerStateType.Assign:
-                    token = new AssignToken(line, column, Dictionaries.Assigns[text], text);
-                    break;
-                case LexerStateType.EOF:
-                    token = new EOFToken(line, column, TokenType.EOF, "-1");
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(lexerState), lexerState, null);
-            }
-
-            return token;
-        }
-
         internal enum LexerStateType : int
         {
             InvalidExpr = -1,
@@ -83,7 +26,8 @@ namespace FEFUPascalCompiler.Lexer
             DoubleNumber,
             LexemeEnd,
             Assign,
-            EOF,
+            StartStringConst,
+            FinishStringConst,
         }
 
         private static readonly Dictionary<string, LexerStateType> StrToLexerStateType =
@@ -103,7 +47,8 @@ namespace FEFUPascalCompiler.Lexer
                 {"DoubleNumber", LexerStateType.DoubleNumber},
                 {"LexemeEnd", LexerStateType.LexemeEnd},
                 {"Assign", LexerStateType.Assign},
-                {"EOF", LexerStateType.EOF},
+                {"StartStringConst", LexerStateType.StartStringConst},
+                {"FinishStringConst", LexerStateType.FinishStringConst},
             };
 
         private static readonly Dictionary<LexerStateType, bool> TerminalStates = new Dictionary<LexerStateType, bool>
@@ -122,8 +67,34 @@ namespace FEFUPascalCompiler.Lexer
             {LexerStateType.DoubleNumber, true},
             {LexerStateType.LexemeEnd, true},
             {LexerStateType.Assign, true},
-            {LexerStateType.EOF, true},
+            {LexerStateType.StartStringConst, false},
+            {LexerStateType.FinishStringConst, true},
         };
+
+        private static readonly Dictionary<LexerStateType, TokenType> LexerStateTypeToTokenType
+            = new Dictionary<LexerStateType, TokenType>
+            {
+                {LexerStateType.Ident, TokenType.IDENT},
+                {LexerStateType.Number, TokenType.TYPE_INTEGER},
+                {LexerStateType.DoubleNumber, TokenType.TYPE_DOUBLE},
+                {LexerStateType.SemiColon, TokenType.SEPARATOR},
+                {LexerStateType.Colon, TokenType.SEPARATOR},
+                {LexerStateType.Dot, TokenType.SEPARATOR},
+                {LexerStateType.Comma, TokenType.SEPARATOR},
+                {LexerStateType.BinArithmeticOperator, TokenType.BIN_ARITHM_OPERATOR},
+                {LexerStateType.Assign, TokenType.SMP_ASSIGN},
+                {LexerStateType.FinishStringConst, TokenType.TYPE_STRING},
+            };
+
+        internal static Token GetToken(int line, int column, string text, LexerStateType lexerState)
+        {
+            if (LexerStateTypeToTokenType.ContainsKey(lexerState))
+            {
+                return Token.GetToken(line, column, LexerStateTypeToTokenType[lexerState], text);
+            }
+
+            return null;
+        }
 
         private static readonly int StateNumber = Enum.GetValues(typeof(LexerStateType)).Length;
 
@@ -210,7 +181,7 @@ namespace FEFUPascalCompiler.Lexer
 
         public bool NextToken()
         {
-            if ((_currentToken is EOFToken) || ((_currentToken == null) && (_input == null)))
+            if ((_input.EndOfStream) || ((_currentToken == null) && (_input == null)))
             {
                 return false;
             }
@@ -234,7 +205,7 @@ namespace FEFUPascalCompiler.Lexer
                     _input.ReadLine();
                     ++_line;
                     _column = 1;
-                    throw new UnexpectedSymbolException(line, column + 1, text.ToString());
+                    throw new UnexpectedSymbolException(line, column + 1, "Error: " + text.ToString());
                 }
 
                 lastState = currState;
@@ -267,7 +238,7 @@ namespace FEFUPascalCompiler.Lexer
 
             if ((currState.Type == LexerStateType.LexemeEnd) && (!lastState.Terminal))
             {
-                throw new UnexpectedSymbolException(line, column, text.ToString());
+                throw new UnexpectedSymbolException(line, column, "Error: " + text.ToString());
             }
 
             return text.Length == 0
