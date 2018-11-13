@@ -34,15 +34,24 @@ namespace FEFUPascalCompiler.Lexer
         public UnexpectedSymbolException(string message) : base(message)
         {
         }
-        public UnexpectedSymbolException(int line, int column, string lexeme) : base(line, column, lexeme)
+        public override string Message { get; }
+    }
+
+    [Serializable]
+    public class UnclosedStringConstException : LexerException
+    {
+        public UnclosedStringConstException()
         {
-            Message = string.Format("({0},{1}) Unexpected symbol: {2}",
-                line.ToString(), column.ToString(), lexeme);
+        }
+
+        public UnclosedStringConstException(string message) : base(message)
+        {
+            Message = message;
         }
 
         public override string Message { get; }
     }
-       
+    
     [Serializable]
     public class StrToIntConvertException : LexerException
     {

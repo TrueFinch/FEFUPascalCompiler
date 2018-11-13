@@ -205,7 +205,7 @@ namespace FEFUPascalCompiler.Lexer
                     _input.ReadLine();
                     ++_line;
                     _column = 1;
-                    throw new UnexpectedSymbolException(line, column + 1, "Error: " + text.ToString());
+                    throw new UnexpectedSymbolException($"({line},{column + 1}) Unexpected symbol in lexeme {text}");
                 }
 
                 lastState = currState;
@@ -238,7 +238,12 @@ namespace FEFUPascalCompiler.Lexer
 
             if ((currState.Type == LexerStateType.LexemeEnd) && (!lastState.Terminal))
             {
-                throw new UnexpectedSymbolException(line, column, "Error: " + text.ToString());
+                if (lastState.Type == LexerStateType.StartStringConst)
+                {
+                    throw new UnclosedStringConstException($"({line},{column}) Unclosed string constant lexeme {text}");
+                }
+
+                throw new UnexpectedSymbolException($"({line},{column}) Unexpected symbol in lexeme {text}");
             }
 
             return text.Length == 0
