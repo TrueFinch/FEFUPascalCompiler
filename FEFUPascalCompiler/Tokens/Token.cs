@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq.Expressions;
 using FEFUPascalCompiler.Lexer;
 
@@ -12,11 +13,18 @@ namespace FEFUPascalCompiler.Tokens
 
         public int Column { get; }
 
-        public TokenType TokenType { get; }
+        public TokenType TokenType { get; protected set; }
 
         public string Text { get; }
 
-        public string StrValue { get; set; }
+        public string StrValue { get; protected set; }
+
+        protected Token(int line, int column, string text)
+        {
+            Line = line;
+            Column = column;
+            Text = text;
+        }
 
         protected Token(int line, int column, TokenType tokenType, string text)
         {
@@ -25,131 +33,194 @@ namespace FEFUPascalCompiler.Tokens
             TokenType = tokenType;
             Text = text;
         }
+
+        public static Token GetToken(int line, int column, TokenType tokenType, string text)
+        {
+            if (tokenType == TokenType.TYPE_INTEGER)
+            {
+                return new IntegerToken(line, column, text);
+            }
+
+            if (tokenType == TokenType.TYPE_DOUBLE)
+            {
+                return new DoubleToken(line, column, text);
+            }
+
+            if (tokenType == TokenType.TYPE_STRING)
+            {
+                return new StringConstToken(line, column, text);
+            }
+
+            if ((tokenType == TokenType.BIN_ARITHM_OPERATOR)
+                || (tokenType == TokenType.BIN_ARITHM_SUM)
+                || (tokenType == TokenType.BIN_ARITHM_DIF)
+                || (tokenType == TokenType.BIN_ARITHM_MUL)
+                || (tokenType == TokenType.BIN_ARITHM_DIV)
+                || (tokenType == TokenType.BIN_ARITHM_POW))
+            {
+                return new BinArithmeticOperationToken(line, column, text);
+            }
+
+            if ((tokenType == TokenType.ASSIGNMENT)
+                || (tokenType == TokenType.SMP_ASSIGN)
+                || (tokenType == TokenType.SUM_ASSIGN)
+                || (tokenType == TokenType.DIF_ASSIGN)
+                || (tokenType == TokenType.MUL_ASSIGN)
+                || (tokenType == TokenType.DIV_ASSIGN))
+            {
+                return new AssignToken(line, column, text);
+            }
+
+            if ((tokenType == TokenType.IDENT))
+            {
+                return new IdentToken(line, column, text);
+            }
+
+            if ((tokenType == TokenType.SEPARATOR)
+                || (tokenType == TokenType.DOT)
+                || (tokenType == TokenType.SEMICOLON)
+                || (tokenType == TokenType.COLON)
+                || (tokenType == TokenType.COMMA))
+            {
+                return new SeparatorToken(line, column, text);
+            }
+
+            throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, null);
+        }
     }
 
     public class IntegerToken : Token
     {
-        public int Value { get; }
-
-        public IntegerToken(int line, int column, TokenType tokenType, string text)
-            : base(line, column, tokenType, text)
+        //base if the number system
+        private static Dictionary<char, int> basis = new Dictionary<char, int>
         {
-            int val;
-            if (int.TryParse(text.ToCharArray(), out val))
+            {'%', 2}, {'&', 8}, {'$', 16},
+            {'0', 10}, {'1', 10}, {'2', 10}, {'3', 10}, {'4', 10}, {'5', 10}, {'6', 10}, {'7', 10}, {'8', 10}, {'9', 10}
+        };
+
+        private string ParseAndCheckLexeme(string lexeme)
+        {
+            string str;
+            try
             {
-                //TODO: add cast from bin/oct/hex format to decimal
-                Value = val;
+                if (lexeme[0] == '-')
+                {
+                    str = (-1 * Convert.ToInt64(lexeme.Substring(2), basis[lexeme[1]])).ToString();
+                }
+                else
+                {
+                    //if number not in decimal basis then lexeme[0] == % or $ or &
+                    if (basis[lexeme[0]] != 10)
+                    {
+                        str = Convert.ToInt64(lexeme.Substring(1), basis[lexeme[0]]).ToString();
+                    }
+                    else
+                    {
+                        str = Convert.ToInt64(lexeme, basis[lexeme[0]]).ToString();
+                    }
+                }
             }
-            else
+            catch (FormatException exception)
             {
-                throw new StrToIntConvertException(line, column, text);
-                //TODO: throw exception of integer overflowing
+                throw new StrToIntConvertException($"Error on ({Line},{Column}) in {lexeme}: {exception.Message}");
+            }
+            catch (OverflowException exception)
+            {
+                throw new StrToIntConvertException($"Error on ({Line},{Column}) in {lexeme}: {exception.Message}");
             }
 
-            StrValue = Value.ToString();
+            return str;
+        }
+
+        public IntegerToken(int line, int column, string text)
+            : base(line, column, text)
+        {
+            TokenType = TokenType.TYPE_INTEGER;
+            StrValue = ParseAndCheckLexeme(text);
         }
     }
 
     public class DoubleToken : Token
     {
-        private double _value;
-
-        public double Value { get; }
-
-        public DoubleToken(int line, int column, TokenType tokenType, string text)
-            : base(line, column, tokenType, text)
+        private void CheckLexeme(string lexeme)
         {
-            double val;
-            if (double.TryParse(text.ToCharArray(), out val))
+            try
             {
-                _value = val;
+                Convert.ToDouble(lexeme);
             }
-            else
+            catch (FormatException exception)
             {
-                //TODO: add throw exception of double overflowing
+                throw new StrToIntConvertException($"Error on ({Line},{Column}) in {lexeme}: {exception.Message}");
             }
+            catch (OverflowException exception)
+            {
+                throw new StrToIntConvertException($"Error on ({Line},{Column}) in {lexeme}: {exception.Message}");
+            }
+        }
 
-            StrValue = _value.ToString();
+        public DoubleToken(int line, int column, string text)
+            : base(line, column, text)
+        {
+            TokenType = TokenType.TYPE_DOUBLE;
+            CheckLexeme(text);
+            StrValue = text;
         }
     }
 
     public class IdentToken : Token
     {
-        public string Value { get; }
-
-        public IdentToken(int line, int column, TokenType tokenType, string text)
-            : base(line, column, tokenType, text)
+        public IdentToken(int line, int column, string text)
+            : base(line, column, text)
         {
-            Value = text.ToLower();
-            StrValue = Value.ToString();
+            if (Dictionaries.KeyWords.ContainsKey(text.ToLower()))
+            {
+                TokenType = Dictionaries.KeyWords[text.ToLower()];
+            }
+            else
+            {
+                TokenType = TokenType.IDENT;
+            }
+
+            StrValue = text.ToLower();
         }
     }
 
-    public class KeyWordToken : Token
+    public class BinArithmeticOperationToken : Token
     {
-        public string Value { get; }
-
-        public KeyWordToken(int line, int column, TokenType tokenType, string text)
-            : base(line, column, tokenType, text)
+        public BinArithmeticOperationToken(int line, int column, string text)
+            : base(line, column, text)
         {
-            Value = text.ToLower();
-            StrValue = Value.ToString();
-        }
-    }
-
-    public class ArithmeticOperationToken : Token
-    {
-        public ArithmeticOperationToken(int line, int column, TokenType tokenType, string text)
-            : base(line, column, tokenType, text)
-        {
+            TokenType = Dictionaries.BinArithmeticOperators[text];
             StrValue = text;
-        }
-    }
-
-    public class EOFToken : Token
-    {
-        public int Value { get; }
-        public EOFToken(int line, int column, TokenType tokenType, string text)
-            : base(line, column, tokenType, text)
-        {
-            Value = -1;
-            StrValue = Value.ToString();
-        }
-    }
-
-    public class SemiColonToken : Token
-    {
-        public SemiColonToken(int line, int column, TokenType tokenType, string text)
-            : base(line, column, tokenType, text)
-        {
-            StrValue = ";";
-        }
-    }
-
-    public class ColonToken : Token
-    {
-        public ColonToken(int line, int column, TokenType tokenType, string text)
-            : base(line, column, tokenType, text)
-        {
-            StrValue = ":";
         }
     }
 
     public class AssignToken : Token
     {
-        public AssignToken(int line, int column, TokenType tokenType, string text)
-            : base(line, column, tokenType, text)
+        public AssignToken(int line, int column, string text)
+            : base(line, column, text)
         {
+            TokenType = Dictionaries.Assigns[text];
             StrValue = text;
         }
     }
 
-    public class DotToken : Token
+    public class SeparatorToken : Token
     {
-        public DotToken(int line, int column, TokenType tokenType, string text)
-            : base(line, column, tokenType, text)
+        public SeparatorToken(int line, int column, string text) : base(line, column, text)
         {
-            StrValue = ".";
+            StrValue = text;
+            TokenType = Dictionaries.Separators[text];
+        }
+    }
+
+    public class StringConstToken : Token
+    {
+        public StringConstToken(int line, int column, string text)
+            : base(line, column, text)
+        {
+            TokenType = TokenType.TYPE_STRING;
+            StrValue = text;
         }
     }
 }

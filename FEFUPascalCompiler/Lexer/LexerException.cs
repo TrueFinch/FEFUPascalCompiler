@@ -34,15 +34,24 @@ namespace FEFUPascalCompiler.Lexer
         public UnexpectedSymbolException(string message) : base(message)
         {
         }
-        public UnexpectedSymbolException(int line, int column, string lexeme) : base(line, column, lexeme)
+        public override string Message { get; }
+    }
+
+    [Serializable]
+    public class UnclosedStringConstException : LexerException
+    {
+        public UnclosedStringConstException()
         {
-            Message = string.Format("({0},{1}) Unexpected symbol: {2}",
-                line.ToString(), column.ToString(), lexeme);
+        }
+
+        public UnclosedStringConstException(string message) : base(message)
+        {
+            Message = message;
         }
 
         public override string Message { get; }
     }
-       
+    
     [Serializable]
     public class StrToIntConvertException : LexerException
     {
@@ -52,12 +61,7 @@ namespace FEFUPascalCompiler.Lexer
 
         public StrToIntConvertException(string message) : base(message)
         {
-        }
-
-        public StrToIntConvertException(int line, int column, string lexeme) : base(line, column, lexeme)
-        {
-            Message = $"({line.ToString()},{column.ToString()}) Invalid string to convert to integer: {lexeme}. " +
-                      $"Value must be between {int.MinValue} and {int.MaxValue}";
+            Message = message;
         }
 
         public override string Message { get; }

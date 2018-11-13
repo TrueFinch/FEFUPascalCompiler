@@ -54,7 +54,7 @@ namespace Tests
             sr1 = File.OpenText(path1);
             if (sr1 == null)
             {
-                Assert.Fail();
+                Assert.Fail($"File by path {path1} does not exist");
             }
         }
 
@@ -75,20 +75,19 @@ namespace Tests
 
         private void TryFail(StreamReader fileIn, StreamReader fileOut)
         {
-            Token token = _compiler.Peek();
+            Token token;
             do
             {
+                token = _compiler.Peek();
                 var l = fileOut.ReadLine();
                 Row expectedToken = new Row(l);
                 if (expectedToken.Empty())
                 {
-                    Assert.Fail();
+                    Assert.Fail(".out file does not contain information about token");
                 }
 
                 AreEqual(token, expectedToken);
-                _compiler.Next();
-                token = _compiler.Peek();
-            } while (token != null);
+            } while (_compiler.Next());
         }
 
         private FEFUPascalCompiler.FEFUPascalCompiler _compiler;
@@ -147,11 +146,13 @@ namespace Tests
         [Test]
         public void BinaryIntegerConstantsTest()
         {
-            InitStreams(out var fileIn, out var fileOut, @"LexerTests/test_01.in", @"LexerTests/test_01.out");
+            InitStreams(out var fileIn, out var fileOut, @"LexerTests/test_04.in", @"LexerTests/test_04.out");
             _compiler.SetInput(fileIn);
             TryFail(fileIn, fileOut);
             Assert.Pass();
         }
         
+//        [Test]
+//        public void 
     }
 }
