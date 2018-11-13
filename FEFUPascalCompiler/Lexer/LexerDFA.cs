@@ -224,9 +224,15 @@ namespace FEFUPascalCompiler.Lexer
 
                 for (int i = 0; i < transition.Shift; ++i)
                 {
-                    if ((currState.Type == LexerStateType.LexemeEnd)
-                        || ((currState.Type == LexerStateType.Start) && ((_input.Peek() == 10) || _input.Peek() == 32)))
+                    if (currState.Type == LexerStateType.LexemeEnd)
                     {
+                        _input.Read();
+                    }
+                    else if ((currState.Type == LexerStateType.Start) && ((_input.Peek() == 10) || _input.Peek() == 32))
+                    {
+                        line += _input.Peek() == 10 ? 1 : 0;
+                        column = _input.Peek() == 10 ? 1 : column;
+                        column += _input.Peek() == 32 ? 1 : 0;
                         _input.Read();
                     }
                     else
