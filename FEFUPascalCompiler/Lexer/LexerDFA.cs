@@ -21,7 +21,8 @@ namespace FEFUPascalCompiler.Lexer
             Comma,
             BinArithmeticOperator,
             Ampersand,
-            Number,
+            IntegerNumberStart,
+            IntegerNumber,
             DoubleNumberStart,
             DoubleNumber,
             LexemeEnd,
@@ -42,7 +43,8 @@ namespace FEFUPascalCompiler.Lexer
                 {"Comma", LexerStateType.Comma},
                 {"BinArithmeticOperator", LexerStateType.BinArithmeticOperator},
                 {"Ampersand", LexerStateType.Ampersand},
-                {"Number", LexerStateType.Number},
+                {"IntegerNumberStart", LexerStateType.IntegerNumberStart},
+                {"IntegerNumber", LexerStateType.IntegerNumber},
                 {"DoubleNumberStart", LexerStateType.DoubleNumberStart},
                 {"DoubleNumber", LexerStateType.DoubleNumber},
                 {"LexemeEnd", LexerStateType.LexemeEnd},
@@ -50,7 +52,7 @@ namespace FEFUPascalCompiler.Lexer
                 {"StartStringConst", LexerStateType.StartStringConst},
                 {"FinishStringConst", LexerStateType.FinishStringConst},
             };
-
+        //TODO: add StartNumber state for lexer
         private static readonly Dictionary<LexerStateType, bool> TerminalStates = new Dictionary<LexerStateType, bool>
         {
             {LexerStateType.InvalidExpr, true},
@@ -62,7 +64,8 @@ namespace FEFUPascalCompiler.Lexer
             {LexerStateType.Comma, true},
             {LexerStateType.BinArithmeticOperator, true},
             {LexerStateType.Ampersand, false},
-            {LexerStateType.Number, true},
+            {LexerStateType.IntegerNumberStart, false},
+            {LexerStateType.IntegerNumber, true},
             {LexerStateType.DoubleNumberStart, false},
             {LexerStateType.DoubleNumber, true},
             {LexerStateType.LexemeEnd, true},
@@ -75,7 +78,7 @@ namespace FEFUPascalCompiler.Lexer
             = new Dictionary<LexerStateType, TokenType>
             {
                 {LexerStateType.Ident, TokenType.IDENT},
-                {LexerStateType.Number, TokenType.TYPE_INTEGER},
+                {LexerStateType.IntegerNumber, TokenType.TYPE_INTEGER},
                 {LexerStateType.DoubleNumber, TokenType.TYPE_DOUBLE},
                 {LexerStateType.SemiColon, TokenType.SEPARATOR},
                 {LexerStateType.Colon, TokenType.SEPARATOR},
@@ -244,12 +247,16 @@ namespace FEFUPascalCompiler.Lexer
 
             if ((currState.Type == LexerStateType.LexemeEnd) && (!lastState.Terminal))
             {
+                text.Append((char) _input.Peek());
+                _input.ReadLine();
+                ++_line;
+                _column = 1;
                 if (lastState.Type == LexerStateType.StartStringConst)
                 {
                     throw new UnclosedStringConstException($"({line},{column}) Unclosed string constant lexeme {text}");
                 }
-
-                throw new UnexpectedSymbolException($"({line},{column}) Unexpected symbol in lexeme {text}");
+                
+                throw new UnexpectedSymbolException($"({line},{column + 1}) Unexpected symbol in lexeme {text}");
             }
 
             return text.Length == 0
@@ -262,7 +269,7 @@ namespace FEFUPascalCompiler.Lexer
             return _currentToken;
         }
 
-        public void SetInput(StreamReader input)
+        public void SetInput(ref StreamReader input)
         {
             _line = 1;
             _column = 1;
