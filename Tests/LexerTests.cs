@@ -101,8 +101,9 @@ namespace Tests
         [Test]
         public void SimpleTest()
         {
-            InitStreams(out var fileIn, out var fileOut, @"LexerTests/test_00.in", @"LexerTests/test_00.out");
-            _compiler.SetInput(fileIn);
+            InitStreams(out var fileIn, out var fileOut,
+                @"LexerTests/SimpleProgramTests/test_00.in", @"LexerTests/SimpleProgramTests/test_00.out");
+            _compiler.SetInput(ref fileIn);
             TryFail(fileIn, fileOut);
 
             Assert.Pass();
@@ -111,18 +112,19 @@ namespace Tests
         [Test]
         public void DecimalIntegerConstantsTest()
         {
-            InitStreams(out var fileIn, out var fileOut, @"LexerTests/test_01.in", @"LexerTests/test_01.out");
-            _compiler.SetInput(fileIn);
+            InitStreams(out var fileIn, out var fileOut,
+                @"LexerTests/DecimalIntegerTests/test_01.in", @"LexerTests/DecimalIntegerTests/test_01.out");
+            _compiler.SetInput(ref fileIn);
             TryFail(fileIn, fileOut);
             Assert.Pass();
         }
 
         [Test]
-        public void TooLongDecimalIntegerConstantsTest()
+        public void TooBigDecimalIntegerConstantsTest()
         {
-            InitStream(out var fileIn, @"LexerTests/test_02.in");
-            _compiler.SetInput(fileIn);
-            while (fileIn.EndOfStream)
+            InitStream(out var fileIn, @"LexerTests/DecimalIntegerTests/test_02.in");
+            Assert.Throws<StrToIntConvertException>(() => { _compiler.SetInput(ref fileIn); });
+            while (!fileIn.EndOfStream)
             {
                 Assert.Throws<StrToIntConvertException>(() => { _compiler.Next(); });
             }
@@ -133,8 +135,8 @@ namespace Tests
         [Test]
         public void InvalidDecimalIntegerConstantsTest()
         {
-            InitStream(out var fileIn, @"LexerTests/test_03.in");
-            _compiler.SetInput(fileIn);
+            InitStream(out var fileIn, @"LexerTests/DecimalIntegerTests/test_03.in");
+            Assert.Throws<UnexpectedSymbolException>(() => { _compiler.SetInput(ref fileIn); });
             while (fileIn.EndOfStream)
             {
                 Assert.Throws<UnexpectedSymbolException>(() => { _compiler.Next(); });
@@ -144,15 +146,49 @@ namespace Tests
         }
 
         [Test]
-        public void BinaryIntegerConstantsTest()
+        public void ManySpacesAndNewLinesIntegerConstantsTest()
         {
-            InitStreams(out var fileIn, out var fileOut, @"LexerTests/test_04.in", @"LexerTests/test_04.out");
-            _compiler.SetInput(fileIn);
+            InitStreams(out var fileIn, out var fileOut,
+                @"LexerTests/DecimalIntegerTests/test_04.in", @"LexerTests/DecimalIntegerTests/test_04.out");
+            _compiler.SetInput(ref fileIn);
             TryFail(fileIn, fileOut);
             Assert.Pass();
         }
-        
-//        [Test]
-//        public void 
+
+        [Test]
+        public void BinaryIntegerConstantsTest()
+        {
+            InitStreams(out var fileIn, out var fileOut,
+                @"LexerTests/BinaryIntegerTests/test_01.in", @"LexerTests/BinaryIntegerTests/test_01.out");
+            _compiler.SetInput(ref fileIn);
+            TryFail(fileIn, fileOut);
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TooBigBinaryIntegerConstantsTest()
+        {
+            InitStream(out var fileIn, @"LexerTests/BinaryIntegerTests/test_02.in");
+            Assert.Throws<StrToIntConvertException>(() => { _compiler.SetInput(ref fileIn); });
+            while (!fileIn.EndOfStream)
+            {
+                Assert.Throws<StrToIntConvertException>(() => { _compiler.Next(); });
+            }
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void InvalidBinaryIntegerConstantsTest()
+        {
+            InitStream(out var fileIn, @"LexerTests/BinaryIntegerTests/test_03.in");
+            Assert.Throws<UnexpectedSymbolException>(() => { _compiler.SetInput(ref fileIn); });
+            while (!fileIn.EndOfStream)
+            {
+                Assert.Throws<UnexpectedSymbolException>(() => { _compiler.Next(); });
+            }
+
+            Assert.Pass();
+        }
     }
 }
