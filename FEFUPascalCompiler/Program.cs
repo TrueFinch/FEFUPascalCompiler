@@ -10,10 +10,10 @@ namespace FEFUPascalCompiler
     {
         private LexerDFA _lexer;
 
-        public FEFUPascalCompiler(StreamReader input)
+        public FEFUPascalCompiler(ref StreamReader input)
         {
             _lexer = new LexerDFA();
-            _lexer.SetInput(input);
+            _lexer.SetInput(ref input);
         }
 
         public FEFUPascalCompiler()
@@ -21,14 +21,14 @@ namespace FEFUPascalCompiler
             _lexer = new LexerDFA();
         }
 
-        public void SetInput(StreamReader input)
+        public void SetInput(ref StreamReader input)
         {
-            _lexer.SetInput(input);
+            _lexer.SetInput(ref input);
         }
 
-        public void Next()
+        public bool Next()
         {
-            _lexer.NextToken();
+            return _lexer.NextToken();
         }
 
         public Token Peek()
@@ -57,7 +57,7 @@ namespace FEFUPascalCompiler
 //            }
 
 //            var inputFilePath = args[args.Length - 1];
-            string inputFilePath = @"project.pas";
+            string inputFilePath = @"project.txt";
             try
             {
                 var inputStream = File.OpenText(inputFilePath);
@@ -67,28 +67,27 @@ namespace FEFUPascalCompiler
 //                }
                 try
                 {
-                    FEFUPascalCompiler compiler = new FEFUPascalCompiler(inputStream);
+                    FEFUPascalCompiler compiler = new FEFUPascalCompiler(ref inputStream);
 
-                    Token token = compiler.Peek();
+                    Token token;
                     do
                     {
+                        token = compiler.Peek();
                         Console.WriteLine("{0},{1}\t{2}\t\t{3}\t\t{4}",
                             token.Line.ToString(),
                             token.Column.ToString(),
                             token.TokenType.ToString(),
                             token.StrValue,
                             token.Text);
-                        compiler.Next();
-                        token = compiler.Peek();
-                    } while (token != null);
+                    } while (compiler.Next());
                 }
                 catch (StrToIntConvertException exception)
                 {
-                    Console.WriteLine("Error: " + exception.Message);
+                    Console.WriteLine(exception.Message);
                 }
                 catch (UnexpectedSymbolException exception)
                 {
-                    Console.WriteLine("Error: " + exception.Message);
+                    Console.WriteLine(exception.Message);
                 }
             }
             catch (FileNotFoundException exception)
