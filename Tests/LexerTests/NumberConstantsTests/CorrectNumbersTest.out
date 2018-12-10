@@ -1,6 +1,5 @@
 (1, 1)    | IntegerNumber       | %101010                       | 42                            |
-(1, 9)    | DifOperator         | -                             | -                             |
-(1, 10)   | IntegerNumber       | %10000                        | 16                            |
+(1, 9)    | IntegerNumber       | %10000                        | 16                            |
 (2, 1)    | IntegerNumber       | %1111111111111111111111111111111111111111111111111111111111111110| -2                            |
 (3, 1)    | IntegerNumber       | 1337                          | 1337                          |
 (4, 5)    | IntegerNumber       | 42                            | 42                            |

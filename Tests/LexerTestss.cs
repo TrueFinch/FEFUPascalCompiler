@@ -39,10 +39,10 @@ namespace Tests
         public static void ParseFile(in FEFUPascalCompiler.FEFUPascalCompiler compiler, in string resultFilePath)
         {
             InitStreamWriter(out var result, resultFilePath);
-            do
+            while (compiler.Next())
             {
                 result.WriteLine(compiler.Peek().ToString());
-            } while (compiler.Next());
+            } 
             result.Close();
         }
 

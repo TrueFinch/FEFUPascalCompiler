@@ -95,6 +95,10 @@
       <EmbeddedResource Include="LexerTests\NumberConstantsTests\IncorrectBinNumbersTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\CorrectNumbersTest.out" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\CorrectNumbersTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>
