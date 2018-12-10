@@ -4,6 +4,8 @@
         <TargetFramework>netcoreapp2.1</TargetFramework>
 
         <IsPackable>false</IsPackable>
+
+        <LangVersion>7.2</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -65,6 +67,32 @@
       </EmbeddedResource>
       <None Remove="LexerTests\BinaryIntegerTests\test_03.in" />
       <EmbeddedResource Include="LexerTests\BinaryIntegerTests\test_03.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\BinaryIntegerTests\test_04.in" />
+      <EmbeddedResource Include="LexerTests\BinaryIntegerTests\test_04.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\BinaryIntegerTests\test_04.out" />
+      <EmbeddedResource Include="LexerTests\BinaryIntegerTests\test_04.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\CorrectBinNumbersTest.txt" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\CorrectNumbersTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\CorrectBinNumbersTest.out" />
+      <None Remove="LexerTests\NumberConstantsTests\CorrectBinNumbersTest.res" />
+      <None Remove="LexerTests\NumberConstantsTests\CorrectOctNumbersTest.in" />
+      <None Remove="LexerTests\NumberConstantsTests\CorrectOctNumbersTest.out" />
+      <None Remove="LexerTests\NumberConstantsTests\CorrectDecNumbersTest.in" />
+      <None Remove="LexerTests\NumberConstantsTests\CorrectDecNumbersTest.out" />
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectBinNumbersTest.in" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\IncorrectBinNumbersTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectBinNumbersTest.out" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\IncorrectBinNumbersTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
     </ItemGroup>

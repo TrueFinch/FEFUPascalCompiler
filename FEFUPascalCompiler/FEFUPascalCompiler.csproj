@@ -8,9 +8,6 @@
 
     <ItemGroup>
       <None Remove="Lexer\Transitions" />
-      <EmbeddedResource Include="Lexer\Transitions">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
       <None Remove="project.pas" />
     </ItemGroup>
 
