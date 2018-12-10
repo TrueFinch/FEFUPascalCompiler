@@ -30,9 +30,9 @@ namespace FEFUPascalCompiler.Lexer
     [Serializable]
     public class UnexpectedSymbolException : LexerException
     {
-        public UnexpectedSymbolException() {}
         public UnexpectedSymbolException(string message) : base(message)
         {
+            Message = message;
         }
         public override string Message { get; }
     }
@@ -40,10 +40,6 @@ namespace FEFUPascalCompiler.Lexer
     [Serializable]
     public class UnclosedStringConstException : LexerException
     {
-        public UnclosedStringConstException()
-        {
-        }
-
         public UnclosedStringConstException(string message) : base(message)
         {
             Message = message;
@@ -55,10 +51,6 @@ namespace FEFUPascalCompiler.Lexer
     [Serializable]
     public class StrToIntConvertException : LexerException
     {
-        public StrToIntConvertException()
-        {
-        }
-
         public StrToIntConvertException(string message) : base(message)
         {
             Message = message;
