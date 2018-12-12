@@ -36,14 +36,14 @@ namespace Tests
             }
         }
 
-        public static void ParseFile(in FEFUPascalCompiler.FEFUPascalCompiler compiler, in string resultFilePath)
+        public static void ParseAndPrint(ref FEFUPascalCompiler.Compiler compiler, ref StreamWriter output)
         {
-            InitStreamWriter(out var result, resultFilePath);
+//            InitStreamWriter(out var result, resultFilePath);
             while (compiler.Next())
-            {
-                result.WriteLine(compiler.Peek().ToString());
+            {                                                                
+                output.WriteLine(compiler.Peek().ToString());
             } 
-            result.Close();
+//            result.Close();
         }
 
         public static void CheckResult(in string filePathToExpected, in string filePathToActual)
@@ -54,6 +54,12 @@ namespace Tests
             {
                 Assert.AreEqual(expected.ReadLine(), actual.ReadLine());
             }
+        }
+
+        public static void CheckError(in string filePathToExpected, in string exceptionMessage)
+        {
+            InitStreamReader(out var expected, filePathToExpected);
+            Assert.AreEqual(expected.ReadLine(), exceptionMessage);
         }
     } // class TestFunctions
 } // namespace Tests
