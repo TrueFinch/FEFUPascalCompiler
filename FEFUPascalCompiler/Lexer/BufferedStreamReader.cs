@@ -6,7 +6,7 @@ namespace FEFUPascalCompiler.Lexer
 {
     public class BufferedStreamReader
     {
-        public BufferedStreamReader(ref StreamReader sr)
+        public BufferedStreamReader(in StreamReader sr)
         {
             _sr = sr;
         }
