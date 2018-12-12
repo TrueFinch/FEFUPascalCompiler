@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "/home/truefinch/.dotnet/store/|arch|/|tfm|",
+      "/home/truefinch/.nuget/packages"
+    ]
+  }
+}

@@ -26,6 +26,7 @@ namespace Tests.LexerTests.NumberConstantsTests
             
             TestFunctions.ParseAndPrint(ref _compiler, ref result);
             
+            result.Close();
             _compiler.Input.Close();
             
             TestFunctions.CheckResult(outPathFile, resPathFile);
@@ -48,9 +49,10 @@ namespace Tests.LexerTests.NumberConstantsTests
             
             TestFunctions.ParseAndPrint(ref _compiler, ref result);
 
+            result.Close();
             _compiler.Input.Close();
             
-            TestFunctions.CheckResult(outPathFile, resPathFile);
+            TestFunctions.CheckError(outPathFile, _compiler.LastException.Message);
             
             Assert.Pass();
         }
