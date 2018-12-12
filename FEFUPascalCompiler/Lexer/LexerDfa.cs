@@ -118,6 +118,10 @@ namespace FEFUPascalCompiler.Lexer
             try
             {
                 _currentToken = Parse();
+                if (_currentToken == null)
+                {
+                    return false;
+                }
             }
             catch (Exception)
             {
@@ -204,7 +208,7 @@ namespace FEFUPascalCompiler.Lexer
 
             var nextToken = lexeme.Length == 0 ? null : GetToken(line, column, lexeme.ToString(), lastState.Type);
             
-            if ((_currentToken?.TokenType == TokenType.End) && (nextToken?.TokenType == TokenType.Dot))
+            if ((nextToken == null) || (_currentToken?.TokenType == TokenType.End) && (nextToken?.TokenType == TokenType.Dot))
             {
                 _stopLexer = true;
             }
