@@ -38,12 +38,10 @@ namespace Tests
 
         public static void ParseAndPrint(ref FEFUPascalCompiler.Compiler compiler, ref StreamWriter output)
         {
-//            InitStreamWriter(out var result, resultFilePath);
             while (compiler.Next())
             {                                                                
                 output.WriteLine(compiler.Peek().ToString());
             } 
-//            result.Close();
         }
 
         public static void CheckResult(in string filePathToExpected, in string filePathToActual)
