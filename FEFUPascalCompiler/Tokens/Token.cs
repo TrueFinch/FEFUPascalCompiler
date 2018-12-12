@@ -55,34 +55,29 @@ namespace FEFUPascalCompiler.Tokens
         public IntegerNumberToken(int line, int column, string lexeme)
             : base(line, column, TokenType.IntegerNumber, lexeme)
         {
-            Value = ParseAndCheckLexeme(lexeme);
+            Value = ConvertToInteger(lexeme);
         }
 
-        private long ParseAndCheckLexeme(string lexeme)
+        private long ConvertToInteger(string lexeme)
         {
             try
             {
-                if (lexeme[0] == '-')
-                {
-                    return -1 * Convert.ToInt64(lexeme.Substring(2), basis[lexeme[1]]);
-                }
-
                 //if number not in decimal basis then lexeme[0] == % or $ or &
                 if (basis[lexeme[0]] != 10)
                 {
                     return Convert.ToInt64(lexeme.Substring(1), basis[lexeme[0]]);
                 }
-
                 return Convert.ToInt64(lexeme, basis[lexeme[0]]);
             }
             catch (FormatException exception)
             {
                 throw new StrToIntConvertException($"Error on ({Line},{Column}) in {lexeme}: {exception.Message}");
-            }
+            }           
             catch (OverflowException exception)
             {
                 throw new StrToIntConvertException($"Error on ({Line},{Column}) in {lexeme}: {exception.Message}");
             }
+
         }
 
         public override string ToString()
