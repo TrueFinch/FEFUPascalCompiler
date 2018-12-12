@@ -18,15 +18,21 @@ namespace FEFUPascalCompiler
         public static int Main(string[] args)
         {
             string inputFilePath = @"project.txt";
-            
-            FEFUPascalCompiler compiler = new FEFUPascalCompiler();
-            compiler.SetInput(inputFilePath);
+
+            Compiler compiler = new Compiler();
+            compiler.Input = new StreamReader(inputFilePath);
             
             while (compiler.Next())
             {
                 Console.WriteLine(compiler.Peek().ToString());
             }
 
+            if (compiler.LastException != null)
+            {
+                Console.WriteLine(compiler.LastException.Message);
+            }
+            
+            compiler.Input.Close();
             return 0;
         }
     }
