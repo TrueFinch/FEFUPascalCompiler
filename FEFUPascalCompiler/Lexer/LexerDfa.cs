@@ -44,7 +44,7 @@ namespace FEFUPascalCompiler.Lexer
             MultiLineCommentStart,
             MultiLineCommentFinish,
             SingleLineComment,
-            UnexpectedSymbol,
+//            UnexpectedSymbol,
         }
 
         private static readonly Dictionary<LexerState, TokenType> LexerStateTypeToTokenType
@@ -98,7 +98,7 @@ namespace FEFUPascalCompiler.Lexer
 
         private int _line;
         private int _column;
-        private BufferedStreamReader _input;
+        private BufferedStreamReader _inputStream;
         private Token _currentToken;
         private bool _stopLexer;
         private bool _gotError;
@@ -110,7 +110,7 @@ namespace FEFUPascalCompiler.Lexer
 
         public bool NextToken()
         {
-            if ((_input.EndOfStream()) || ((_currentToken == null) && (_input == null)) || _stopLexer || _gotError)
+            if ((_inputStream.EndOfStream()) || ((_currentToken == null) && (_inputStream == null)) || _stopLexer || _gotError)
             {
                 return false;
             }
@@ -119,14 +119,12 @@ namespace FEFUPascalCompiler.Lexer
             {
                 _currentToken = Parse();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.Write(e.Message);
                 _gotError = true;
                 _stopLexer = true;
-                return false;
+                throw;
             }
-
             return true;
         }
 
@@ -139,15 +137,15 @@ namespace FEFUPascalCompiler.Lexer
 
             while (currState.Type != LexerState.LexemeEnd)
             {
-                if (!currState.Transitions.ContainsKey((char) _input.Peek()))
+                if (!currState.Transitions.ContainsKey((char) _inputStream.Peek()))
                 {
-                    if (((currState.Type == LexerState.StringConstStart) && (_input.Peek() != '\n'))
+                    if (((currState.Type == LexerState.StringConstStart) && (_inputStream.Peek() != '\n'))
                         || (currState.Type == LexerState.MultiLineCommentStart)
-                        || ((currState.Type == LexerState.SingleLineComment) && (_input.Peek() != '\n')))
+                        || ((currState.Type == LexerState.SingleLineComment) && (_inputStream.Peek() != '\n')))
                     {
-                        _line += _input.Peek() == 10 ? 1 : 0;
-                        _column = _input.Peek() == 10 ? 1 : column + 1;
-                        lexeme.Append(_input.Read());
+                        _line += _inputStream.Peek() == 10 ? 1 : 0;
+                        _column = _inputStream.Peek() == 10 ? 1 : column + 1;
+                        lexeme.Append(_inputStream.Read());
                         continue;
                     }
 
@@ -157,30 +155,30 @@ namespace FEFUPascalCompiler.Lexer
                     continue;
                 }
 
-                var transition = currState.Transitions[(char) _input.Peek()];
+                var transition = currState.Transitions[(char) _inputStream.Peek()];
 
                 if (transition.Shift == 1)
                 {
                     lastState = currState;
                     currState = _statesList[transition.StateType];
-                    if ((currState.Type == LexerState.Start) && ((_input.Peek() == 10) || _input.Peek() == 32))
+                    if ((currState.Type == LexerState.Start) && ((_inputStream.Peek() == 10) || _inputStream.Peek() == 32))
                     {
-                        line += _input.Peek() == 10 ? 1 : 0;
-                        column = _input.Peek() == 10 ? 1 : _column + 1;
+                        line += _inputStream.Peek() == 10 ? 1 : 0;
+                        column = _inputStream.Peek() == 10 ? 1 : _column + 1;
                         _line = line;
                         _column = column;
-                        _input.Read();
+                        _inputStream.Read();
                     }
                     else
                     {
                         ++_column;
-                        lexeme.Append(_input.Read());
+                        lexeme.Append(_inputStream.Read());
                     }
                 }
                 else if (transition.Shift == -1)
                 {
                     --_column;
-                    _input.Kick(lexeme[lexeme.Length - 1]);
+                    _inputStream.Kick(lexeme[lexeme.Length - 1]);
                     lexeme.Remove(lexeme.Length - 1, 1);
                     currState = new Node(LexerState.LexemeEnd, TerminalStates[LexerState.LexemeEnd],
                         new Dictionary<char, Pair<LexerState, int>>());
@@ -189,8 +187,8 @@ namespace FEFUPascalCompiler.Lexer
 
             if ((currState.Type == LexerState.LexemeEnd) && (!lastState.Terminal))
             {
-                lexeme.Append((char) _input.Peek());
-                _input.ReadLine();
+                lexeme.Append((char) _inputStream.Peek());
+                _inputStream.ReadLine();
                 ++_line;
                 _column = 1;
                 _stopLexer = true;
@@ -219,13 +217,13 @@ namespace FEFUPascalCompiler.Lexer
             return _currentToken;
         }
 
-        public void SetInput(ref StreamReader input)
+        public void InitLexer(in StreamReader input)
         {
             _gotError = false;
             _stopLexer = false;
             _currentToken = null;
             _line = _column = 1;
-            _input = new BufferedStreamReader(ref input);
+            _inputStream = new BufferedStreamReader(in input);
             _currentToken = null;
         }
     }
