@@ -58,4 +58,15 @@ namespace FEFUPascalCompiler.Lexer
 
         public override string Message { get; }
     }
+    
+    [Serializable]
+    public class UnclosedMultilineCommentException : LexerException
+    {
+        public UnclosedMultilineCommentException(string message) : base(message)
+        {
+            Message = message;
+        }
+
+        public override string Message { get; }
+    }
 }
