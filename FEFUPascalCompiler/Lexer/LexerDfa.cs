@@ -153,7 +153,7 @@ namespace FEFUPascalCompiler.Lexer
                 currState = _statesList[(int) LexerState.Start];
             int line = _line, column = _column;
 
-            while (currState.Type != LexerState.LexemeEnd)
+            while ((currState.Type != LexerState.LexemeEnd) && (!_inputStream.EndOfStream()))
             {
                 if (!currState.Transitions.ContainsKey((char) _inputStream.Peek()))
                 {
@@ -162,8 +162,17 @@ namespace FEFUPascalCompiler.Lexer
                         || ((currState.Type == LexerState.SingleLineComment) && (_inputStream.Peek() != '\n')))
                     {
                         _line += _inputStream.Peek() == 10 ? 1 : 0;
-                        _column = _inputStream.Peek() == 10 ? 1 : column + 1;
-                        lexeme.Append(_inputStream.Read());
+                        _column = _inputStream.Peek() == 10 ? 1 : _column + 1;
+                        var ch = _inputStream.Read();
+                        if (ch == '\n')
+                        {
+                            lexeme.Append('\\');
+                            lexeme.Append('n');
+                        }
+                        else
+                        {
+                            lexeme.Append(ch);
+                        }
                         continue;
                     }
 
@@ -204,6 +213,19 @@ namespace FEFUPascalCompiler.Lexer
                 }
             }
 
+            if (currState.Type == LexerState.StringConstStart)
+            {
+                _stopLexer = _gotError = true;
+                throw new UnclosedStringConstException(
+                    $"({line},{column}) Unclosed string constant lexeme {lexeme}");
+            }
+            
+            if (currState.Type == LexerState.MultiLineCommentStart)
+            {
+                throw new UnclosedMultilineCommentException(
+                    $"({line},{column}) Unclosed string constant lexeme {lexeme}");
+            }
+            
             if ((currState.Type == LexerState.LexemeEnd) && (!lastState.Terminal))
             {
 //                lexeme.Append((char) _inputStream.Peek());
@@ -211,22 +233,13 @@ namespace FEFUPascalCompiler.Lexer
 //                ++_line;
 //                _column = 1;
                 _stopLexer = _gotError = true;
-                if (lastState.Type == LexerState.StringConstStart)
-                {
-                    throw new UnclosedStringConstException(
-                        $"({line},{column}) Unclosed string constant lexeme {lexeme}");
-                }
-
-                if (lastState.Type == LexerState.MultiLineCommentStart)
-                {
-                    throw new UnclosedMultilineCommentException(
-                        $"({line},{column}) Unclosed string constant lexeme {lexeme}");
-                }
-
                 throw new UnexpectedSymbolException($"({_line},{_column - 1}) Unexpected symbol in lexeme {lexeme}");
             }
-
-            var nextToken = lexeme.Length == 0 ? null : GetToken(line, column, lexeme.ToString(), lastState.Type);
+            
+            var nextToken = (currState.Type == LexerState.SingleLineComment) 
+                            || (currState.Type == LexerState.MultiLineCommentFinish) 
+                ? GetToken(line, column, lexeme.ToString(), currState.Type)
+                : GetToken(line, column, lexeme.ToString(), lastState.Type);
 
             if ((_currentToken?.TokenType == TokenType.End) && (nextToken?.TokenType == TokenType.Dot))
             {
