@@ -1,0 +1,30 @@
+(1, 1)    | Ident               | a                             | a                             |
+(1, 3)    | SimpleAssignOperator| :=                            | :=                            |
+(1, 6)    | IntegerNumber       | 12                            | 12                            |
+(2, 5)    | Ident               | a                             | a                             |
+(2, 6)    | SimpleAssignOperator| :=                            | :=                            |
+(2, 8)    | IntegerNumber       | 12                            | 12                            |
+(3, 3)    | Ident               | b                             | b                             |
+(3, 5)    | SumAssignOperator   | +=                            | +=                            |
+(3, 8)    | IntegerNumber       | 18                            | 18                            |
+(4, 9)    | Ident               | b                             | b                             |
+(4, 10)   | SumAssignOperator   | +=                            | +=                            |
+(4, 12)   | IntegerNumber       | 18                            | 18                            |
+(5, 17)   | Ident               | c                             | c                             |
+(5, 19)   | MulAssignOperator   | *=                            | *=                            |
+(5, 22)   | IntegerNumber       | 74                            | 74                            |
+(6, 21)   | Ident               | c                             | c                             |
+(6, 22)   | MulAssignOperator   | *=                            | *=                            |
+(6, 24)   | IntegerNumber       | 13                            | 13                            |
+(7, 15)   | Ident               | d                             | d                             |
+(7, 17)   | DifAssignOperator   | -=                            | -=                            |
+(7, 20)   | IntegerNumber       | 1                             | 1                             |
+(8, 12)   | Ident               | d                             | d                             |
+(8, 13)   | DifAssignOperator   | -=                            | -=                            |
+(8, 15)   | IntegerNumber       | 1                             | 1                             |
+(9, 6)    | Ident               | f                             | f                             |
+(9, 8)    | DivAssignOperator   | /=                            | /=                            |
+(9, 11)   | IntegerNumber       | 3                             | 3                             |
+(10, 9)   | Ident               | f                             | f                             |
+(10, 10)  | DivAssignOperator   | /=                            | /=                            |
+(10, 12)  | IntegerNumber       | 3                             | 3                             |
