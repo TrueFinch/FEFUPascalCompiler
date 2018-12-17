@@ -1,9 +1,9 @@
 using NUnit.Framework;
 
-namespace Tests.LexerTests.CommentTests
+namespace Tests.LexerTests.OperatorsTests
 {
     [TestFixture]
-    public class CommentTestFixture
+    public class OperatorsTestFixture
     {
         private FEFUPascalCompiler.Compiler _compiler;
 
@@ -14,11 +14,11 @@ namespace Tests.LexerTests.CommentTests
         }
 
         [Test]
-        public void CorrectCommentsTest()
+        public void AllBinOperatorsTest()
         {
-            const string inPathFile = @"LexerTests/CommentTests/CorrectCommentsTest.in";
-            const string outPathFile = @"LexerTests/CommentTests/CorrectCommentsTest.out";
-            const string resPathFile = @"LexerTests/CommentTests/CorrectCommentsTest.res";
+            const string inPathFile = @"LexerTests/OperatorsTests/AllBinOperatorsTest.in";
+            const string outPathFile = @"LexerTests/OperatorsTests/AllBinOperatorsTest.out";
+            const string resPathFile = @"LexerTests/OperatorsTests/AllBinOperatorsTest.res";
             
             TestFunctions.InitStreamReader(out var input, inPathFile);
             TestFunctions.InitStreamWriter(out var result, resPathFile);
@@ -32,14 +32,14 @@ namespace Tests.LexerTests.CommentTests
             TestFunctions.CheckResult(outPathFile, resPathFile);
             
             Assert.Pass();
-        } // CorrectCommentsTest test
+        } // AllBinOperatorsTest test
         
         [Test]
-        public void UnclosedMultilineCommentTest()
+        public void AllAssignOperatorsTest()
         {
-            const string inPathFile = @"LexerTests/CommentTests/UnclosedMultilineCommentTest.in";
-            const string outPathFile = @"LexerTests/CommentTests/UnclosedMultilineCommentTest.out";
-            const string resPathFile = @"LexerTests/CommentTests/UnclosedMultilineCommentTest.res";
+            const string inPathFile = @"LexerTests/OperatorsTests/AllAssignOperatorsTest.in";
+            const string outPathFile = @"LexerTests/OperatorsTests/AllAssignOperatorsTest.out";
+            const string resPathFile = @"LexerTests/OperatorsTests/AllAssignOperatorsTest.res";
             
             TestFunctions.InitStreamReader(out var input, inPathFile);
             TestFunctions.InitStreamWriter(out var result, resPathFile);
@@ -50,9 +50,9 @@ namespace Tests.LexerTests.CommentTests
             result.Close();
             _compiler.Input.Close();
             
-            TestFunctions.CheckError(outPathFile, _compiler.LastException.Message);
+            TestFunctions.CheckResult(outPathFile, resPathFile);
             
             Assert.Pass();
-        } // UnclosedMultilineCommentTest test
-    } // CommentTestFixture class
-} // Tests.LexerTests.CommentTests namespace
+        } // AllAssignOperatorsTest test
+    } // BinOperatorsTestFixture class
+} // Tests.LexerTests.BinOperatorsTests namespace

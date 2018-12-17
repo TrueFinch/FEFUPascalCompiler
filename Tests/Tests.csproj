@@ -159,10 +159,30 @@
       <EmbeddedResource Include="LexerTests\CommentTests\CorrectCommentsTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="LexerTests\BinOperatorsTests" />
+      <None Remove="LexerTests\BinOperatorsTests\AllBinOperatorsTest.in" />
+      <EmbeddedResource Include="LexerTests\OperatorsTests\AllBinOperatorsTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\BinOperatorsTests\AllBinOperatorsTest.out" />
+      <EmbeddedResource Include="LexerTests\OperatorsTests\AllBinOperatorsTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\OperatorsTests\AllAssignOperatorsTest.in" />
+      <EmbeddedResource Include="LexerTests\OperatorsTests\AllAssignOperatorsTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\OperatorsTests\AllAssignOperatorsTest.out" />
+      <EmbeddedResource Include="LexerTests\OperatorsTests\AllAssignOperatorsTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\CommentTests\UnclosedMultilineCommentTest.in" />
+      <EmbeddedResource Include="LexerTests\CommentTests\UnclosedMultilineCommentTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\CommentTests\UnclosedMultilineCommentTest.out" />
+      <EmbeddedResource Include="LexerTests\CommentTests\UnclosedMultilineCommentTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>
