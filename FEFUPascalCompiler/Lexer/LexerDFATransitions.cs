@@ -195,7 +195,14 @@ namespace FEFUPascalCompiler.Lexer
 
             private static Node? InitColonStateNode(Node node)
             {
-                return node.Type != LexerState.Colon ? (Node?) null : node;
+                if (node.Type != LexerState.Colon)
+                {
+                    return null;
+                }
+                
+                node.Transitions.TryAdd('=', new Pair<LexerState, int>(LexerState.Assign, 1));
+                
+                return node;
             }
 
             private static Node? InitDotStateNode(Node node)
@@ -464,10 +471,10 @@ namespace FEFUPascalCompiler.Lexer
                     return null;
                 }
 
-                string DecDigits = "0123456789";
+                string decDigits = "0123456789";
                 string notDecDigits = IdentCharacters +'%' + '&' + '$';
 
-                foreach (char digit in DecDigits)
+                foreach (char digit in decDigits)
                 {
                     node.Transitions.TryAdd(digit, new Pair<LexerState, int>(LexerState.DecNumber, 1));
                 }
