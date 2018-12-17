@@ -1,0 +1,22 @@
+(1, 1)    | StringConst         | 'Hello, world!'               | 'Hello, world!'               |
+(2, 1)    | StringConst         | 'I hate my life'              | 'I hate my life'              |
+(3, 1)    | StringConst         | 'Depression is love, depression is life'| 'Depression is love, depression is life'|
+(4, 1)    | StringConst         | '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-'| '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-'|
+(5, 1)    | StringConst         | 'A night, a street, a lamp, a drugstore'| 'A night, a street, a lamp, a drugstore'|
+(6, 1)    | StringConst         | 'A meaningless and dismal light'| 'A meaningless and dismal light'|
+(7, 1)    | StringConst         | 'A quarter century outpours -'| 'A quarter century outpours -'|
+(8, 1)    | StringConst         | 'It’s all the same. No chance to flight.'| 'It’s all the same. No chance to flight.'|
+(9, 1)    | StringConst         | '-'                           | '-'                           |
+(10, 1)   | StringConst         | 'You’d die and rise anew, begotten.'| 'You’d die and rise anew, begotten.'|
+(11, 1)   | StringConst         | 'All would repeat as ever might:'| 'All would repeat as ever might:'|
+(12, 1)   | StringConst         | 'The street, the icy rippled water,'| 'The street, the icy rippled water,'|
+(13, 1)   | StringConst         | 'The store, the lamp, the lonely night.'| 'The store, the lamp, the lonely night.'|
+(14, 1)   | StringConst         | '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-'| '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-'|
+(15, 1)   | StringConst         | '123'                         | '123'                         |
+(15, 7)   | StringConst         | '345'                         | '345'                         |
+(15, 13)  | StringConst         | '%abc'                        | '%abc'                        |
+(15, 20)  | StringConst         | '\n'                          | '\n'                          |
+(16, 9)   | StringConst         | 'qwerty'                      | 'qwerty'                      |
+(17, 17)  | StringConst         | 'uauauauauauau'               | 'uauauauauauau'               |
+(18, 13)  | StringConst         | '42'                          | '42'                          |
+(19, 6)   | StringConst         | 'new spider-man cartoon is awesome!!!'| 'new spider-man cartoon is awesome!!!'|

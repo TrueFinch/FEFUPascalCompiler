@@ -135,6 +135,34 @@
       <EmbeddedResource Include="LexerTests\IdentifiersTests\DifferentIdentifiersTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="LexerTests\ConstStringsTests\CorrectConstStringsTest.in" />
+      <EmbeddedResource Include="LexerTests\ConstStringsTests\CorrectConstStringsTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\ConstStringsTests\CorrectConstStringsTest.out" />
+      <EmbeddedResource Include="LexerTests\ConstStringsTests\CorrectConstStringsTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\ConstStringsTests\UnclosedConstStringsTest.in" />
+      <EmbeddedResource Include="LexerTests\ConstStringsTests\UnclosedConstStringsTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\ConstStringsTests\UnclosedConstStringsTest.out" />
+      <EmbeddedResource Include="LexerTests\ConstStringsTests\UnclosedConstStringsTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\CommentTests\CorrectCommentsTest.in" />
+      <EmbeddedResource Include="LexerTests\CommentTests\CorrectCommentsTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\CommentTests\CorrectCommentsTest.out" />
+      <EmbeddedResource Include="LexerTests\CommentTests\CorrectCommentsTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="LexerTests\BinOperatorsTests" />
     </ItemGroup>
 
 </Project>
