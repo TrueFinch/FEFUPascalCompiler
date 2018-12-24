@@ -31,7 +31,7 @@ namespace FEFUPascalCompiler.Tokens
 
         public override string ToString()
         {
-            return $"{(Line, Column), -10}| {TokenType, -20}| {Lexeme, -30}| ";
+            return $"{(Line, Column),-10}| {TokenType,-20}| {Lexeme,-30}| ";
         }
 
         public static readonly Dictionary<TokenType, Func<int, int, string, Token>> TokenConstructors =
@@ -45,7 +45,10 @@ namespace FEFUPascalCompiler.Tokens
                 {TokenType.Separator, (line, column, lexeme) => new SeparatorToken(line, column, lexeme)},
                 {TokenType.Ident, (line, column, lexeme) => new IdentToken(line, column, lexeme)},
                 {TokenType.MultiLineComment, (line, column, lexeme) => new MultilineCommentToken(line, column, lexeme)},
-                {TokenType.SingleLineComment, (line, column, lexeme) => new SingleLineCommentToken(line, column, lexeme)},
+                {
+                    TokenType.SingleLineComment,
+                    (line, column, lexeme) => new SingleLineCommentToken(line, column, lexeme)
+                },
                 {TokenType.Bracket, (line, column, lexeme) => new BracketToken(line, column, lexeme)}
             };
     }
@@ -67,22 +70,22 @@ namespace FEFUPascalCompiler.Tokens
                 {
                     return Convert.ToInt64(lexeme.Substring(1), basis[lexeme[0]]);
                 }
+
                 return Convert.ToInt64(lexeme, basis[lexeme[0]]);
             }
             catch (FormatException exception)
             {
                 throw new StrToIntConvertException($"Error on ({Line},{Column}) in {lexeme}: {exception.Message}");
-            }           
+            }
             catch (OverflowException exception)
             {
                 throw new StrToIntConvertException($"Error on ({Line},{Column}) in {lexeme}: {exception.Message}");
             }
-
         }
 
         public override string ToString()
         {
-            return base.ToString() + $"{Value, -30}" + '|';
+            return base.ToString() + $"{Value,-30}" + '|';
         }
 
         public long Value { get; }
@@ -122,7 +125,7 @@ namespace FEFUPascalCompiler.Tokens
 
         public override string ToString()
         {
-            return base.ToString() + $"{Value, -30}" + '|';
+            return base.ToString() + $"{Value,-30}" + '|';
         }
 
         public double Value { get; }
@@ -141,7 +144,7 @@ namespace FEFUPascalCompiler.Tokens
 
         public override string ToString()
         {
-            return base.ToString() + $"{Value, -30}" + '|';
+            return base.ToString() + $"{Value,-30}" + '|';
         }
 
         public string Value { get; }
@@ -157,7 +160,7 @@ namespace FEFUPascalCompiler.Tokens
 
         public override string ToString()
         {
-            return base.ToString() + $"{Value, -30}" + '|';
+            return base.ToString() + $"{Value,-30}" + '|';
         }
 
         public string Value { get; }
@@ -173,7 +176,7 @@ namespace FEFUPascalCompiler.Tokens
 
         public override string ToString()
         {
-            return base.ToString() + $"{Value, -30}" + '|';
+            return base.ToString() + $"{Value,-30}" + '|';
         }
 
         public string Value { get; }
@@ -189,7 +192,7 @@ namespace FEFUPascalCompiler.Tokens
 
         public override string ToString()
         {
-            return base.ToString() + $"{Value, -30}" + '|';
+            return base.ToString() + $"{Value,-30}" + '|';
         }
 
         public string Value { get; }
@@ -197,15 +200,38 @@ namespace FEFUPascalCompiler.Tokens
 
     public class StringConstToken : Token
     {
+        private string SetValue(string lexeme)
+        {
+            lexeme = lexeme[0] == '\'' ? lexeme.Substring(1) : lexeme;
+            lexeme = lexeme[lexeme.Length - 1] == '\'' ? lexeme.Substring(0, lexeme.Length - 1) : lexeme;
+            
+            for (int nextSharpIndex = lexeme.IndexOf("#", StringComparison.Ordinal);
+                nextSharpIndex >= 0;
+                nextSharpIndex = lexeme.IndexOf("#", StringComparison.Ordinal))
+            {
+                string code = "";
+                for (int i = nextSharpIndex + 1; i < lexeme.Length && "0123456789".Contains(lexeme[i]); ++i)
+                {
+                    code += lexeme[i];
+                }
+
+                lexeme = lexeme.Replace(String.Concat("#", code), ((char) Convert.ToUInt32(code, 10)).ToString());
+            }
+
+            lexeme = lexeme.Replace("''", "'");
+            
+            return lexeme;
+        }
+
         public StringConstToken(int line, int column, string lexeme)
             : base(line, column, TokenType.StringConst, lexeme)
         {
-            Value = lexeme;
+            Value = SetValue(lexeme);
         }
 
         public override string ToString()
         {
-            return base.ToString() + $"{Value, -30}" + '|';
+            return base.ToString() + $"{Value,-30}" + '|';
         }
 
         public string Value { get; }
@@ -221,12 +247,12 @@ namespace FEFUPascalCompiler.Tokens
 
         public override string ToString()
         {
-            return base.ToString() + $"{Value, -30}" + '|';
+            return base.ToString() + $"{Value,-30}" + '|';
         }
 
         public string Value { get; }
     }
-    
+
     public class SingleLineCommentToken : Token
     {
         public SingleLineCommentToken(int line, int column, string lexeme)
@@ -237,13 +263,14 @@ namespace FEFUPascalCompiler.Tokens
 
         public override string ToString()
         {
-            return base.ToString() + $"{Value, -30}" + '|';
+            return base.ToString() + $"{Value,-30}" + '|';
         }
 
         public string Value { get; }
     }
-    
-    public class BracketToken: Token{
+
+    public class BracketToken : Token
+    {
         public BracketToken(int line, int column, string lexeme)
             : base(line, column, Dictionaries.LexemeToTokenType[lexeme.ToLower()], lexeme)
         {
@@ -252,7 +279,7 @@ namespace FEFUPascalCompiler.Tokens
 
         public override string ToString()
         {
-            return base.ToString() + $"{Value, -30}" + '|';
+            return base.ToString() + $"{Value,-30}" + '|';
         }
 
         public string Value { get; }
