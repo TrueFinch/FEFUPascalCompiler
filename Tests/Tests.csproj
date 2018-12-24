@@ -183,6 +183,14 @@
       <EmbeddedResource Include="LexerTests\CommentTests\UnclosedMultilineCommentTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="LexerTests\ConstStringsTests\UnclosedConstStringsTest2.in" />
+      <EmbeddedResource Include="LexerTests\ConstStringsTests\UnclosedConstStringsTest2.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\ConstStringsTests\UnclosedConstStringsTest2.out" />
+      <EmbeddedResource Include="LexerTests\ConstStringsTests\UnclosedConstStringsTest2.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

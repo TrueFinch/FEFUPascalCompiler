@@ -46,6 +46,8 @@ namespace FEFUPascalCompiler.Lexer
             MultiLineCommentFinish,
             SingleLineComment,
             InvalidSign,
+            SignCodeStart,
+            SignCodeFinish,
         }
 
 
@@ -74,6 +76,7 @@ namespace FEFUPascalCompiler.Lexer
                 {LexerState.DoubleDotOperator     , TokenType.BinOperator       },
                 {LexerState.StringConstFinish     , TokenType.StringConst       },
                 {LexerState.OpenSquareBracket     , TokenType.Bracket           },         
+                {LexerState.SignCodeFinish        , TokenType.StringConst       },
                 {LexerState.DoubleNumber          , TokenType.DoubleNumber      },
                 {LexerState.CloseBracket          , TokenType.Bracket           },
                 {LexerState.OpenBracket           , TokenType.Bracket           },
