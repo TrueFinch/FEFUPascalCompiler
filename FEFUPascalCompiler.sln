@@ -1,6 +1,7 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FEFUPascalCompiler", "FEFUPascalCompiler\FEFUPascalCompiler.csproj", "{8AEC263A-D17D-4DCB-904C-F27DA0C536F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{BCF460F1-4F2E-4BFE-B525-2DD2E5A1F0AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +13,9 @@ Global
 		{8AEC263A-D17D-4DCB-904C-F27DA0C536F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AEC263A-D17D-4DCB-904C-F27DA0C536F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AEC263A-D17D-4DCB-904C-F27DA0C536F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCF460F1-4F2E-4BFE-B525-2DD2E5A1F0AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCF460F1-4F2E-4BFE-B525-2DD2E5A1F0AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCF460F1-4F2E-4BFE-B525-2DD2E5A1F0AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCF460F1-4F2E-4BFE-B525-2DD2E5A1F0AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

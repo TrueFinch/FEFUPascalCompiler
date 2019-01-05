@@ -1,0 +1,20 @@
+(1, 1)    | Ident               | _123                          | _123                          |
+(2, 1)    | Ident               | &begin                        | &begin                        |
+(3, 1)    | Ident               | MaY                           | may                           |
+(4, 9)    | Ident               | the                           | the                           |
+(5, 6)    | Ident               | _4th                          | _4th                          |
+(6, 21)   | Ident               | BE                            | be                            |
+(7, 16)   | Ident               | &with                         | &with                         |
+(8, 10)   | Ident               | U                             | u                             |
+(9, 3)    | Ident               | i0                            | i0                            |
+(10, 3)   | Ident               | i1                            | i1                            |
+(11, 3)   | Ident               | i2                            | i2                            |
+(12, 3)   | Ident               | i3                            | i3                            |
+(13, 3)   | Ident               | veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongidentifier| veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongidentifier|
+(14, 1)   | Ident               | &is                           | &is                           |
+(14, 5)   | Ident               | eight                         | eight                         |
+(14, 11)  | Ident               | hobbits                       | hobbits                       |
+(14, 19)  | Ident               | equals                        | equals                        |
+(14, 26)  | Ident               | &to                           | &to                           |
+(14, 30)  | Ident               | one                           | one                           |
+(14, 34)  | Ident               | hobbyte                       | hobbyte                       |

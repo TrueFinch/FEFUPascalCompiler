@@ -1,0 +1,2 @@
+(1, 1)    | SingleLineComment   | //some single line comment    | //some single line comment    |
+(2, 9)    | MultiLineComment    | { uuuu multiline comments are awesome\n\n\n\neeeeee}| { uuuu multiline comments are awesome\n\n\n\neeeeee}|

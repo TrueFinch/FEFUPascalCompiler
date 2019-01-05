@@ -1,0 +1,204 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+
+        <IsPackable>false</IsPackable>
+
+        <LangVersion>7.2</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="nunit" Version="3.10.1" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FEFUPascalCompiler\FEFUPascalCompiler.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="LexerTests\test_01.in" />
+      <None Remove="LexerTests\test_01.out" />
+      <None Remove="LexerTests\test_02.in" />
+      <None Remove="LexerTests\test_02.out" />
+      <None Remove="LexerTests\test_03.in" />
+      <None Remove="LexerTests\test_03.out" />
+      <None Remove="LexerTests\test_04.in" />
+      <None Remove="LexerTests\test_04.out" />
+      <None Remove="LexerTests\test_00.out" />
+      <None Remove="LexerTests\test_00.in" />
+      <None Remove="LexerTests\DecimalIntegerTests\test_04.in" />
+      <None Remove="LexerTests\DecimalIntegerTests\test_04.out" />
+      <None Remove="LexerTests\BinaryIntegerTests\test_02.in" />
+      <None Remove="LexerTests\BinaryIntegerTests\test_03.in" />
+      <None Remove="LexerTests\BinaryIntegerTests\test_04.in" />
+      <None Remove="LexerTests\BinaryIntegerTests\test_04.out" />
+      <None Remove="LexerTests\NumberConstantsTests\CorrectBinNumbersTest.txt" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\CorrectNumbersTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\CorrectBinNumbersTest.out" />
+      <None Remove="LexerTests\NumberConstantsTests\CorrectBinNumbersTest.res" />
+      <None Remove="LexerTests\NumberConstantsTests\CorrectOctNumbersTest.in" />
+      <None Remove="LexerTests\NumberConstantsTests\CorrectOctNumbersTest.out" />
+      <None Remove="LexerTests\NumberConstantsTests\CorrectDecNumbersTest.in" />
+      <None Remove="LexerTests\NumberConstantsTests\CorrectDecNumbersTest.out" />
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectBinNumbersTest.in" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\IncorrectBinNumbersTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectBinNumbersTest.out" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\IncorrectBinNumbersTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\CorrectNumbersTest.out" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\CorrectNumbersTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectOctNumberTest.in" />
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectOctNumberTest.out" />
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectOctNumbersTest.in" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\IncorrectOctNumbersTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectOctNumbersTest.out" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\IncorrectOctNumbersTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectDecNumbersTest.in" />
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectDecNumbersTest.out" />
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectHexNumbers.in" />
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectHexNumbers.out" />
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectHexNumbersTest.in" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\IncorrectHexNumbersTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\IncorrectHexNumbersTest.out" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\IncorrectHexNumbersTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\TooLongBinNumbersTest.in" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\TooLongBinNumbersTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\TooLongBinNumbersTest.out" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\TooLongBinNumbersTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\TooLongOctNumbersTest.in" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\TooLongOctNumbersTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\TooLongOctNumbersTest.out" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\TooLongOctNumbersTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\TooLongDecNumbersTest.in" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\TooLongDecNumbersTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\TooLongDecNumbersTest.out" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\TooLongDecNumbersTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\TooLongHexNumbersTest.in" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\TooLongHexNumbersTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\TooLongHexNumbersTest.out" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\TooLongHexNumbersTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\KeywordsTests\AllKeywordsTest.in" />
+      <EmbeddedResource Include="LexerTests\KeywordsTests\AllKeywordsTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\KeywordsTests\AllKeywordsTest.out" />
+      <EmbeddedResource Include="LexerTests\KeywordsTests\AllKeywordsTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\IdentifiersTests\IdentifiersLikeKeywordsTest.in" />
+      <EmbeddedResource Include="LexerTests\IdentifiersTests\IdentifiersLikeKeywordsTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\IdentifiersTests\IdentifiersLikeKeywordsTest.out" />
+      <EmbeddedResource Include="LexerTests\IdentifiersTests\IdentifiersLikeKeywordsTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\IdentifiersTests\DifferentIdentifiersTest.in" />
+      <EmbeddedResource Include="LexerTests\IdentifiersTests\DifferentIdentifiersTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\IdentifiersTests\DifferentIdentifiersTest.out" />
+      <EmbeddedResource Include="LexerTests\IdentifiersTests\DifferentIdentifiersTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\ConstStringsTests\CorrectConstStringsTest.in" />
+      <EmbeddedResource Include="LexerTests\ConstStringsTests\CorrectConstStringsTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\ConstStringsTests\CorrectConstStringsTest.out" />
+      <EmbeddedResource Include="LexerTests\ConstStringsTests\CorrectConstStringsTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\ConstStringsTests\UnclosedConstStringsTest.in" />
+      <EmbeddedResource Include="LexerTests\ConstStringsTests\UnclosedConstStringsTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\ConstStringsTests\UnclosedConstStringsTest.out" />
+      <EmbeddedResource Include="LexerTests\ConstStringsTests\UnclosedConstStringsTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\CommentTests\CorrectCommentsTest.in" />
+      <EmbeddedResource Include="LexerTests\CommentTests\CorrectCommentsTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\CommentTests\CorrectCommentsTest.out" />
+      <EmbeddedResource Include="LexerTests\CommentTests\CorrectCommentsTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\BinOperatorsTests\AllBinOperatorsTest.in" />
+      <EmbeddedResource Include="LexerTests\OperatorsTests\AllBinOperatorsTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\BinOperatorsTests\AllBinOperatorsTest.out" />
+      <EmbeddedResource Include="LexerTests\OperatorsTests\AllBinOperatorsTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\OperatorsTests\AllAssignOperatorsTest.in" />
+      <EmbeddedResource Include="LexerTests\OperatorsTests\AllAssignOperatorsTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\OperatorsTests\AllAssignOperatorsTest.out" />
+      <EmbeddedResource Include="LexerTests\OperatorsTests\AllAssignOperatorsTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\CommentTests\UnclosedMultilineCommentTest.in" />
+      <EmbeddedResource Include="LexerTests\CommentTests\UnclosedMultilineCommentTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\CommentTests\UnclosedMultilineCommentTest.out" />
+      <EmbeddedResource Include="LexerTests\CommentTests\UnclosedMultilineCommentTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\ConstStringsTests\UnclosedConstStringsTest2.in" />
+      <EmbeddedResource Include="LexerTests\ConstStringsTests\UnclosedConstStringsTest2.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\ConstStringsTests\UnclosedConstStringsTest2.out" />
+      <EmbeddedResource Include="LexerTests\ConstStringsTests\UnclosedConstStringsTest2.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\CorrectDoubleNumberTest.in" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\CorrectDoubleNumbersTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\CorrectDoubleNumberTest.out" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\CorrectDoubleNumbersTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
+</Project>
