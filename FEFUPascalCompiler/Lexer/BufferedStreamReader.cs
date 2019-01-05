@@ -28,7 +28,7 @@ namespace FEFUPascalCompiler.Lexer
 
         public bool EndOfStream()
         {
-            return _buffer.Any() || _sr.EndOfStream;
+            return _buffer.Count == 0 && _sr.EndOfStream;
         }
 
         public string ReadLine()
