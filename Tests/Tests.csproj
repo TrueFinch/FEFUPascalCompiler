@@ -191,6 +191,14 @@
       <EmbeddedResource Include="LexerTests\ConstStringsTests\UnclosedConstStringsTest2.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\CorrectDoubleNumberTest.in" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\CorrectDoubleNumbersTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="LexerTests\NumberConstantsTests\CorrectDoubleNumberTest.out" />
+      <EmbeddedResource Include="LexerTests\NumberConstantsTests\CorrectDoubleNumbersTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>
