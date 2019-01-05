@@ -210,5 +210,26 @@ namespace Tests.LexerTests.NumberConstantsTests
             
             Assert.Pass();
         }
+        
+        [Test]
+        public void CorrectDoubleNumbersTest()
+        {
+            const string inPathFile = @"LexerTests/NumberConstantsTests/CorrectDoubleNumbersTest.in";
+            const string outPathFile = @"LexerTests/NumberConstantsTests/CorrectDoubleNumbersTest.out";
+            const string resPathFile = @"LexerTests/NumberConstantsTests/CorrectDoubleNumbersTest.res";
+            
+            TestFunctions.InitStreamReader(out var input, inPathFile);
+            TestFunctions.InitStreamWriter(out var result, resPathFile);
+            _compiler.Input = input;
+            
+            TestFunctions.ParseAndPrint(ref _compiler, ref result);
+            
+            result.Close();
+            _compiler.Input.Close();
+            
+            TestFunctions.CheckResult(outPathFile, resPathFile);
+            
+            Assert.Pass();
+        }
     }
 }
