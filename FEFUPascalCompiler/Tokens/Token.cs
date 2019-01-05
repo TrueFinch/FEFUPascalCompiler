@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using FEFUPascalCompiler.Lexer;
 
 namespace FEFUPascalCompiler.Tokens
@@ -111,7 +112,8 @@ namespace FEFUPascalCompiler.Tokens
         {
             try
             {
-                return Convert.ToDouble(lexeme);
+                NumberFormatInfo provider = new NumberFormatInfo {NumberDecimalSeparator = "."};
+                return Convert.ToDouble(lexeme, provider);
             }
             catch (FormatException exception)
             {
