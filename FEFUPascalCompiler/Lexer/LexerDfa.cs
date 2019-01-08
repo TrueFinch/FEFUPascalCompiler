@@ -54,7 +54,7 @@ namespace FEFUPascalCompiler.Lexer
         }
 
 
-        internal static Token GetToken(int line, int column, string lexeme, LexerState lexerState)
+        private static Token GetToken(int line, int column, string lexeme, LexerState lexerState)
         {
             if (LexerStateTypeToTokenType.ContainsKey(lexerState))
             {
@@ -69,7 +69,7 @@ namespace FEFUPascalCompiler.Lexer
             {
                 // @formatter:off
                 {LexerState.MultiLineCommentFinish, TokenType.MultiLineComment  },
-                {LexerState.CloseSquareBracket    , TokenType.Bracket           },
+                {LexerState.CloseSquareBracket    , TokenType.CloseSquareBracket},
                 {LexerState.SingleLineComment     , TokenType.SingleLineComment },
                 {LexerState.SumArithmOperator     , TokenType.BinOperator       },
                 {LexerState.DifArithmOperator     , TokenType.BinOperator       },
@@ -78,12 +78,12 @@ namespace FEFUPascalCompiler.Lexer
                 {LexerState.PowArithmOperator     , TokenType.BinOperator       },
                 {LexerState.DoubleDotOperator     , TokenType.BinOperator       },
                 {LexerState.StringConstFinish     , TokenType.StringConst       },
-                {LexerState.OpenSquareBracket     , TokenType.Bracket           },         
+                {LexerState.OpenSquareBracket     , TokenType.OpenSquareBracket },         
                 {LexerState.SignCodeFinish        , TokenType.StringConst       },
                 {LexerState.DoubleNumber          , TokenType.DoubleNumber      },
+                {LexerState.CloseBracket          , TokenType.CloseBracket      },
+                {LexerState.OpenBracket           , TokenType.OpenBracket       },
                 {LexerState.ExpDouble             , TokenType.DoubleNumber      },
-                {LexerState.CloseBracket          , TokenType.Bracket           },
-                {LexerState.OpenBracket           , TokenType.Bracket           },
                 {LexerState.BinNumber             , TokenType.IntegerNumber     },
                 {LexerState.OctNumber             , TokenType.IntegerNumber     },
                 {LexerState.DecNumber             , TokenType.IntegerNumber     },
@@ -111,20 +111,6 @@ namespace FEFUPascalCompiler.Lexer
                 Shift     = shift;
                 // @formatter:off
             }
-        }
-
-        // @formatter:off
-        private int                  _line        ;
-        private int                  _column      ;
-        private BufferedStreamReader _inputStream ;
-        private Token                _currentToken;
-        private bool                 _stopLexer   ;
-        private bool                 _gotError    ;
-        // @formatter:on
-
-        public LexerDfa()
-        {
-            _statesList = TransitionsTable.InitTransitions();
         }
 
         public bool NextToken()
@@ -246,7 +232,7 @@ namespace FEFUPascalCompiler.Lexer
                 ? GetToken(line, column, lexeme.ToString(), currState.Type)
                 : GetToken(line, column, lexeme.ToString(), lastState.Type);
 
-            if ((_currentToken?.TokenType == TokenType.End) && (nextToken?.TokenType == TokenType.Dot))
+            if ((_currentToken?.Type == TokenType.End) && (nextToken?.Type == TokenType.Dot))
             {
                 _stopLexer = true;
             }
@@ -270,5 +256,19 @@ namespace FEFUPascalCompiler.Lexer
             _currentToken    = null;
             // @formatter:on
         }
+        
+        public LexerDfa()
+        {
+            _statesList = TransitionsTable.InitTransitions();
+        }
+        
+        // @formatter:off
+        private BufferedStreamReader _inputStream;
+        private Token                _currentToken;
+        private int                  _line        ;
+        private int                  _column      ;
+        private bool                 _stopLexer = true;
+        private bool                 _gotError    ;
+        // @formatter:on
     }
 }
