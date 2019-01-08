@@ -239,6 +239,14 @@ namespace FEFUPascalCompiler.Tokens
         public string Value { get; }
     }
 
+    //TODO: add charconst token realization and don't forget about lexer part and tests for this token
+    public class CharConstToken : Token
+    {
+        public CharConstToken(int line, int column, string lexeme) : base(line, column, TokenType.CharConst, lexeme)
+        {
+        }
+    }
+
     public class MultilineCommentToken : Token
     {
         public MultilineCommentToken(int line, int column, string lexeme)
