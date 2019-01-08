@@ -11,7 +11,7 @@ namespace FEFUPascalCompiler.Tokens
 
         public int Column { get; }
 
-        public TokenType TokenType { get; protected set; }
+        public TokenType Type { get; protected set; }
 
         public string Lexeme { get; }
 
@@ -22,17 +22,17 @@ namespace FEFUPascalCompiler.Tokens
             Lexeme = lexeme;
         }
 
-        protected Token(int line, int column, TokenType tokenType, string lexeme)
+        protected Token(int line, int column, TokenType type, string lexeme)
         {
             Line = line;
             Column = column;
-            TokenType = tokenType;
+            Type = type;
             Lexeme = lexeme;
         }
 
         public override string ToString()
         {
-            return $"{(Line, Column),-10}| {TokenType,-20}| {Lexeme,-30}| ";
+            return $"{(Line, Column),-10}| {Type,-20}| {Lexeme,-30}| ";
         }
 
         public static readonly Dictionary<TokenType, Func<int, int, string, Token>> TokenConstructors =
@@ -237,6 +237,14 @@ namespace FEFUPascalCompiler.Tokens
         }
 
         public string Value { get; }
+    }
+
+    //TODO: add charconst token realization and don't forget about lexer part and tests for this token
+    public class CharConstToken : Token
+    {
+        public CharConstToken(int line, int column, string lexeme) : base(line, column, TokenType.CharConst, lexeme)
+        {
+        }
     }
 
     public class MultilineCommentToken : Token

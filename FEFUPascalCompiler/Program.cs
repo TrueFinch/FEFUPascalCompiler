@@ -33,6 +33,12 @@ namespace FEFUPascalCompiler
             }
             
             compiler.Input.Close();
+            
+            
+            compiler.Input = new StreamReader(inputFilePath);
+            var astTree = compiler.ParseSingleExpression();
+            
+            compiler.Input.Close();
             return 0;
         }
     }

@@ -32,6 +32,7 @@ namespace FEFUPascalCompiler.Tokens
         IntegerNumber,
         DoubleNumber,
         StringConst,
+        CharConst,
 
         //Identifiers
         Ident,

@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using FEFUPascalCompiler.Tokens;
 
@@ -32,6 +29,7 @@ namespace FEFUPascalCompiler.Lexer
             DivArithmOperator,
             PowArithmOperator,
             DoubleDotOperator,
+
 //            DoubleNumberStart,
             DoubleNumber,
             ExpDoubleStart,
@@ -50,11 +48,11 @@ namespace FEFUPascalCompiler.Lexer
             SingleLineComment,
             InvalidSign,
             SignCodeStart,
-            SignCodeFinish,
+            SignCodeFinish
         }
 
 
-        internal static Token GetToken(int line, int column, string lexeme, LexerState lexerState)
+        private static Token GetToken(int line, int column, string lexeme, LexerState lexerState)
         {
             if (LexerStateTypeToTokenType.ContainsKey(lexerState))
             {
@@ -69,7 +67,7 @@ namespace FEFUPascalCompiler.Lexer
             {
                 // @formatter:off
                 {LexerState.MultiLineCommentFinish, TokenType.MultiLineComment  },
-                {LexerState.CloseSquareBracket    , TokenType.Bracket           },
+                {LexerState.CloseSquareBracket    , TokenType.CloseSquareBracket},
                 {LexerState.SingleLineComment     , TokenType.SingleLineComment },
                 {LexerState.SumArithmOperator     , TokenType.BinOperator       },
                 {LexerState.DifArithmOperator     , TokenType.BinOperator       },
@@ -78,12 +76,12 @@ namespace FEFUPascalCompiler.Lexer
                 {LexerState.PowArithmOperator     , TokenType.BinOperator       },
                 {LexerState.DoubleDotOperator     , TokenType.BinOperator       },
                 {LexerState.StringConstFinish     , TokenType.StringConst       },
-                {LexerState.OpenSquareBracket     , TokenType.Bracket           },         
+                {LexerState.OpenSquareBracket     , TokenType.OpenSquareBracket },         
                 {LexerState.SignCodeFinish        , TokenType.StringConst       },
                 {LexerState.DoubleNumber          , TokenType.DoubleNumber      },
+                {LexerState.CloseBracket          , TokenType.CloseBracket      },
+                {LexerState.OpenBracket           , TokenType.OpenBracket       },
                 {LexerState.ExpDouble             , TokenType.DoubleNumber      },
-                {LexerState.CloseBracket          , TokenType.Bracket           },
-                {LexerState.OpenBracket           , TokenType.Bracket           },
                 {LexerState.BinNumber             , TokenType.IntegerNumber     },
                 {LexerState.OctNumber             , TokenType.IntegerNumber     },
                 {LexerState.DecNumber             , TokenType.IntegerNumber     },
@@ -93,7 +91,7 @@ namespace FEFUPascalCompiler.Lexer
                 {LexerState.Colon                 , TokenType.Separator         },
                 {LexerState.Ident                 , TokenType.Ident             },
                 {LexerState.Comma                 , TokenType.Separator         },
-                {LexerState.Dot                   , TokenType.Separator         },
+                {LexerState.Dot                   , TokenType.Separator         }
                 // @formatter:on
             };
 
@@ -109,48 +107,8 @@ namespace FEFUPascalCompiler.Lexer
                 // @formatter:off
                 StateType = type ;
                 Shift     = shift;
-                // @formatter:off
+                // @formatter:on
             }
-        }
-
-        // @formatter:off
-        private int                  _line        ;
-        private int                  _column      ;
-        private BufferedStreamReader _inputStream ;
-        private Token                _currentToken;
-        private bool                 _stopLexer   ;
-        private bool                 _gotError    ;
-        // @formatter:on
-
-        public LexerDfa()
-        {
-            _statesList = TransitionsTable.InitTransitions();
-        }
-
-        public bool NextToken()
-        {
-            if ((_inputStream.EndOfStream()) || ((_currentToken == null) && (_inputStream == null)) || _stopLexer ||
-                _gotError)
-            {
-                return false;
-            }
-
-            try
-            {
-                _currentToken = Parse();
-                if (_currentToken == null)
-                {
-                    return false;
-                }
-            }
-            catch (Exception)
-            {
-                _gotError = true;
-                _stopLexer = true;
-                throw;
-            }
-
-            return true;
         }
 
         private Token Parse()
@@ -162,12 +120,12 @@ namespace FEFUPascalCompiler.Lexer
 
             while ((currState.Type != LexerState.LexemeEnd))
             {
-                if (!currState.Transitions.ContainsKey((char) _inputStream.Peek()))
+                if (!currState.Transitions.ContainsKey(_inputStream.Peek()))
                 {
-                    if ((_inputStream.Peek() != '\uffff') 
+                    if ((_inputStream.Peek() != '\uffff')
                         && (((currState.Type == LexerState.StringConstStart) && (_inputStream.Peek() != '\n'))
-                        || (currState.Type == LexerState.MultiLineCommentStart)
-                        || ((currState.Type == LexerState.SingleLineComment) && (_inputStream.Peek() != '\n'))))
+                            || (currState.Type == LexerState.MultiLineCommentStart)
+                            || ((currState.Type == LexerState.SingleLineComment) && (_inputStream.Peek() != '\n'))))
                     {
                         _line += _inputStream.Peek() == 10 ? 1 : 0;
                         _column = _inputStream.Peek() == 10 ? 1 : _column + 1;
@@ -191,7 +149,7 @@ namespace FEFUPascalCompiler.Lexer
                     continue;
                 }
 
-                var transition = currState.Transitions[(char) _inputStream.Peek()];
+                var transition = currState.Transitions[_inputStream.Peek()];
 
                 if (transition.Shift == 1)
                 {
@@ -224,7 +182,7 @@ namespace FEFUPascalCompiler.Lexer
 
             if ((lastState.Type == LexerState.StringConstStart) && currState.Type == LexerState.LexemeEnd)
             {
-                _stopLexer = _gotError = true;
+                _tokenizeFinished = _gotError = true;
                 throw new UnclosedStringConstException(
                     $"({line},{column}) Unclosed string constant lexeme {lexeme}");
             }
@@ -237,7 +195,7 @@ namespace FEFUPascalCompiler.Lexer
 
             if ((currState.Type == LexerState.LexemeEnd) && (!lastState.Terminal))
             {
-                _stopLexer = _gotError = true;
+                _tokenizeFinished = _gotError = true;
                 throw new UnexpectedSymbolException($"({_line},{_column - 1}) Unexpected symbol in lexeme {lexeme}");
             }
 
@@ -246,13 +204,41 @@ namespace FEFUPascalCompiler.Lexer
                 ? GetToken(line, column, lexeme.ToString(), currState.Type)
                 : GetToken(line, column, lexeme.ToString(), lastState.Type);
 
-            if ((_currentToken?.TokenType == TokenType.End) && (nextToken?.TokenType == TokenType.Dot))
+            if ((_currentToken?.Type == TokenType.End) && (nextToken?.Type == TokenType.Dot))
             {
-                _stopLexer = true;
+                _tokenizeFinished = true;
             }
 
             return nextToken;
         }
+
+        public bool NextToken()
+        {
+            if ((_inputStream.EndOfStream()) || ((_currentToken == null) && (_inputStream == null)) ||
+                _tokenizeFinished ||
+                _gotError)
+            {
+                return false;
+            }
+
+            try
+            {
+                _currentToken = Parse();
+                if (_currentToken == null)
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                _gotError = true;
+                _tokenizeFinished = true;
+                throw;
+            }
+
+            return true;
+        }
+
 
         public Token PeekToken()
         {
@@ -262,13 +248,31 @@ namespace FEFUPascalCompiler.Lexer
         public void InitLexer(in StreamReader input)
         {
             // @formatter:off
-            _gotError        = false;
-            _stopLexer       = false;
-            _currentToken    = null;
-            _line            = _column = 1;
-            _inputStream     = new BufferedStreamReader(in input);
-            _currentToken    = null;
+            _gotError         = false;
+            _tokenizeFinished = false;
+            _currentToken     = null;
+            _line             = _column = 1;
+            _inputStream      = new BufferedStreamReader(in input);
             // @formatter:on
         }
+
+        public bool IsReady()
+        {
+            return !_gotError && !_tokenizeFinished && _currentToken == null && _inputStream != null;
+        }
+
+        public LexerDfa()
+        {
+            _statesList = TransitionsTable.InitTransitions();
+        }
+
+        // @formatter:off
+        private BufferedStreamReader _inputStream;
+        private Token                _currentToken;
+        private int                  _line        ;
+        private int                  _column      ;
+        private bool                 _tokenizeFinished = true;
+        private bool                 _gotError    ;
+        // @formatter:on
     }
 }
