@@ -4,6 +4,9 @@ namespace FEFUPascalCompiler.Tokens
 {
     public enum TokenType
     {
+        //logic operators
+        
+        
         // arithmetic Operators
         BinOperator,
         SumOperator,
@@ -77,6 +80,8 @@ namespace FEFUPascalCompiler.Tokens
         Record,
         Repeat,
         Set,
+        Shl,
+        Shr,
         Then,
         To,
         Type,
@@ -84,6 +89,7 @@ namespace FEFUPascalCompiler.Tokens
         Var,
         While,
         With,
+        Xor,
 
         //standard names
         Abs,
@@ -162,6 +168,8 @@ namespace FEFUPascalCompiler.Tokens
             {"record", TokenType.Record},
             {"repeat", TokenType.Repeat},
             {"set", TokenType.Set},
+            {"shl", TokenType.Shl},
+            {"shr", TokenType.Shr},
             {"then", TokenType.Then},
             {"to", TokenType.To},
             {"type", TokenType.Type},
