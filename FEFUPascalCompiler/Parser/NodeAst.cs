@@ -65,7 +65,7 @@ namespace FEFUPascalCompiler.Parser
 
     public class BinOperation : NodeAst
     {
-        public BinOperation(BinOperatorToken operation, NodeAst left, NodeAst right)
+        public BinOperation(Token operation, NodeAst left, NodeAst right)
         {
             Operation = operation;
             Value = string.Format("{0} {1} {2}", left.ToString(), operation.Value, right.ToString());
@@ -84,7 +84,7 @@ namespace FEFUPascalCompiler.Parser
             return visitor.Visit(this);
         }
 
-        public BinOperatorToken Operation { get; }
+        public Token Operation { get; }
         public NodeAst Left => _children[0];
         public NodeAst Right => _children[1];
     }

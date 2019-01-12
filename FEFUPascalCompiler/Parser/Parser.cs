@@ -35,14 +35,15 @@ namespace FEFUPascalCompiler.Parser
             {
                 var operationToken = PeekToken();
                 if (operationToken == null
-                    || operationToken.Type != TokenType.SumOperator && operationToken.Type != TokenType.DifOperator)
+                    || operationToken.Type != TokenType.SumOperator && operationToken.Type != TokenType.DifOperator 
+                    && operationToken.Type != TokenType.Or && operationToken.Type != TokenType.Xor)
                 {
                     break;
                 }
 
                 NextToken();
                 var right = ParseTerm();
-                left = new BinOperation(operationToken as BinOperatorToken, left, right);
+                left = new BinOperation(operationToken, left, right);
             }
 
             return left;
@@ -56,14 +57,17 @@ namespace FEFUPascalCompiler.Parser
             {
                 var operationToken = PeekToken();
                 if (operationToken == null
-                    || operationToken.Type != TokenType.MulOperator && operationToken.Type != TokenType.DivOperator)
+                    || operationToken.Type != TokenType.MulOperator 
+                    && operationToken.Type != TokenType.DivOperator && operationToken.Type != TokenType.And 
+                    && operationToken.Type != TokenType.Mod && operationToken.Type != TokenType.Div
+                    && operationToken.Type != TokenType.Shl && operationToken.Type != TokenType.Shr)
                 {
                     break;
                 }
 
                 NextToken();
                 var right = ParseFactor();
-                left = new BinOperation(operationToken as BinOperatorToken, left, right);
+                left = new BinOperation(operationToken, left, right);
             }
 
             return left;
@@ -117,15 +121,16 @@ namespace FEFUPascalCompiler.Parser
             }
 
             if (assignToken.Type != TokenType.SimpleAssignOperator
-                || assignToken.Type != TokenType.SumAssignOperator || assignToken.Type != TokenType.DifAssignOperator
-                || assignToken.Type != TokenType.MulAssignOperator || assignToken.Type != TokenType.DivAssignOperator)
+                && assignToken.Type != TokenType.SumAssignOperator && assignToken.Type != TokenType.DifAssignOperator
+                && assignToken.Type != TokenType.MulAssignOperator && assignToken.Type != TokenType.DivAssignOperator)
             {
                 //some parser exception
+                return null;
             }
 
             NextToken();
-            var rigth = ParseExpression();
-            return new AssignStatement(assignToken as AssignToken, left, rigth);
+            var right = ParseExpression();
+            return new AssignStatement(assignToken as AssignToken, left, right);
         }
 
         public Parser(PeekToken peekToken, NextToken nextToken, PeekAndNext peekAndNext)

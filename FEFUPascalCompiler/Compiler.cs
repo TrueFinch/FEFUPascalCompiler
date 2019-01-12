@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Threading;
 using FEFUPascalCompiler.Lexer;
 using FEFUPascalCompiler.Tokens;
 using FEFUPascalCompiler.Parser;
