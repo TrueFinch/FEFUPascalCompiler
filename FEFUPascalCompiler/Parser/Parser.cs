@@ -77,12 +77,15 @@ namespace FEFUPascalCompiler.Parser
             {
                 case TokenType.Ident:
                 {
-                    return new Variable(token as IdentToken);
+                    return new Identifier(token as IdentToken);
                 }
                 case TokenType.IntegerNumber:
+                {
+                    return new ConstIntegerLiteral(token as IntegerNumberToken);
+                }
                 case TokenType.DoubleNumber:
                 {
-                    return new ConstLiteral(token);
+                    return new ConstDoubleLiteral(token as DoubleNumberToken);
                 }
                 case TokenType.OpenBracket:
                 {
