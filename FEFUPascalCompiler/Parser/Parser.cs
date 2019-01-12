@@ -19,7 +19,7 @@ namespace FEFUPascalCompiler.Parser
         public NodeAst ParseSingleExpression()
         {
             NextToken(); // skipping null token so next call will return not null token if it's exist
-            return ParseExpression();
+            return ParseAssingStatement();
         }
 
         public NodeAst Parse()
@@ -105,6 +105,27 @@ namespace FEFUPascalCompiler.Parser
                     return null;
                 }
             }
+        }
+
+        private NodeAst ParseAssingStatement()
+        {
+            var left = ParseExpression();
+            var assignToken = PeekToken();
+            if (assignToken == null)
+            {
+                return left;
+            }
+
+            if (assignToken.Type != TokenType.SimpleAssignOperator
+                || assignToken.Type != TokenType.SumAssignOperator || assignToken.Type != TokenType.DifAssignOperator
+                || assignToken.Type != TokenType.MulAssignOperator || assignToken.Type != TokenType.DivAssignOperator)
+            {
+                //some parser exception
+            }
+
+            NextToken();
+            var rigth = ParseExpression();
+            return new AssignStatement(assignToken as AssignToken, left, rigth);
         }
 
         public Parser(PeekToken peekToken, NextToken nextToken, PeekAndNext peekAndNext)

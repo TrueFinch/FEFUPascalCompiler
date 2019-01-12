@@ -8,9 +8,9 @@ namespace FEFUPascalCompiler.Parser
     public abstract class NodeAst
     {
         public override string ToString() => Value;
-        
+
         public abstract T Accept<T>(IAstVisitor<T> visitor);
-        
+
         protected string Value { get; set; }
         protected List<NodeAst> _children = new List<NodeAst>();
     }
@@ -27,7 +27,7 @@ namespace FEFUPascalCompiler.Parser
         {
             return visitor.Visit(this);
         }
-        
+
         public IdentToken Token { get; }
     }
 
@@ -38,12 +38,12 @@ namespace FEFUPascalCompiler.Parser
             Token = token;
             Value = token.Value.ToString();
         }
-        
+
         public override T Accept<T>(IAstVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
-        
+
         public IntegerNumberToken Token { get; }
     }
 
@@ -54,21 +54,27 @@ namespace FEFUPascalCompiler.Parser
             Token = token;
             Value = token.Value.ToString(new NumberFormatInfo {NumberDecimalSeparator = "."});
         }
-        
+
         public override T Accept<T>(IAstVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
-        
+
         public DoubleNumberToken Token { get; }
     }
-    
+
     public class BinOperation : NodeAst
     {
-        public BinOperation(BinOperatorToken oper, NodeAst left, NodeAst right)
+        public BinOperation(BinOperatorToken operation, NodeAst left, NodeAst right)
         {
-            Oper = oper;
-            Value = string.Format("{0} {1} {2}", left.ToString(), oper.Value, right.ToString());
+            Operation = operation;
+            Value = string.Format("{0} {1} {2}", left.ToString(), operation.Value, right.ToString());
+            _children.Add(left);
+            _children.Add(right);
+        }
+
+        protected BinOperation(NodeAst left, NodeAst right)
+        {
             _children.Add(left);
             _children.Add(right);
         }
@@ -77,9 +83,24 @@ namespace FEFUPascalCompiler.Parser
         {
             return visitor.Visit(this);
         }
-        
-        public BinOperatorToken Oper {get;}
-        public NodeAst Left {get=>_children[0];}
-        public NodeAst Right {get=>_children[1];}
+
+        public BinOperatorToken Operation { get; }
+        public NodeAst Left => _children[0];
+        public NodeAst Right => _children[1];
+    }
+
+    public class AssignStatement : BinOperation
+    {
+        public AssignStatement(AssignToken operation, NodeAst left, NodeAst right) : base(left, right)
+        {
+            Operation = operation;
+            Value = string.Format("{0} {1} {2}", left.ToString(), operation.Value, right.ToString());
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+        public new AssignToken Operation { get; }
     }
 }

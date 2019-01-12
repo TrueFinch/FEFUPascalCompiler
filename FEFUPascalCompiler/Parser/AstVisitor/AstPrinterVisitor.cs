@@ -24,7 +24,15 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
 
         public AstPrinterNode Visit(BinOperation node)
         {
-            var printer = new AstPrinterNode(node.Oper.Value);
+            var printer = new AstPrinterNode(node.Operation.Value);
+            printer.AddChild(node.Left.Accept(this));
+            printer.AddChild(node.Right.Accept(this));
+            return printer;
+        }
+
+        public AstPrinterNode Visit(AssignStatement node)
+        {
+            var printer = new AstPrinterNode(node.Operation.Value);
             printer.AddChild(node.Left.Accept(this));
             printer.AddChild(node.Right.Accept(this));
             return printer;

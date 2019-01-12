@@ -6,5 +6,6 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
         T Visit(ConstIntegerLiteral node);
         T Visit(ConstDoubleLiteral node);
         T Visit(BinOperation node);
+        T Visit(AssignStatement node);
     }
 }
