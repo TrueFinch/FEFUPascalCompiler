@@ -1,0 +1,73 @@
+//*====================================================================================================================*
+//#      /$$$$$$$                                        /$$                                                           #
+//#     | $$__  $$                                      | $$                                                           #
+//#     | $$  \ $$/$$$$$$   /$$$$$$$  /$$$$$$$  /$$$$$$ | $$                                                           #
+//#     | $$$$$$$/____  $$ /$$_____/ /$$_____/ |____  $$| $$                                                           #
+//#     | $$____/ /$$$$$$$|  $$$$$$ | $$        /$$$$$$$| $$                                                           #
+//#     | $$     /$$__  $$ \____  $$| $$       /$$__  $$| $$                                                           #
+//#     | $$    |  $$$$$$$ /$$$$$$$/|  $$$$$$$|  $$$$$$$| $$                                                           #
+//#     |__/   /$$$$$$___/|_______/  \_______//$$______/|__/                   /$$$$$$                                 #
+//#           /$$__  $$                      | $$                             |_  $$_/                                 #
+//#          | $$  \__/ /$$   /$$ /$$$$$$$  /$$$$$$   /$$$$$$  /$$   /$$        | $$   /$$$$$$$                        #
+//#          |  $$$$$$ | $$  | $$| $$__  $$|_  $$_/  |____  $$|  $$ /$$/        | $$  | $$__  $$                       #
+//#           \____  $$| $$  | $$| $$  \ $$  | $$     /$$$$$$$ \  $$$$/         | $$  | $$  \ $$                       #
+//#           /$$  \ $$| $$  | $$| $$  | $$  | $$ /$$/$$__  $$  >$$  $$         | $$  | $$  | $$                       #
+//#          |  $$$$$$/|  $$$$$$$| $$  | $$  |  $$$$/  $$$$$$$ /$$/\  $$       /$$$$$$| $$  | $$                       #
+//#           \______/  \____  $$|__/  |__/   \___/  \_______/|__/  \__/      |______/|__/  |__/                       #
+//#                     /$$  | $$                                                                                      #
+//#                    |  $$$$$$/                                                                                      #
+//# /$$$$$$$$           /$$____/                          /$$                 /$$       /$$$$$$$  /$$   /$$ /$$$$$$$$  #
+//#| $$_____/          | $$                              | $$                | $$      | $$__  $$| $$$ | $$| $$_____/  #
+//#| $$      /$$   /$$/$$$$$$    /$$$$$$  /$$$$$$$   /$$$$$$$  /$$$$$$   /$$$$$$$      | $$  \ $$| $$$$| $$| $$        #
+//#| $$$$$  |  $$ /$$/_  $$_/   /$$__  $$| $$__  $$ /$$__  $$ /$$__  $$ /$$__  $$      | $$$$$$$ | $$ $$ $$| $$$$$     #
+//#| $$__/   \  $$$$/  | $$    | $$$$$$$$| $$  \ $$| $$  | $$| $$$$$$$$| $$  | $$      | $$__  $$| $$  $$$$| $$__/     #
+//#| $$       >$$  $$  | $$ /$$| $$_____/| $$  | $$| $$  | $$| $$_____/| $$  | $$      | $$  \ $$| $$\  $$$| $$        #
+//#| $$$$$$$$/$$/\  $$ |  $$$$/|  $$$$$$$| $$  | $$|  $$$$$$$|  $$$$$$$|  $$$$$$$      | $$$$$$$/| $$ \  $$| $$        #
+//#|________/__/  \__/  \___/   \_______/|__/  |__/ \_______/ \_______/ \_______/      |_______/ |__/  \__/|__/        #
+//*====================================================================================================================*   
+//# RBNF RULES:                                                                                                        #
+//#  1.     ::=    -- equal by definition                  ;                                                           #
+//#  2.      |     -- or (alternative)                     ;                                                           #
+//#  3.      .     -- end of the rule                      ;                                                           #
+//#  4.     [X]    -- a zero or one entry of X             ;                                                           #
+//#  5.     {X}    -- zero and more entries of X           ;                                                           #
+//#  6.    (X|Y)   -- group: or X, or Y                    ;                                                           #
+//#  7.    "XYZ"   -- terminal sign XYZ                    ;                                                           #
+//#  8. <Metaname> -- not terminal sign with name Metaname ;                                                           #                           
+//*====================================================================================================================*                                                                                                                             
+                                                                                                                                     
+<program> ::= <program_header> ";" <main_block> "." 
+    <program_header> ::= "program" <name> ";" 
+        <name> ::= <letter>[(<letter>|<digit>)] 
+    <main_block> ::= {<declaration_part>} <statement_part> 
+        <declaration_part> ::= (<const_def_part>|<type_def_part>|<variable_def_part>|<proc_and_func_def_part>) 
+            <const_def_part> ::= "const" <const_def> {<const_def>} 
+                <const_def> ::= <ident> "=" <type> ";" 
+            <type_def_part> ::= "type" <type_def> {<type_def>} 
+                <type_def> ::= <ident> "=" <type> ";" 
+                    <type> ::= <ident> | <array_type>
+                        <array_type> ::= "array [" <int_number> ".." <int_number> "] of" (<type>|<array_type>)
+            <variable_def_part> ::= "var" <variable_def> {<variable_def>} 
+                <variable_def> ::= <ident_list> ":" <type> | <ident> ":" <type> "=" <expression>
+                    <ident_list> ::= <ident> {"," <ident>}
+            <proc_and_func_def_part> ::= {(<proc_def>|<func_def>)}
+                <proc_def> ::= <proc_header> <subroutine_block>
+private             <proc_header> ::= "procedure" <ident> <formal_param_list> ";"
+                        <formal_param_list> ::= "(" [<formal_param_section> {";" <formal_param_section>}] ")"
+                            <formal_param_section> ::= [<modifier>] <parameter>
+                                <modifier> ::= "var"|"const"|"out"
+                                <parameter> ::= <ident_list> ":" <param_type>
+                                    <param_type> ::= <simple_type> | <conformant_array>
+                                        <conformant_array> ::= "array of" (<simple_type>|<conformant_array>)
+                    <subroutine_block> ::= <block> | "forward" ";"
+                <func_def> ::= <func_header>
+                    <func_header> ::= "function" <ident> <formal_param_list> ":" <simple_type>
+        <statement_part> ::= ?????
+<type> ::= <simple_type>
+<simple_type> ::= <ident>
+<ident> ::= <letter> {<letter>|<digit>}
+<letter> ::= "_"|"A"|"B"|"C"|"D"|"E"|"F"|"G"|"H"|"I"|"J"|"K"|"L"|"M"|"N"|"O"|"P"|"Q"|"R"|"S"|"T"|"U"|"V"|"W"|"X"|"Y"|
+             "Z"|"a"|"b"|"c"|"d"|"e"|"f"|"g"|"h"|"i"|"j"|"k"|"l"|"m"|"n"|"o"|"p"|"q"|"r"|"s"|"t"|"u"|"v"|"w"|"x"|"y"|
+             "z" 
+<int_number> ::= <digit> {<digit>}
+<digit> ::= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9" 
