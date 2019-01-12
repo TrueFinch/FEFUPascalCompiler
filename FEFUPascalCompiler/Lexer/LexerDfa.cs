@@ -77,10 +77,10 @@ namespace FEFUPascalCompiler.Lexer
                 {LexerState.DoubleDotOperator     , TokenType.BinOperator       },
                 {LexerState.StringConstFinish     , TokenType.StringConst       },
                 {LexerState.OpenSquareBracket     , TokenType.OpenSquareBracket },         
-                {LexerState.SignCodeFinish        , TokenType.StringConst       },
+//                {LexerState.SignCodeFinish        , TokenType.StringConst       },
                 {LexerState.DoubleNumber          , TokenType.DoubleNumber      },
-                {LexerState.CloseBracket          , TokenType.CloseBracket      },
-                {LexerState.OpenBracket           , TokenType.OpenBracket       },
+                {LexerState.CloseBracket          , TokenType.Separator         },
+                {LexerState.OpenBracket           , TokenType.Separator         },
                 {LexerState.ExpDouble             , TokenType.DoubleNumber      },
                 {LexerState.BinNumber             , TokenType.IntegerNumber     },
                 {LexerState.OctNumber             , TokenType.IntegerNumber     },
@@ -91,7 +91,8 @@ namespace FEFUPascalCompiler.Lexer
                 {LexerState.Colon                 , TokenType.Separator         },
                 {LexerState.Ident                 , TokenType.Ident             },
                 {LexerState.Comma                 , TokenType.Separator         },
-                {LexerState.Dot                   , TokenType.Separator         }
+                {LexerState.Dot                   , TokenType.Separator         },
+                {LexerState.SignCodeFinish        , TokenType.CharConst         },
                 // @formatter:on
             };
 
@@ -199,6 +200,8 @@ namespace FEFUPascalCompiler.Lexer
                 throw new UnexpectedSymbolException($"({_line},{_column - 1}) Unexpected symbol in lexeme {lexeme}");
             }
 
+            
+            
             var nextToken = (currState.Type == LexerState.SingleLineComment)
                             || (currState.Type == LexerState.MultiLineCommentFinish)
                 ? GetToken(line, column, lexeme.ToString(), currState.Type)
