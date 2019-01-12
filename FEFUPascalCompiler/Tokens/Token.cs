@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using FEFUPascalCompiler.Lexer;
 
+//all compilers are brothers, but you are adopted 
+
 namespace FEFUPascalCompiler.Tokens
 {
     public abstract class Token
@@ -206,7 +208,7 @@ namespace FEFUPascalCompiler.Tokens
         {
             lexeme = lexeme[0] == '\'' ? lexeme.Substring(1) : lexeme;
             lexeme = lexeme[lexeme.Length - 1] == '\'' ? lexeme.Substring(0, lexeme.Length - 1) : lexeme;
-            
+
             for (int nextSharpIndex = lexeme.IndexOf("#", StringComparison.Ordinal);
                 nextSharpIndex >= 0;
                 nextSharpIndex = lexeme.IndexOf("#", StringComparison.Ordinal))
@@ -221,7 +223,7 @@ namespace FEFUPascalCompiler.Tokens
             }
 
             lexeme = lexeme.Replace("''", "'");
-            
+
             return lexeme;
         }
 
@@ -244,7 +246,24 @@ namespace FEFUPascalCompiler.Tokens
     {
         public CharConstToken(int line, int column, string lexeme) : base(line, column, TokenType.CharConst, lexeme)
         {
+            Value = SetValue(lexeme);
         }
+
+        private string SetValue(string lexeme)
+        {
+            if (lexeme[0] == '\'')
+            {
+                return lexeme;
+            }
+            return ((char) Convert.ToUInt32(lexeme.Substring(1))).ToString();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + $"{Value,-30}" + '|';
+        }
+
+        public string Value { get; }
     }
 
     public class MultilineCommentToken : Token
