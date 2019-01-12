@@ -16,6 +16,8 @@ namespace FEFUPascalCompiler.Tokens
         public TokenType Type { get; protected set; }
 
         public string Lexeme { get; }
+        
+        public string Value { get; protected set; }
 
         protected Token(int line, int column, string lexeme)
         {
@@ -55,7 +57,8 @@ namespace FEFUPascalCompiler.Tokens
                 {TokenType.Bracket, (line, column, lexeme) => new BracketToken(line, column, lexeme)}
             };
     }
-
+    
+    //TODO: change int64 ti int32
     public class IntegerNumberToken : Token
     {
         public IntegerNumberToken(int line, int column, string lexeme)
@@ -91,7 +94,7 @@ namespace FEFUPascalCompiler.Tokens
             return base.ToString() + $"{Value,-30}" + '|';
         }
 
-        public long Value { get; }
+        public new long Value { get; }
 
         //base of the number system
         private static Dictionary<char, int> basis = new Dictionary<char, int>
@@ -101,7 +104,8 @@ namespace FEFUPascalCompiler.Tokens
             {'9', 10}
         };
     }
-
+    
+    //TODO: change double to float
     public class DoubleNumberToken : Token
     {
         public DoubleNumberToken(int line, int column, string lexeme)
@@ -132,7 +136,7 @@ namespace FEFUPascalCompiler.Tokens
             return base.ToString() + $"{Value,-30}" + '|';
         }
 
-        public double Value { get; }
+        public new double Value { get; }
     }
 
     public class IdentToken : Token
@@ -150,8 +154,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     public class BinOperatorToken : Token
@@ -166,8 +168,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     public class AssignToken : Token
@@ -182,8 +182,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     public class SeparatorToken : Token
@@ -198,8 +196,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     public class StringConstToken : Token
@@ -237,8 +233,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     //TODO: add charconst token realization and don't forget about lexer part and tests for this token
@@ -262,8 +256,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     public class MultilineCommentToken : Token
@@ -278,8 +270,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     public class SingleLineCommentToken : Token
@@ -294,8 +284,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     public class BracketToken : Token
@@ -310,7 +298,5 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 }
