@@ -4,7 +4,14 @@ namespace FEFUPascalCompiler.Tokens
 {
     public enum TokenType
     {
+        //TODO: add tests for comparing_operators operators
         //logic operators
+        NotEqualOperator,
+        EqualOperator,
+        LessOperator,
+        LessOrEqualOperator,
+        GreaterOperator,
+        GreaterOrEqualOperator,
         
         
         // arithmetic Operators
@@ -13,7 +20,6 @@ namespace FEFUPascalCompiler.Tokens
         DifOperator,
         MulOperator,
         DivOperator,
-        PowOperator,
         DoubleDotOperator,
 
         //Assign operators
@@ -228,7 +234,6 @@ namespace FEFUPascalCompiler.Tokens
             {"-", TokenType.DifOperator},
             {"*", TokenType.MulOperator},
             {"/", TokenType.DivOperator},
-            {"**", TokenType.PowOperator},
             {"..", TokenType.DoubleDotOperator},
             {":=", TokenType.SimpleAssignOperator},
             {"+=", TokenType.SumAssignOperator},
@@ -243,7 +248,12 @@ namespace FEFUPascalCompiler.Tokens
             {")", TokenType.CloseBracket},
             {"[", TokenType.OpenSquareBracket},
             {"]", TokenType.CloseSquareBracket},
-//            {";", TokenType.Semicolon},
+            {"<>", TokenType.NotEqualOperator},
+            {"<", TokenType.LessOperator},
+            {"<=", TokenType.LessOrEqualOperator},
+            {">=", TokenType.GreaterOrEqualOperator},
+            {">", TokenType.GreaterOperator},
+            {"=", TokenType.EqualOperator},
         };
     }
 }

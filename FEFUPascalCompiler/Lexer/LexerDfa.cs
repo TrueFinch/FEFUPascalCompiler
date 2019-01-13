@@ -29,7 +29,14 @@ namespace FEFUPascalCompiler.Lexer
             DivArithmOperator,
             PowArithmOperator,
             DoubleDotOperator,
-
+            
+            NotEqualOperator,
+            EqualOperator,
+            LessOperator,
+            LessOrEqualOperator,
+            GreaterOperator,
+            GreaterOrEqualOperator,
+            
 //            DoubleNumberStart,
             DoubleNumber,
             ExpDoubleStart,

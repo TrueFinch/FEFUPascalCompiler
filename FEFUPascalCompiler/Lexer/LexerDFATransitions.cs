@@ -94,47 +94,96 @@ namespace FEFUPascalCompiler.Lexer
                 new Dictionary<LexerState, Func<Node, Node?>>
                 {
                     // @formatter:off
-                    {LexerState.MultiLineCommentFinish, InitMultiLineCommentFinishStateNode},
-                    {LexerState.MultiLineCommentStart , InitMultiLineCommentStartStateNode },
-                    {LexerState.CloseSquareBracket    , InitCloseSquareBracketStateNode    },
-                    {LexerState.OpenSquareBracket     , InitOpenSquareBracketStateNode     },
-//                    {LexerState.DoubleNumberStart     , InitDoubleNumberStartStateNode     },
-                    {LexerState.StringConstFinish     , InitStringConstFinishStateNode     },
-                    {LexerState.SingleLineComment     , InitSingleLineCommentStateNode     },
-                    {LexerState.DoubleDotOperator     , InitDoubleDotOperatorStateNode     },
-                    {LexerState.SumArithmOperator     , InitSumArithOperatorStateNode      },
-                    {LexerState.DifArithmOperator     , InitDifArithOperatorStateNode      },
-                    {LexerState.MulArithmOperator     , InitMulArithOperatorStateNode      },
-                    {LexerState.DivArithmOperator     , InitDivArithOperatorStateNode      },
-                    {LexerState.PowArithmOperator     , InitPowArithOperatorStateNode      },
-                    {LexerState.StringConstStart      , InitStringConstStartStateNode      },
-                    {LexerState.ExpDoubleStart        , InitExpDoubleStartStateNode        },
-                    {LexerState.ExpDoubleMinus        , InitExpDoubleMinusStateNode        },
-                    {LexerState.ExpDouble             , InitExpDoubleStateNode             },
-                    {LexerState.BinNumberStart        , InitBinNumberStartStateNode        },
-                    {LexerState.OctNumberStart        , InitOctNumberStartStateNode        },
-                    {LexerState.HexNumberStart        , InitHexNumberStartStateNode        },
-                    {LexerState.SignCodeFinish        , InitSignCodeFinishStateNode        },
-                    {LexerState.SignCodeStart         , InitSignCodeStartStateNode         },
-                    {LexerState.DoubleNumber          , InitDoubleNumberStateNode          },
-                    {LexerState.CloseBracket          , InitCloseBracketStateNode          },
-                    {LexerState.OpenBracket           , InitOpenBracketStateNode           },
-                    {LexerState.InvalidSign           , InitInvalidSignStateNode           },
-                    {LexerState.BinNumber             , InitBinNumberStateNode             },
-                    {LexerState.OctNumber             , InitOctNumberStateNode             },
-                    {LexerState.HexNumber             , InitHexNumberStateNode             },
-                    {LexerState.DecNumber             , InitDecNumberStateNode             },
-                    {LexerState.SemiColon             , InitSemiColonStateNode             },
-                    {LexerState.LexemeEnd             , InitLexemeEndStateNode             },
-                    {LexerState.Assign                , InitAssignStateNode                },
-                    {LexerState.Start                 , InitStartStateNode                 },
-                    {LexerState.Ident                 , InitIdentStateNode                 },
-                    {LexerState.Colon                 , InitColonStateNode                 },
-                    {LexerState.Comma                 , InitCommaStateNode                 },
-                    {LexerState.Dot                   , InitDotStateNode                   },
+                    {LexerState.MultiLineCommentFinish     , InitMultiLineCommentFinishStateNode     },
+                    {LexerState.GreaterOrEqualOperator     , InitGreaterOrEqualOperatorStateNode     },
+                    {LexerState.MultiLineCommentStart      , InitMultiLineCommentStartStateNode      },
+                    {LexerState.LessOrEqualOperator        , InitLessOrEqualOperatorStateNode        },
+                    {LexerState.CloseSquareBracket         , InitCloseSquareBracketStateNode         },
+                    {LexerState.OpenSquareBracket          , InitOpenSquareBracketStateNode          },
+//                    {LexerState.DoubleNumberStart          , InitDoubleNumberStartStateNode          },
+                    {LexerState.StringConstFinish          , InitStringConstFinishStateNode          },
+                    {LexerState.SingleLineComment          , InitSingleLineCommentStateNode          },
+                    {LexerState.DoubleDotOperator          , InitDoubleDotOperatorStateNode          },
+                    {LexerState.SumArithmOperator          , InitSumArithOperatorStateNode           },
+                    {LexerState.DifArithmOperator          , InitDifArithOperatorStateNode           },
+                    {LexerState.MulArithmOperator          , InitMulArithOperatorStateNode           },
+                    {LexerState.DivArithmOperator          , InitDivArithOperatorStateNode           },
+                    {LexerState.PowArithmOperator          , InitPowArithOperatorStateNode           },
+                    {LexerState.StringConstStart           , InitStringConstStartStateNode           },
+                    {LexerState.NotEqualOperator           , InitNotEqualOperatorStateNode           },
+                    {LexerState.GreaterOperator            , InitGreaterOperatorStateNode            },
+                    {LexerState.BinNumberStart             , InitBinNumberStartStateNode             },
+                    {LexerState.OctNumberStart             , InitOctNumberStartStateNode             },
+                    {LexerState.HexNumberStart             , InitHexNumberStartStateNode             },
+                    {LexerState.SignCodeFinish             , InitSignCodeFinishStateNode             },
+                    {LexerState.ExpDoubleStart             , InitExpDoubleStartStateNode             },
+                    {LexerState.ExpDoubleMinus             , InitExpDoubleMinusStateNode             },
+                    {LexerState.EqualOperator              , InitEqualOperatorStateNode              },
+                    {LexerState.SignCodeStart              , InitSignCodeStartStateNode              },
+                    {LexerState.LessOperator               , InitLessOperatorStateNode               },
+                    {LexerState.DoubleNumber               , InitDoubleNumberStateNode               },
+                    {LexerState.CloseBracket               , InitCloseBracketStateNode               },
+                    {LexerState.OpenBracket                , InitOpenBracketStateNode                },
+                    {LexerState.InvalidSign                , InitInvalidSignStateNode                },
+                    {LexerState.ExpDouble                  , InitExpDoubleStateNode                  },
+                    {LexerState.BinNumber                  , InitBinNumberStateNode                  },
+                    {LexerState.OctNumber                  , InitOctNumberStateNode                  },
+                    {LexerState.HexNumber                  , InitHexNumberStateNode                  },
+                    {LexerState.DecNumber                  , InitDecNumberStateNode                  },
+                    {LexerState.SemiColon                  , InitSemiColonStateNode                  },
+                    {LexerState.LexemeEnd                  , InitLexemeEndStateNode                  },
+                    {LexerState.Assign                     , InitAssignStateNode                     },
+                    {LexerState.Start                      , InitStartStateNode                      },
+                    {LexerState.Ident                      , InitIdentStateNode                      },
+                    {LexerState.Colon                      , InitColonStateNode                      },
+                    {LexerState.Comma                      , InitCommaStateNode                      },
+                    {LexerState.Dot                        , InitDotStateNode                        },
                     // @formatter:on
                 };
 
+            private static Node? InitNotEqualOperatorStateNode(Node node)
+            {
+                return node.Type != LexerState.NotEqualOperator ? (Node?) null : node;
+            }
+            
+            private static Node? InitEqualOperatorStateNode(Node node)
+            {
+                return node.Type != LexerState.EqualOperator ? (Node?) null : node;
+            } 
+            
+            private static Node? InitLessOrEqualOperatorStateNode(Node node)
+            {
+                return node.Type != LexerState.LessOrEqualOperator ? (Node?) null : node;
+            }
+            
+            private static Node? InitGreaterOrEqualOperatorStateNode(Node node)
+            {
+                return node.Type != LexerState.GreaterOrEqualOperator ? (Node?) null : node;
+            }
+            
+            private static Node? InitLessOperatorStateNode(Node node)
+            {
+                if (node.Type != LexerState.LessOperator)
+                {
+                    return null;
+                }
+                
+                node.Transitions['>'] = new Pair<LexerState, int>(LexerState.NotEqualOperator, 1);
+                node.Transitions['='] = new Pair<LexerState, int>(LexerState.LessOrEqualOperator, 1);
+                return node;
+            }
+            
+            private static Node? InitGreaterOperatorStateNode(Node node)
+            {
+                if (node.Type != LexerState.GreaterOperator)
+                {
+                    return null;
+                }
+                
+                node.Transitions['='] = new Pair<LexerState, int>(LexerState.GreaterOrEqualOperator, 1);
+                return node;
+            }
+            
             private static readonly string IdentCharacters = "_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
             private static readonly string DecDigits = "0123456789";
@@ -170,14 +219,16 @@ namespace FEFUPascalCompiler.Lexer
                 node.Transitions.TryAdd('*',  new Pair<LexerState, int>(LexerState.MulArithmOperator     , 1));
                 node.Transitions.TryAdd('/',  new Pair<LexerState, int>(LexerState.DivArithmOperator     , 1));
                 node.Transitions.TryAdd('\'', new Pair<LexerState, int>(LexerState.StringConstStart      , 1));
+                node.Transitions.TryAdd('>',  new Pair<LexerState, int>(LexerState.GreaterOperator       , 1));
                 node.Transitions.TryAdd('%',  new Pair<LexerState, int>(LexerState.BinNumberStart        , 1));
                 node.Transitions.TryAdd('&',  new Pair<LexerState, int>(LexerState.OctNumberStart        , 1));
                 node.Transitions.TryAdd('$',  new Pair<LexerState, int>(LexerState.HexNumberStart        , 1));
+                node.Transitions.TryAdd('=',  new Pair<LexerState, int>(LexerState.EqualOperator         , 1));
                 node.Transitions.TryAdd('#',  new Pair<LexerState, int>(LexerState.SignCodeStart         , 1));
+                node.Transitions.TryAdd('<',  new Pair<LexerState, int>(LexerState.LessOperator          , 1));
                 node.Transitions.TryAdd(')',  new Pair<LexerState, int>(LexerState.CloseBracket          , 1));
                 node.Transitions.TryAdd('(',  new Pair<LexerState, int>(LexerState.OpenBracket           , 1));
                 node.Transitions.TryAdd(';',  new Pair<LexerState, int>(LexerState.SemiColon             , 1));
-                node.Transitions.TryAdd('=',  new Pair<LexerState, int>(LexerState.Assign                , 1));
                 node.Transitions.TryAdd(':',  new Pair<LexerState, int>(LexerState.Colon                 , 1));
                 node.Transitions.TryAdd(',',  new Pair<LexerState, int>(LexerState.Comma                 , 1));
                 node.Transitions.TryAdd('.',  new Pair<LexerState, int>(LexerState.Dot                   , 1));
