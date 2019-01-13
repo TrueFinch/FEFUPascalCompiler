@@ -125,30 +125,24 @@ namespace FEFUPascalCompiler.Parser
 
         private List<AstNode> ParseIndexRanges()
         {
-            var indexRange = ParseIndexRange();
+            var indexRanges = new List<AstNode> {ParseIndexRange()};
 
-            if (indexRange == null)
+            if (indexRanges[0] == null)
             {
                 //some parser exception -- need at list one list range here
                 return null;
             }
-
-            var indexRanges = new List<AstNode>();
-            indexRanges.Add(indexRange);
-
-            do
+            
+            while (PeekToken().Type == TokenType.Comma)
             {
-                var token = PeekToken();
-                if (token.Type != TokenType.Comma)
+                var indexRange = ParseIndexRange();
+                if (indexRange == null)
                 {
-                    //some parser exception -- no comma (and no hommo)
-                    return null;
+                    //exception unexpected lexeme
                 }
-
-                indexRange = ParseIndexRange();
-                if (indexRange == null) break;
                 indexRanges.Add(indexRange);
-            } while (true);
+                NextToken();
+            }
 
             return indexRanges;
         }
@@ -197,12 +191,58 @@ namespace FEFUPascalCompiler.Parser
             }
 
             NextToken();
-            return RecordType(fieldList);
+            return new RecordType(fieldList);
         }
 
-        private AstNode ParseFieldsList()
+        private List<AstNode> ParseFieldsList()
         {
+            var fieldsList = new List<AstNode> {ParseFieldSection()};
+
+            if (fieldsList[0] == null)
+            {
+                //some parser exception -- need at list one list range here
+                return null;
+            }
             
+            while (PeekToken().Type == TokenType.Comma)
+            {
+                var fieldSection = ParseFieldSection();
+                if (fieldSection == null)
+                {
+                    //exception unexpected lexeme
+                }
+                fieldsList.Add(fieldSection);
+                NextToken();
+            }
+
+            return fieldsList;
+        }
+
+        private AstNode ParseFieldSection()
+        {
+            var identList = ParseIdentList();
+            if (identList == null)
+            {
+                //exception -- empty ident list
+                return null;
+            }
+
+            var token = PeekToken();
+            if (token.Type != TokenType.Colon)
+            {
+                //exception -- no double dot
+                return null;
+            }
+
+            NextToken();
+            var fieldsType = ParseType();
+            if (fieldsType == null)
+            {
+                //exception -- wrong range bounds 
+                return null;
+            }
+
+            return new FieldSection(token, identList, fieldsType);
         }
 
         private AstNode ParsePointerType()

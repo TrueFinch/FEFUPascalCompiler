@@ -223,7 +223,7 @@ namespace FEFUPascalCompiler.Parser
                 {
                     return ParseIdent();
                 }
-                case TokenType.IntegerNumber:
+                case TokenType.DecIntegerNumber:
                 {
                     NextToken();
                     return new ConstIntegerLiteral(token as IntegerNumberToken);
@@ -283,20 +283,14 @@ namespace FEFUPascalCompiler.Parser
             {
                 //exception -- this is not ident list
             }
-
-            var token = PeekToken();
-            if (token.Type != TokenType.Comma)
-            {
-                return identList[0]; //list with only one element = just ident
-            }
-
-            NextToken();
+            
             while (PeekToken().Type == TokenType.Comma)
             {
                 var ident = ParseIdent();
                 if (ident == null)
                 {
                     //exception unexpected lexeme
+                    return null;
                 }
                 identList.Add(ident);
                 NextToken();

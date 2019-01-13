@@ -64,4 +64,24 @@ namespace FEFUPascalCompiler.Parser
 
         public List<AstNode> FieldsList => _children;
     }
+
+    public class FieldSection : AstNode
+    {
+        public FieldSection(Token colon, AstNode identList, AstNode identsType) : base(AstNodeType.FieldSection)
+        {
+            Colon = colon;
+            _children.Add(identList);
+            _children.Add(identsType);
+            Value = colon.ToString();
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            throw new System.NotImplementedException();
+        }
+        
+        public Token Colon { get; }
+        public AstNode Idents => _children[0];
+        public AstNode IdentsType => _children[1];
+    }
 }
