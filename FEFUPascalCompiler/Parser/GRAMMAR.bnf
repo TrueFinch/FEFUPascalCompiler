@@ -91,8 +91,8 @@
         <index_ranges> ::= <index_range> {"," <index_range>}
             <index_range> ::= <dec_int> ".." <dec_int>
             
-    <record_type> ::= "record" [<field_list>] "end"
-        <field_list> ::= <field_section> {";" <field_section>}
+    <record_type> ::= "record" [<fields_list>] "end"
+        <fields_list> ::= <field_section> {";" <field_section>}
             <field_section> ::= <ident_list> ":" <type>
 
     <pointer_type> ::= "^" <simple_type>

@@ -21,6 +21,7 @@ namespace FEFUPascalCompiler.Parser
         FuncDecl,
         ArrayType,
         IndexRange,
+        RecordType,
         Ident,
         ConstIntegerLiteral,
         ConstDoubleLiteral,

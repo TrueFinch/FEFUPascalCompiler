@@ -70,6 +70,7 @@ namespace FEFUPascalCompiler.Parser
                     return type;
                 }
             }
+
             //some parser exception
             return null;
         }
@@ -106,6 +107,7 @@ namespace FEFUPascalCompiler.Parser
             {
                 return null; //some parser exception -- this already mistake
             }
+
             token = NextAndPeek();
             if (token.Type != TokenType.Of)
             {
@@ -128,12 +130,12 @@ namespace FEFUPascalCompiler.Parser
             if (indexRange == null)
             {
                 //some parser exception -- need at list one list range here
-                return null; 
+                return null;
             }
-            
+
             var indexRanges = new List<AstNode>();
             indexRanges.Add(indexRange);
-            
+
             do
             {
                 var token = PeekToken();
@@ -142,14 +144,13 @@ namespace FEFUPascalCompiler.Parser
                     //some parser exception -- no comma (and no hommo)
                     return null;
                 }
+
                 indexRange = ParseIndexRange();
                 if (indexRange == null) break;
                 indexRanges.Add(indexRange);
-
             } while (true);
 
             return indexRanges;
-
         }
 
         private AstNode ParseIndexRange()
@@ -175,12 +176,33 @@ namespace FEFUPascalCompiler.Parser
                 //exception -- wrong range bounds 
                 return null;
             }
+
             return new IndexRange(token, leftBound, rightBound);
         }
 
         private AstNode ParseRecordType()
         {
-            throw new NotImplementedException();
+            var token = PeekToken();
+            if (token.Type != TokenType.Record)
+            {
+                return null; //this is not record type
+            }
+
+            NextToken();
+            var fieldList = ParseFieldsList();
+            token = PeekToken();
+            if (token.Type != TokenType.End)
+            {
+                return null; //this is not record type
+            }
+
+            NextToken();
+            return RecordType(fieldList);
+        }
+
+        private AstNode ParseFieldsList()
+        {
+            
         }
 
         private AstNode ParsePointerType()

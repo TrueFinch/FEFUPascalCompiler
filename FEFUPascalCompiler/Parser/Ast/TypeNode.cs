@@ -4,17 +4,17 @@ using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser
 {
-    public abstract class TypeNode : AstNode
-    {
-        protected TypeNode(AstNodeType type) : base(type)
-        {
-        }
-    }
+//    public abstract class TypeNode : AstNode
+//    {
+//        protected TypeNode(AstNodeType type) : base(type)
+//        {
+//        }
+//    }
 
-    public class ArrayType : TypeNode
+    public class ArrayType : AstNode
     {
         public ArrayType(List<AstNode> indexRanges, AstNode arrayType) : base(AstNodeType.ArrayType)
-        {           
+        {
             _children.InsertRange(0, indexRanges);
             _children.Add(arrayType);
             Value = Type.ToString();
@@ -43,9 +43,25 @@ namespace FEFUPascalCompiler.Parser
         {
             return visitor.Visit(this);
         }
-        
+
         public Token DoubleDot { get; }
         public AstNode LeftBound => _children[0];
         public AstNode RightBound => _children[1];
+    }
+
+    public class RecordType : AstNode
+    {
+        public RecordType(List<AstNode> fieldsList) : base(AstNodeType.RecordType)
+        {
+            _children.InsertRange(0, fieldsList);
+            Value = Type.ToString();
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public List<AstNode> FieldsList => _children;
     }
 }
