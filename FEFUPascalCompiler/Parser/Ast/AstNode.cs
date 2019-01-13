@@ -8,25 +8,30 @@ namespace FEFUPascalCompiler.Parser
 {
     public enum AstNodeType
     {
+        // @formatter:off
         Program,
-        MainBlock,
-        ConstDeclsPart,
-        ConstDecl,
-        TypeDeclsPart,
-        TypeDecl,
-        VarDeclsPart,
-        VarDecl,
-        ProcFuncDeclsPart,
-        ProcDecl,
-        FuncDecl,
-        ArrayType,
-        IndexRange,
-        RecordType,
+            MainBlock,
+                ConstDeclsPart,
+                    ConstDecl,
+                TypeDeclsPart,
+                    TypeDecl,
+                VarDeclsPart,
+                    VarDecl,
+                ProcFuncDeclsPart,
+                    ProcDecl,
+                    FuncDecl,
+        //Types
+            ArrayType,
+                IndexRange,
+            RecordType,
+                FieldSection,
+        //Other
         IdentList,
         Ident,
         ConstIntegerLiteral,
         ConstDoubleLiteral,
         BinOperation,
+        // @formatter:on
     }
 
     public abstract class AstNode
@@ -136,7 +141,7 @@ namespace FEFUPascalCompiler.Parser
 
         public List<AstNode> Idents => _children;
     }
-    
+
     public class Ident : AstNode
     {
         public Ident(Token token) : this(token, AstNodeType.Ident)
