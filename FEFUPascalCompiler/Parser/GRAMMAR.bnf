@@ -87,7 +87,7 @@
 <type> ::= <simple_type>|<array_type>|<record_type>|<pointer_type>|<procedure_type>
     <simple_type> ::= <ident>
     
-    <array_type> ::= "array" "[" <index_ranges> "]" "of" (<type>|<array_type>)
+    <array_type> ::= "array" "[" <index_ranges> "]" "of" <type>
         <index_ranges> ::= <index_range> {"," <index_range>}
             <index_range> ::= <dec_int> ".." <dec_int>
             
