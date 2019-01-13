@@ -6,7 +6,7 @@ using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser
 {
-    public enum NodeAstType
+    public enum AstNodeType
     {
         Program,
         MainBlock,
@@ -19,15 +19,17 @@ namespace FEFUPascalCompiler.Parser
         ProcFuncDeclsPart,
         ProcDecl,
         FuncDecl,
+        ArrayType,
+        IndexRange,
         Ident,
         ConstIntegerLiteral,
         ConstDoubleLiteral,
         BinOperation,
     }
 
-    public abstract class NodeAst
+    public abstract class AstNode
     {
-        protected NodeAst(NodeAstType type)
+        protected AstNode(AstNodeType type)
         {
             Type = type;
         }
@@ -36,23 +38,23 @@ namespace FEFUPascalCompiler.Parser
 
         public abstract T Accept<T>(IAstVisitor<T> visitor);
 
-        public NodeAstType Type { get; }
+        public AstNodeType Type { get; }
         protected string Value { get; set; }
-        protected List<NodeAst> _children = new List<NodeAst>();
+        protected List<AstNode> _children = new List<AstNode>();
     }
 
-    public abstract class DeclsPart : NodeAst
+    public abstract class DeclsPart : AstNode
     {
-        protected DeclsPart(List<NodeAst> decls, NodeAstType type) : base(type)
+        protected DeclsPart(List<AstNode> decls, AstNodeType type) : base(type)
         {
             _children.InsertRange(0, decls);
             Value = Type.ToString();
         }
     }
 
-    public class Program : NodeAst
+    public class Program : AstNode
     {
-        public Program(NodeAst header, NodeAst mainBlock) : base(NodeAstType.Program)
+        public Program(AstNode header, AstNode mainBlock) : base(AstNodeType.Program)
         {
             Value = header.ToString();
             _children.Add(header);
@@ -64,13 +66,13 @@ namespace FEFUPascalCompiler.Parser
             return visitor.Visit(this);
         }
 
-        public MainBlock Header => (MainBlock) _children[0];
-        public MainBlock MainBlock => (MainBlock) _children[1];
+        public AstNode Header => _children[0];
+        public AstNode MainBlock => (MainBlock) _children[1];
     }
 
-    public class MainBlock : NodeAst
+    public class MainBlock : AstNode
     {
-        public MainBlock(List<NodeAst> declParts, NodeAst mainCompound) : base(NodeAstType.MainBlock)
+        public MainBlock(List<AstNode> declParts, AstNode mainCompound) : base(AstNodeType.MainBlock)
         {
             _children.InsertRange(0, declParts);
             _children.Add(mainCompound);
@@ -82,14 +84,14 @@ namespace FEFUPascalCompiler.Parser
             return visitor.Visit(this);
         }
 
-        public List<NodeAst> DeclParts => _children.GetRange(0, _children.Count - 1);
-        public NodeAst MainCompound => _children[_children.Count - 1];
+        public List<AstNode> DeclParts => _children.GetRange(0, _children.Count - 1);
+        public AstNode MainCompound => _children[_children.Count - 1];
     }
 
 
     public class ConstDeclsPart : DeclsPart
     {
-        public ConstDeclsPart(List<NodeAst> constDecls) : base(constDecls, NodeAstType.ConstDeclsPart)
+        public ConstDeclsPart(List<AstNode> constDecls) : base(constDecls, AstNodeType.ConstDeclsPart)
         {
         }
 
@@ -99,9 +101,9 @@ namespace FEFUPascalCompiler.Parser
         }
     }
 
-    public class ConstDecl : NodeAst
+    public class ConstDecl : AstNode
     {
-        public ConstDecl(NodeAst ident, NodeAst expression) : base(NodeAstType.ConstDecl)
+        public ConstDecl(AstNode ident, AstNode expression) : base(AstNodeType.ConstDecl)
         {
             _children.Add(ident);
             _children.Add(expression);
@@ -113,13 +115,13 @@ namespace FEFUPascalCompiler.Parser
             return visitor.Visit(this);
         }
 
-        public NodeAst Constant => _children[0];
-        public NodeAst Expression => _children[1];
+        public AstNode ConstIdent => _children[0];
+        public AstNode Expression => _children[1];
     }
 
-    public class Ident : NodeAst
+    public class Ident : AstNode
     {
-        public Ident(Token token) : this(token, NodeAstType.Ident)
+        public Ident(Token token) : this(token, AstNodeType.Ident)
         {
         }
 
@@ -128,7 +130,7 @@ namespace FEFUPascalCompiler.Parser
             return visitor.Visit(this);
         }
 
-        protected Ident(Token token, NodeAstType type) : base(type)
+        protected Ident(Token token, AstNodeType type) : base(type)
         {
             Token = token;
             Value = token.Value;
@@ -137,9 +139,9 @@ namespace FEFUPascalCompiler.Parser
         public Token Token { get; }
     }
 
-    public class ConstIntegerLiteral : NodeAst
+    public class ConstIntegerLiteral : AstNode
     {
-        public ConstIntegerLiteral(IntegerNumberToken token) : base(NodeAstType.ConstIntegerLiteral)
+        public ConstIntegerLiteral(IntegerNumberToken token) : base(AstNodeType.ConstIntegerLiteral)
         {
             Token = token;
             Value = token.Value.ToString();
@@ -153,9 +155,9 @@ namespace FEFUPascalCompiler.Parser
         public IntegerNumberToken Token { get; }
     }
 
-    public class ConstDoubleLiteral : NodeAst
+    public class ConstDoubleLiteral : AstNode
     {
-        public ConstDoubleLiteral(DoubleNumberToken token) : base(NodeAstType.ConstDoubleLiteral)
+        public ConstDoubleLiteral(DoubleNumberToken token) : base(AstNodeType.ConstDoubleLiteral)
         {
             Token = token;
             Value = token.Value.ToString(new NumberFormatInfo {NumberDecimalSeparator = "."});
@@ -169,16 +171,16 @@ namespace FEFUPascalCompiler.Parser
         public DoubleNumberToken Token { get; }
     }
 
-    public class BinOperation : NodeAst
+    public class BinOperation : AstNode
     {
-        public BinOperation(Token operation, NodeAst left, NodeAst right) : this(left, right)
+        public BinOperation(Token operation, AstNode left, AstNode right) : this(left, right)
         {
             Operation = operation;
 //            Value = string.Format("{0} {1} {2}", left.ToString(), operation.Value, right.ToString());
             Value = operation.Value;
         }
 
-        protected BinOperation(NodeAst left, NodeAst right) : base(NodeAstType.BinOperation)
+        protected BinOperation(AstNode left, AstNode right) : base(AstNodeType.BinOperation)
         {
             _children.Add(left);
             _children.Add(right);
@@ -190,13 +192,13 @@ namespace FEFUPascalCompiler.Parser
         }
 
         public Token Operation { get; }
-        public NodeAst Left => _children[0];
-        public NodeAst Right => _children[1];
+        public AstNode Left => _children[0];
+        public AstNode Right => _children[1];
     }
 
     public class AssignStatement : BinOperation
     {
-        public AssignStatement(AssignToken operation, NodeAst left, NodeAst right) : base(left, right)
+        public AssignStatement(AssignToken operation, AstNode left, AstNode right) : base(left, right)
         {
             Operation = operation;
 //            Value = string.Format("{0} {1} {2}", left.ToString(), operation.Value, right.ToString());
