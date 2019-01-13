@@ -22,6 +22,7 @@ namespace FEFUPascalCompiler.Parser
         ArrayType,
         IndexRange,
         RecordType,
+        IdentList,
         Ident,
         ConstIntegerLiteral,
         ConstDoubleLiteral,
@@ -120,6 +121,22 @@ namespace FEFUPascalCompiler.Parser
         public AstNode Expression => _children[1];
     }
 
+    public class IdentList : AstNode
+    {
+        public IdentList(List<AstNode> identList) : base(AstNodeType.IdentList)
+        {
+            _children.InsertRange(0, identList);
+            Value = Type.ToString();
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public List<AstNode> Idents => _children;
+    }
+    
     public class Ident : AstNode
     {
         public Ident(Token token) : this(token, AstNodeType.Ident)

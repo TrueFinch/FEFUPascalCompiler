@@ -7,7 +7,7 @@ using FEFUPascalCompiler.Tokens;
 namespace FEFUPascalCompiler.Parser
 {
     internal delegate Token PeekAndNext();
-    
+
     internal delegate Token NextAndPeek();
 
     internal delegate Token PeekToken();
@@ -119,13 +119,13 @@ namespace FEFUPascalCompiler.Parser
                 //some parser exception
                 return null;
             }
+
             constDecls.Add(constDecl);
             do
             {
                 constDecl = ParseConstDecl();
                 if (constDecl == null) break;
                 constDecls.Add(constDecl);
-
             } while (true);
 
             return new ConstDeclsPart(constDecls);
@@ -153,7 +153,7 @@ namespace FEFUPascalCompiler.Parser
             NextToken();
             return new ConstDecl(constIdent, expression);
         }
-       
+
 
         private AstNode ParseVarDeclsPart()
         {
@@ -164,7 +164,7 @@ namespace FEFUPascalCompiler.Parser
         {
             throw new NotImplementedException();
         }
-        
+
         private AstNode ParseExpression()
         {
             var left = ParseTerm();
@@ -276,6 +276,35 @@ namespace FEFUPascalCompiler.Parser
             return new AssignStatement(assignToken as AssignToken, left, right);
         }
 
+        public AstNode ParseIdentList()
+        {
+            var identList = new List<AstNode> {ParseIdent()};
+            if (identList[0] == null)
+            {
+                //exception -- this is not ident list
+            }
+
+            var token = PeekToken();
+            if (token.Type != TokenType.Comma)
+            {
+                return identList[0]; //list with only one element = just ident
+            }
+
+            NextToken();
+            while (PeekToken().Type == TokenType.Comma)
+            {
+                var ident = ParseIdent();
+                if (ident == null)
+                {
+                    //exception unexpected lexeme
+                }
+                identList.Add(ident);
+                NextToken();
+            }
+
+            return new IdentList(identList);
+        }
+
         private AstNode ParseIdent()
         {
             var token = PeekToken();
@@ -284,7 +313,7 @@ namespace FEFUPascalCompiler.Parser
                 //this is not ident, may be this is key word? Think about it
                 return null;
             }
-            
+
             return new Ident(PeekAndNext());
         }
 
