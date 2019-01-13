@@ -42,7 +42,7 @@ namespace FEFUPascalCompiler.Tokens
         public static readonly Dictionary<TokenType, Func<int, int, string, Token>> TokenConstructors =
             new Dictionary<TokenType, Func<int, int, string, Token>>
             {
-                {TokenType.IntegerNumber, (line, column, lexeme) => new IntegerNumberToken(line, column, lexeme)},
+                {TokenType.DecIntegerNumber, (line, column, lexeme) => new IntegerNumberToken(line, column, lexeme)},
                 {TokenType.DoubleNumber, (line, column, lexeme) => new DoubleNumberToken(line, column, lexeme)},
                 {TokenType.StringConst, (line, column, lexeme) => new StringConstToken(line, column, lexeme)},
                 {TokenType.BinOperator, (line, column, lexeme) => new BinOperatorToken(line, column, lexeme)},
@@ -62,7 +62,7 @@ namespace FEFUPascalCompiler.Tokens
     public class IntegerNumberToken : Token
     {
         public IntegerNumberToken(int line, int column, string lexeme)
-            : base(line, column, TokenType.IntegerNumber, lexeme)
+            : base(line, column, TokenType.DecIntegerNumber, lexeme)
         {
             Value = ConvertToInteger(lexeme);
         }
@@ -101,7 +101,13 @@ namespace FEFUPascalCompiler.Tokens
         {
             {'%', 2}, {'&', 8}, {'$', 16},
             {'0', 10}, {'1', 10}, {'2', 10}, {'3', 10}, {'4', 10}, {'5', 10}, {'6', 10}, {'7', 10}, {'8', 10},
-            {'9', 10}
+            {'9', 10},
+        };
+        
+        private static Dictionary<int, TokenType> basisToTokenType = new Dictionary<int, TokenType>
+        {
+            {2, TokenType.BinIntegerNumber}, {8, TokenType.OctIntegerNumber}, 
+            {10, TokenType.DecIntegerNumber}, {16, TokenType.HexIntegerNumber},
         };
     }
     
