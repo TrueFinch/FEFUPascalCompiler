@@ -129,6 +129,12 @@ namespace FEFUPascalCompiler
             return t;
         }
 
+        public Token NextAndPeek()
+        {
+            Next();
+            return Peek();
+        }
+        
         public StreamReader Input
         {
             get => _input;
@@ -142,12 +148,12 @@ namespace FEFUPascalCompiler
         public Compiler()
         {
             _lexer = new LexerDfa();
-            _parser = new Parser.Parser(Peek, Next, PeekAndNext);
+            _parser = new Parser.Parser(Peek, Next, PeekAndNext, NextAndPeek);
         }
 
         public Exception LastException = null;
 
-        private NodeAst _ast;
+        private AstNode _ast;
         private LexerDfa _lexer;
         private Parser.Parser _parser;
         private StreamReader _input;
