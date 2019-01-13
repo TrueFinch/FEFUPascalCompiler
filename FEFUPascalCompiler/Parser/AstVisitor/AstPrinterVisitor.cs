@@ -7,7 +7,7 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
 {
     internal class AstPrintVisitor : IAstVisitor<AstPrinterNode>
     {
-        public AstPrinterNode Visit(Identifier node)
+        public AstPrinterNode Visit(Ident node)
         {
             return new AstPrinterNode(node.ToString());
         }
@@ -24,7 +24,7 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
 
         public AstPrinterNode Visit(BinOperation node)
         {
-            var printer = new AstPrinterNode(node.Operation.Value);
+            var printer = new AstPrinterNode(node.ToString());
             printer.AddChild(node.Left.Accept(this));
             printer.AddChild(node.Right.Accept(this));
             return printer;
@@ -32,10 +32,27 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
 
         public AstPrinterNode Visit(AssignStatement node)
         {
-            var printer = new AstPrinterNode(node.Operation.Value);
+            var printer = new AstPrinterNode(node.ToString());
             printer.AddChild(node.Left.Accept(this));
             printer.AddChild(node.Right.Accept(this));
             return printer;
+        }
+
+        public AstPrinterNode Visit(Program node)
+        {
+            var printer = new AstPrinterNode(node.ToString());
+            printer.AddChild(node.MainBlock.Accept(this));
+            return printer;
+        }
+
+//        public AstPrinterNode Visit(ProgramHeader node)
+//        {
+//            throw new NotImplementedException();
+//        }
+
+        public AstPrinterNode Visit(MainBlock node)
+        {
+            throw new NotImplementedException();
         }
     }
 
