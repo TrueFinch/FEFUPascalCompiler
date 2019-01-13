@@ -38,19 +38,19 @@
                                                                                                                                      
 <program> ::= "program" <ident>  ";" <main_block> "." 
         
-    <main_block> ::= {<declaration_parts>} <compound_statement> 
-        <declaration_parts> ::= <const_decl_part>|<type_decl_part>|<variable_decl_part>|<proc_and_func_decl_part>
+    <main_block> ::= {<declarations_parts>} <compound_statement> 
+        <declarations_parts> ::= <const_decls_part>|<type_decls_part>|<variable_decls_part>|<proc_and_func_decls_part>
         
-            <const_decl_part> ::= "const" <const_decl> {<const_decl>} 
+            <const_decls_part> ::= "const" <const_decl> {<const_decl>} 
                 <const_decl> ::= <ident> "=" <expression> ";" 
                 
-            <type_decl_part> ::= "type" <type_decl> {<type_decl>} 
+            <type_decls_part> ::= "type" <type_decl> {<type_decl>} 
                 <type_decl> ::= <ident> "=" <type> ";" 
                         
-            <variable_decl_part> ::= "var" <variable_decl> {<variable_decl>} 
+            <variable_decls_part> ::= "var" <variable_decl> {<variable_decl>} 
                 <variable_decl> ::= (<ident_list> ":" <type>) | (<ident> ":" <type> "=" <expression>)
                     
-            <proc_and_func_decl_part> ::= {(<proc_decl>|<func_decl>)}
+            <proc_and_func_decls_part> ::= {(<proc_decl>|<func_decl>)}
                 <proc_decl> ::= <proc_header> ";" <subroutine_block> ";"
                      <proc_header> ::= "procedure" <ident> "(" [<formal_param_list>] ")" 
                     
@@ -62,9 +62,9 @@
                                     <modifier> ::= "var"|"const"|"out"
                                     <parameter> ::= <ident_list> ":" <param_type>
                                         <param_type> ::= <simple_type> | <conformant_array>
-                                            <conformant_array> ::= "array" "of" (<simple_type>|<conformant_array>)
+                                            <conformant_array> ::= "array" "of" (<simple_type>)
                     <subroutine_block> ::= <block> | "forward"
-                        <block> ::= {<declaration_parts>} <compound_statement>
+                        <block> ::= {<const_decls_part>|<type_decls_part>|<variable_decls_part>} <compound_statement>
 
                         
         <compound_statement> ::= "begin" <statements_part> "end"           
@@ -103,16 +103,16 @@
 
 <expression> ::= <simple_expr>[<comparing_operator> <simple_expr>]
     <comparing_operator> ::= "<>"|"<"|"<="|">="|">"|"="|"=="
-    <simple_expr> ::= [<simple_expr> <additive_operator>] <term>
+    <simple_expr> ::= <term> [<additive_operator> <term>] 
         <additive_operator> ::= "+"|"-"|"or"|"xor"
-        <term> ::= [<term> <multiplying_operator>] <simple_term>
+        <term> ::= <simple_term> [<multiplying_operator> <simple_term>] 
             <multiplying_operator> ::= "*"|"/"|"div"|"mod"|"and"|"shr"|"shl" 
-            <simple_term> ::= (<unary_operator> <simple_term>) | <factor>
+            <simple_term> ::= [<unary_operator>] <factor>
                 <unary_operator> ::= "+"|"-"|"not"|"@"
                 <factor> ::= <variable_ref>|("("<expression>")")|<constant>|"nil"
                     <variable_ref> ::= (<ident>|<array_access>|<record_access>|<function_call>)["^"]
-                        <array_access> ::= <factor> "[" <expression> {"," <expression>} "]"
-                        <record_access> ::= <factor> "." <ident>
+                        <array_access> ::= <variable_ref> "[" <expression> {"," <expression>} "]"
+                        <record_access> ::= <variable_ref> "." <ident>
                         <function_call> ::= <variable_ref> <param_list>
                             <param_list> ::= "(" [<expression> {"," <expression>}] ")"
 

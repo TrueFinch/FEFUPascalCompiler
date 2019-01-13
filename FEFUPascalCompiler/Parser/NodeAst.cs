@@ -9,21 +9,29 @@ namespace FEFUPascalCompiler.Parser
     public enum NodeAstType
     {
         Program,
-        ProgramHeader,
         MainBlock,
+        ConstDeclsPart,
+        ConstDecl,
+        TypeDeclsPart,
+        TypeDecl,
+        VarDeclsPart,
+        VarDecl,
+        ProcFuncDeclsPart,
+        ProcDecl,
+        FuncDecl,
         Ident,
         ConstIntegerLiteral,
         ConstDoubleLiteral,
         BinOperation,
     }
-    
+
     public abstract class NodeAst
     {
         protected NodeAst(NodeAstType type)
         {
             Type = type;
         }
-        
+
         public override string ToString() => Value;
 
         public abstract T Accept<T>(IAstVisitor<T> visitor);
@@ -31,6 +39,15 @@ namespace FEFUPascalCompiler.Parser
         public NodeAstType Type { get; }
         protected string Value { get; set; }
         protected List<NodeAst> _children = new List<NodeAst>();
+    }
+
+    public abstract class DeclsPart : NodeAst
+    {
+        protected DeclsPart(List<NodeAst> decls, NodeAstType type) : base(type)
+        {
+            _children.InsertRange(0, decls);
+            Value = Type.ToString();
+        }
     }
 
     public class Program : NodeAst
@@ -41,7 +58,7 @@ namespace FEFUPascalCompiler.Parser
             _children.Add(header);
             _children.Add(mainBlock);
         }
-        
+
         public override T Accept<T>(IAstVisitor<T> visitor)
         {
             return visitor.Visit(this);
@@ -57,7 +74,9 @@ namespace FEFUPascalCompiler.Parser
         {
             _children.InsertRange(0, declParts);
             _children.Add(mainCompound);
+            Value = Type.ToString();
         }
+
         public override T Accept<T>(IAstVisitor<T> visitor)
         {
             return visitor.Visit(this);
@@ -66,7 +85,38 @@ namespace FEFUPascalCompiler.Parser
         public List<NodeAst> DeclParts => _children.GetRange(0, _children.Count - 1);
         public NodeAst MainCompound => _children[_children.Count - 1];
     }
-    
+
+
+    public class ConstDeclsPart : DeclsPart
+    {
+        public ConstDeclsPart(List<NodeAst> constDecls) : base(constDecls, NodeAstType.ConstDeclsPart)
+        {
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+    }
+
+    public class ConstDecl : NodeAst
+    {
+        public ConstDecl(NodeAst ident, NodeAst expression) : base(NodeAstType.ConstDecl)
+        {
+            _children.Add(ident);
+            _children.Add(expression);
+            Value = "=";
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public NodeAst Constant => _children[0];
+        public NodeAst Expression => _children[1];
+    }
+
     public class Ident : NodeAst
     {
         public Ident(Token token) : this(token, NodeAstType.Ident)
@@ -121,7 +171,7 @@ namespace FEFUPascalCompiler.Parser
 
     public class BinOperation : NodeAst
     {
-        public BinOperation(Token operation, NodeAst left, NodeAst right) : this (left, right)
+        public BinOperation(Token operation, NodeAst left, NodeAst right) : this(left, right)
         {
             Operation = operation;
 //            Value = string.Format("{0} {1} {2}", left.ToString(), operation.Value, right.ToString());
@@ -157,6 +207,7 @@ namespace FEFUPascalCompiler.Parser
         {
             return visitor.Visit(this);
         }
+
         public new AssignToken Operation { get; }
     }
 }
