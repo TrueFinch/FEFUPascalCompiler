@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using FEFUPascalCompiler.Lexer;
 
+//all compilers are brothers, but you are adopted 
+
 namespace FEFUPascalCompiler.Tokens
 {
     public abstract class Token
@@ -14,6 +16,8 @@ namespace FEFUPascalCompiler.Tokens
         public TokenType Type { get; protected set; }
 
         public string Lexeme { get; }
+        
+        public string Value { get; protected set; }
 
         protected Token(int line, int column, string lexeme)
         {
@@ -38,7 +42,7 @@ namespace FEFUPascalCompiler.Tokens
         public static readonly Dictionary<TokenType, Func<int, int, string, Token>> TokenConstructors =
             new Dictionary<TokenType, Func<int, int, string, Token>>
             {
-                {TokenType.IntegerNumber, (line, column, lexeme) => new IntegerNumberToken(line, column, lexeme)},
+                {TokenType.DecIntegerNumber, (line, column, lexeme) => new IntegerNumberToken(line, column, lexeme)},
                 {TokenType.DoubleNumber, (line, column, lexeme) => new DoubleNumberToken(line, column, lexeme)},
                 {TokenType.StringConst, (line, column, lexeme) => new StringConstToken(line, column, lexeme)},
                 {TokenType.BinOperator, (line, column, lexeme) => new BinOperatorToken(line, column, lexeme)},
@@ -53,11 +57,12 @@ namespace FEFUPascalCompiler.Tokens
                 {TokenType.Bracket, (line, column, lexeme) => new BracketToken(line, column, lexeme)}
             };
     }
-
+    
+    //TODO: change int64 ti int32
     public class IntegerNumberToken : Token
     {
         public IntegerNumberToken(int line, int column, string lexeme)
-            : base(line, column, TokenType.IntegerNumber, lexeme)
+            : base(line, column, TokenType.DecIntegerNumber, lexeme)
         {
             Value = ConvertToInteger(lexeme);
         }
@@ -89,17 +94,24 @@ namespace FEFUPascalCompiler.Tokens
             return base.ToString() + $"{Value,-30}" + '|';
         }
 
-        public long Value { get; }
+        public new long Value { get; }
 
         //base of the number system
         private static Dictionary<char, int> basis = new Dictionary<char, int>
         {
             {'%', 2}, {'&', 8}, {'$', 16},
             {'0', 10}, {'1', 10}, {'2', 10}, {'3', 10}, {'4', 10}, {'5', 10}, {'6', 10}, {'7', 10}, {'8', 10},
-            {'9', 10}
+            {'9', 10},
+        };
+        
+        private static Dictionary<int, TokenType> basisToTokenType = new Dictionary<int, TokenType>
+        {
+            {2, TokenType.BinIntegerNumber}, {8, TokenType.OctIntegerNumber}, 
+            {10, TokenType.DecIntegerNumber}, {16, TokenType.HexIntegerNumber},
         };
     }
-
+    
+    //TODO: change double to float
     public class DoubleNumberToken : Token
     {
         public DoubleNumberToken(int line, int column, string lexeme)
@@ -130,7 +142,7 @@ namespace FEFUPascalCompiler.Tokens
             return base.ToString() + $"{Value,-30}" + '|';
         }
 
-        public double Value { get; }
+        public new double Value { get; }
     }
 
     public class IdentToken : Token
@@ -148,8 +160,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     public class BinOperatorToken : Token
@@ -164,8 +174,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     public class AssignToken : Token
@@ -180,8 +188,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     public class SeparatorToken : Token
@@ -196,8 +202,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     public class StringConstToken : Token
@@ -206,7 +210,7 @@ namespace FEFUPascalCompiler.Tokens
         {
             lexeme = lexeme[0] == '\'' ? lexeme.Substring(1) : lexeme;
             lexeme = lexeme[lexeme.Length - 1] == '\'' ? lexeme.Substring(0, lexeme.Length - 1) : lexeme;
-            
+
             for (int nextSharpIndex = lexeme.IndexOf("#", StringComparison.Ordinal);
                 nextSharpIndex >= 0;
                 nextSharpIndex = lexeme.IndexOf("#", StringComparison.Ordinal))
@@ -221,7 +225,7 @@ namespace FEFUPascalCompiler.Tokens
             }
 
             lexeme = lexeme.Replace("''", "'");
-            
+
             return lexeme;
         }
 
@@ -235,8 +239,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     //TODO: add charconst token realization and don't forget about lexer part and tests for this token
@@ -244,6 +246,21 @@ namespace FEFUPascalCompiler.Tokens
     {
         public CharConstToken(int line, int column, string lexeme) : base(line, column, TokenType.CharConst, lexeme)
         {
+            Value = SetValue(lexeme);
+        }
+
+        private string SetValue(string lexeme)
+        {
+            if (lexeme[0] == '\'')
+            {
+                return lexeme;
+            }
+            return ((char) Convert.ToUInt32(lexeme.Substring(1))).ToString();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + $"{Value,-30}" + '|';
         }
     }
 
@@ -259,8 +276,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     public class SingleLineCommentToken : Token
@@ -275,8 +290,6 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 
     public class BracketToken : Token
@@ -291,7 +304,5 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
-
-        public string Value { get; }
     }
 }

@@ -1,9 +1,14 @@
 namespace FEFUPascalCompiler.Parser.AstVisitor
 {
-    internal interface IAstVisitor <T>
+    public interface IAstVisitor <T>
     {
-        T Visit(Variable node);
-        T Visit(ConstLiteral node);
+        T Visit(Ident node);
+        T Visit(ConstIntegerLiteral node);
+        T Visit(ConstDoubleLiteral node);
         T Visit(BinOperation node);
+        T Visit(AssignStatement node);
+        T Visit(Program node);
+//        T Visit(ProgramHeader node);
+        T Visit(MainBlock node);
     }
 }

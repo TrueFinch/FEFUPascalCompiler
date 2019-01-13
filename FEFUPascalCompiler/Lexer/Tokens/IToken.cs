@@ -4,13 +4,22 @@ namespace FEFUPascalCompiler.Tokens
 {
     public enum TokenType
     {
+        //TODO: add tests for comparing_operators operators
+        //logic operators
+        NotEqualOperator,
+        EqualOperator,
+        LessOperator,
+        LessOrEqualOperator,
+        GreaterOperator,
+        GreaterOrEqualOperator,
+        
+        
         // arithmetic Operators
         BinOperator,
         SumOperator,
         DifOperator,
         MulOperator,
         DivOperator,
-        PowOperator,
         DoubleDotOperator,
 
         //Assign operators
@@ -29,7 +38,10 @@ namespace FEFUPascalCompiler.Tokens
         Colon,
 
         //data types
-        IntegerNumber,
+        BinIntegerNumber,
+        DecIntegerNumber,
+        OctIntegerNumber,
+        HexIntegerNumber,
         DoubleNumber,
         StringConst,
         CharConst,
@@ -72,11 +84,14 @@ namespace FEFUPascalCompiler.Tokens
         Of,
         Or,
         Packed,
+        Pass,
         Procedure,
         Program,
         Record,
         Repeat,
         Set,
+        Shl,
+        Shr,
         Then,
         To,
         Type,
@@ -84,6 +99,7 @@ namespace FEFUPascalCompiler.Tokens
         Var,
         While,
         With,
+        Xor,
 
         //standard names
         Abs,
@@ -157,11 +173,14 @@ namespace FEFUPascalCompiler.Tokens
             {"of", TokenType.Of},
             {"or", TokenType.Or},
             {"packed", TokenType.Packed},
+            {"pass", TokenType.Pass},
             {"procedure", TokenType.Procedure},
             {"program", TokenType.Program},
             {"record", TokenType.Record},
             {"repeat", TokenType.Repeat},
             {"set", TokenType.Set},
+            {"shl", TokenType.Shl},
+            {"shr", TokenType.Shr},
             {"then", TokenType.Then},
             {"to", TokenType.To},
             {"type", TokenType.Type},
@@ -218,7 +237,6 @@ namespace FEFUPascalCompiler.Tokens
             {"-", TokenType.DifOperator},
             {"*", TokenType.MulOperator},
             {"/", TokenType.DivOperator},
-            {"**", TokenType.PowOperator},
             {"..", TokenType.DoubleDotOperator},
             {":=", TokenType.SimpleAssignOperator},
             {"+=", TokenType.SumAssignOperator},
@@ -233,7 +251,12 @@ namespace FEFUPascalCompiler.Tokens
             {")", TokenType.CloseBracket},
             {"[", TokenType.OpenSquareBracket},
             {"]", TokenType.CloseSquareBracket},
-//            {";", TokenType.Semicolon},
+            {"<>", TokenType.NotEqualOperator},
+            {"<", TokenType.LessOperator},
+            {"<=", TokenType.LessOrEqualOperator},
+            {">=", TokenType.GreaterOrEqualOperator},
+            {">", TokenType.GreaterOperator},
+            {"=", TokenType.EqualOperator},
         };
     }
 }

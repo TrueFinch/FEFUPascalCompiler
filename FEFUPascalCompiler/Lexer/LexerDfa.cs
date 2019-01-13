@@ -29,7 +29,14 @@ namespace FEFUPascalCompiler.Lexer
             DivArithmOperator,
             PowArithmOperator,
             DoubleDotOperator,
-
+            
+            NotEqualOperator,
+            EqualOperator,
+            LessOperator,
+            LessOrEqualOperator,
+            GreaterOperator,
+            GreaterOrEqualOperator,
+            
 //            DoubleNumberStart,
             DoubleNumber,
             ExpDoubleStart,
@@ -77,21 +84,22 @@ namespace FEFUPascalCompiler.Lexer
                 {LexerState.DoubleDotOperator     , TokenType.BinOperator       },
                 {LexerState.StringConstFinish     , TokenType.StringConst       },
                 {LexerState.OpenSquareBracket     , TokenType.OpenSquareBracket },         
-                {LexerState.SignCodeFinish        , TokenType.StringConst       },
+//                {LexerState.SignCodeFinish        , TokenType.StringConst       },
                 {LexerState.DoubleNumber          , TokenType.DoubleNumber      },
-                {LexerState.CloseBracket          , TokenType.CloseBracket      },
-                {LexerState.OpenBracket           , TokenType.OpenBracket       },
+                {LexerState.CloseBracket          , TokenType.Separator         },
+                {LexerState.OpenBracket           , TokenType.Separator         },
                 {LexerState.ExpDouble             , TokenType.DoubleNumber      },
-                {LexerState.BinNumber             , TokenType.IntegerNumber     },
-                {LexerState.OctNumber             , TokenType.IntegerNumber     },
-                {LexerState.DecNumber             , TokenType.IntegerNumber     },
-                {LexerState.HexNumber             , TokenType.IntegerNumber     },
+                {LexerState.BinNumber             , TokenType.DecIntegerNumber     },
+                {LexerState.OctNumber             , TokenType.DecIntegerNumber     },
+                {LexerState.DecNumber             , TokenType.DecIntegerNumber     },
+                {LexerState.HexNumber             , TokenType.DecIntegerNumber     },
                 {LexerState.SemiColon             , TokenType.Separator         },
                 {LexerState.Assign                , TokenType.AssignOperator    },
                 {LexerState.Colon                 , TokenType.Separator         },
                 {LexerState.Ident                 , TokenType.Ident             },
                 {LexerState.Comma                 , TokenType.Separator         },
-                {LexerState.Dot                   , TokenType.Separator         }
+                {LexerState.Dot                   , TokenType.Separator         },
+                {LexerState.SignCodeFinish        , TokenType.CharConst         },
                 // @formatter:on
             };
 
@@ -199,6 +207,8 @@ namespace FEFUPascalCompiler.Lexer
                 throw new UnexpectedSymbolException($"({_line},{_column - 1}) Unexpected symbol in lexeme {lexeme}");
             }
 
+            
+            
             var nextToken = (currState.Type == LexerState.SingleLineComment)
                             || (currState.Type == LexerState.MultiLineCommentFinish)
                 ? GetToken(line, column, lexeme.ToString(), currState.Type)
