@@ -36,38 +36,104 @@
 //#  8. <Metaname> -- not terminal sign with name Metaname ;                                                           #                           
 //*====================================================================================================================*                                                                                                                             
                                                                                                                                      
-<program> ::= <program_header> ";" <main_block> "." 
-    <program_header> ::= "program" <name> ";" 
-        <name> ::= <letter>[(<letter>|<digit>)] 
-    <main_block> ::= {<declaration_part>} <statement_part> 
-        <declaration_part> ::= (<const_def_part>|<type_def_part>|<variable_def_part>|<proc_and_func_def_part>) 
-            <const_def_part> ::= "const" <const_def> {<const_def>} 
-                <const_def> ::= <ident> "=" <type> ";" 
-            <type_def_part> ::= "type" <type_def> {<type_def>} 
-                <type_def> ::= <ident> "=" <type> ";" 
-                    <type> ::= <ident> | <array_type>
-                        <array_type> ::= "array [" <int_number> ".." <int_number> "] of" (<type>|<array_type>)
-            <variable_def_part> ::= "var" <variable_def> {<variable_def>} 
-                <variable_def> ::= <ident_list> ":" <type> | <ident> ":" <type> "=" <expression>
-                    <ident_list> ::= <ident> {"," <ident>}
-            <proc_and_func_def_part> ::= {(<proc_def>|<func_def>)}
-                <proc_def> ::= <proc_header> <subroutine_block>
-private             <proc_header> ::= "procedure" <ident> <formal_param_list> ";"
-                        <formal_param_list> ::= "(" [<formal_param_section> {";" <formal_param_section>}] ")"
-                            <formal_param_section> ::= [<modifier>] <parameter>
-                                <modifier> ::= "var"|"const"|"out"
-                                <parameter> ::= <ident_list> ":" <param_type>
-                                    <param_type> ::= <simple_type> | <conformant_array>
-                                        <conformant_array> ::= "array of" (<simple_type>|<conformant_array>)
-                    <subroutine_block> ::= <block> | "forward" ";"
-                <func_def> ::= <func_header>
-                    <func_header> ::= "function" <ident> <formal_param_list> ":" <simple_type>
-        <statement_part> ::= ?????
-<type> ::= <simple_type>
-<simple_type> ::= <ident>
-<ident> ::= <letter> {<letter>|<digit>}
-<letter> ::= "_"|"A"|"B"|"C"|"D"|"E"|"F"|"G"|"H"|"I"|"J"|"K"|"L"|"M"|"N"|"O"|"P"|"Q"|"R"|"S"|"T"|"U"|"V"|"W"|"X"|"Y"|
-             "Z"|"a"|"b"|"c"|"d"|"e"|"f"|"g"|"h"|"i"|"j"|"k"|"l"|"m"|"n"|"o"|"p"|"q"|"r"|"s"|"t"|"u"|"v"|"w"|"x"|"y"|
-             "z" 
-<int_number> ::= <digit> {<digit>}
-<digit> ::= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9" 
+<program> ::= "program" <ident>  ";" <main_block> "." 
+        
+    <main_block> ::= {<declaration_parts>} <compound_statement> 
+        <declaration_parts> ::= <const_decl_part>|<type_decl_part>|<variable_decl_part>|<proc_and_func_decl_part>
+        
+            <const_decl_part> ::= "const" <const_decl> {<const_decl>} 
+                <const_decl> ::= <ident> "=" <expression> ";" 
+                
+            <type_decl_part> ::= "type" <type_decl> {<type_decl>} 
+                <type_decl> ::= <ident> "=" <type> ";" 
+                        
+            <variable_decl_part> ::= "var" <variable_decl> {<variable_decl>} 
+                <variable_decl> ::= (<ident_list> ":" <type>) | (<ident> ":" <type> "=" <expression>)
+                    
+            <proc_and_func_decl_part> ::= {(<proc_decl>|<func_decl>)}
+                <proc_decl> ::= <proc_header> ";" <subroutine_block> ";"
+                     <proc_header> ::= "procedure" <ident> "(" [<formal_param_list>] ")" 
+                    
+                <func_decl> ::= <func_header> ";" <subroutine_block> ";"
+                    <func_header> ::= "function" <ident> "(" [<formal_param_list>] ")" ":" <simple_type> 
+                    
+                            <formal_param_list> ::= <formal_param_section> {";" <formal_param_section>}
+                                <formal_param_section> ::= [<modifier>] <parameter>
+                                    <modifier> ::= "var"|"const"|"out"
+                                    <parameter> ::= <ident_list> ":" <param_type>
+                                        <param_type> ::= <simple_type> | <conformant_array>
+                                            <conformant_array> ::= "array" "of" (<simple_type>|<conformant_array>)
+                    <subroutine_block> ::= <block> | "forward"
+                        <block> ::= {<declaration_parts>} <compound_statement>
+
+                        
+        <compound_statement> ::= "begin" <statements_part> "end"           
+            <statements_part> ::= [<statement> {";" <statement>}]
+                <statement> ::= <simple_statement>|<structured_statement>
+                
+                    <simple_statement> ::= <empty_statement>|<assignment_statement>|<function_call>
+                        <empty_statement> ::= "pass"
+                        <assignment_statement> ::= <expression> <assignment_symbol> <expression>
+                            <assignment_symbol> ::= ":="|"+="|"-="|"*="|"/="
+                            
+                    <structured_statement> ::= <compound_statement>|<if_statement>|<loop_statement>
+                        <loop_statement> ::= <while_statement>|<for_statement>
+                            <while_statement> ::= "while" <expression> "do" <statement>
+                            <for_statement> ::= "for" <ident> ":=" <for_range> "do" <statement>
+                                <for_range> ::= <expression> ("to"|"downto") <expression>
+                        <if_statement> ::= "if" "(" <expression> ")" "then" <statement> ["else" <statement>]
+                        
+        
+<type> ::= <simple_type>|<array_type>|<record_type>|<pointer_type>|<procedure_type>
+    <simple_type> ::= <ident>
+    
+    <array_type> ::= "array" "[" <index_ranges> "]" "of" (<type>|<array_type>)
+        <index_ranges> ::= <index_range> {"," <index_range>}
+            <index_range> ::= <dec_int> ".." <dec_int>
+            
+    <record_type> ::= "record" [<field_list>] "end"
+        <field_list> ::= <field_section> {";" <field_section>}
+            <field_section> ::= <ident_list> ":" <type>
+
+    <pointer_type> ::= "^" <simple_type>
+    <procedure_type> ::= <func_signature>|<proc_signature>
+        <func_signature> ::= "function" [<formal_param_list>] ":" <simple_type> 
+        <proc_signature> ::= "procedure" [<formal_param_list>]
+        
+
+<expression> ::= <simple_expr>[<comparing_operator> <simple_expr>]
+    <comparing_operator> ::= "<>"|"<"|"<="|">="|">"|"="|"=="
+    <simple_expr> ::= [<simple_expr> <additive_operator>] <term>
+        <additive_operator> ::= "+"|"-"|"or"|"xor"
+        <term> ::= [<term> <multiplying_operator>] <simple_term>
+            <multiplying_operator> ::= "*"|"/"|"div"|"mod"|"and"|"shr"|"shl" 
+            <simple_term> ::= (<unary_operator> <simple_term>) | <factor>
+                <unary_operator> ::= "+"|"-"|"not"|"@"
+                <factor> ::= <variable_ref>|("("<expression>")")|<constant>|"nil"
+                    <variable_ref> ::= (<ident>|<array_access>|<record_access>|<function_call>)["^"]
+                        <array_access> ::= <factor> "[" <expression> {"," <expression>} "]"
+                        <record_access> ::= <factor> "." <ident>
+                        <function_call> ::= <variable_ref> <param_list>
+                            <param_list> ::= "(" [<expression> {"," <expression>}] ")"
+
+
+<ident_list> ::= <ident> {"," <ident>}
+    <ident> ::= <letter> {<letter>|<dec_digit>}
+        <letter> ::= "_"|"A"|"B"|"C"|"D"|"E"|"F"|"G"|"H"|"I"|"J"|"K"|"L"|"M"|"N"|"O"|"P"|"Q"|"R"|"S"|"T"|"U"|"V"|"W"|
+                     "X"|"Y"|"Z"|"a"|"b"|"c"|"d"|"e"|"f"|"g"|"h"|"i"|"j"|"k"|"l"|"m"|"n"|"o"|"p"|"q"|"r"|"s"|"t"|"u"|
+                     "v"|"w"|"x"|"y"|"z" 
+                     
+<constant> ::= <int_number>|<number>|<char>|<string>
+    <number> ::= <dec_int> {<dec_int>} ["." <dec_int>] [("E"|"e") <dec_int>]
+    <char> ::= ("'" <ASCII_sign> "'") | ("#" <dec_int>)
+        <ASCII_sign> ::= 42
+    <string> ::= "'" <char> {<char>} "'"
+    <int_number> ::= <bin_int>|<oct_int>|<dec_int>|<hex_int>
+        <bin_int> ::= "%" <bin_digit> {<bin_digit>}
+            <bin_digit> ::= "0"|"1"
+        <oct_int> ::= "$" <oct_digit> {<oct_digit>}
+            <oct_digit> ::= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"
+        <dec_int> ::= <dec_digit> {<dec_digit>}
+            <dec_digit> ::= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
+        <hex_int> ::= "%" <hex_digit> {<hex_digit>}
+            <hex_digit> ::= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"A"|"B"|"C"|"D"|"E"|"F"
