@@ -116,13 +116,47 @@ namespace FEFUPascalCompiler.Parser
 
     public class ProcFuncDeclsPart : DeclsPart
     {
-        public ProcFuncDeclsPart(List<AstNode> decls, AstNodeType type, Token token = null) : base(decls, type, token)
+        public ProcFuncDeclsPart(List<AstNode> decls) : base(decls, AstNodeType.ProcFuncDeclsPart)
         {
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
         {
-            throw new System.NotImplementedException();
+            return visitor.Visit(this);
         }
-    } 
+    }
+    
+    public class ProcDecl : AstNode
+    {
+        public ProcDecl(Token token, AstNode procHeader, AstNode block) : base(AstNodeType.ProcDecl, token)
+        {
+            _children.Add(procHeader);
+            _children.Add(block);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public AstNode ProcHeader => _children[0];
+        public AstNode Block => _children[1];
+    }
+    
+    public class FuncDecl : AstNode
+    {
+        public FuncDecl(Token token, AstNode funcHeader, AstNode block) : base(AstNodeType.FuncDecl, token)
+        {
+            _children.Add(funcHeader);
+            _children.Add(block);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public AstNode FuncHeader => _children[0];
+        public AstNode Block => _children[1];
+    }
 }
