@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using FEFUPascalCompiler.Parser.AstVisitor;
 using FEFUPascalCompiler.Tokens;
 
@@ -6,19 +7,18 @@ namespace FEFUPascalCompiler.Parser
 {
     public abstract class DeclsPart : AstNode
     {
-        protected DeclsPart(Token token, List<AstNode> decls, AstNodeType type) : base(type)
+        protected DeclsPart(List<AstNode> decls, AstNodeType type, Token token = null) : base(type, token)
         {
-            Token = token;
             _children.InsertRange(0, decls);
-            Value = token.Value;
         }
-        public Token Token { get; }
+
         public List<AstNode> Decls => _children;
     }
 
     public class ConstDeclsPart : DeclsPart
     {
-        public ConstDeclsPart(Token token, List<AstNode> constDecls) : base(token, constDecls, AstNodeType.ConstDeclsPart)
+        public ConstDeclsPart(Token token, List<AstNode> constDecls)
+            : base(constDecls, AstNodeType.ConstDeclsPart, token)
         {
         }
 
@@ -30,9 +30,8 @@ namespace FEFUPascalCompiler.Parser
 
     public class ConstDecl : AstNode
     {
-        public ConstDecl(Token token, AstNode ident, AstNode expression) : base(AstNodeType.ConstDecl)
+        public ConstDecl(Token token, AstNode ident, AstNode expression) : base(AstNodeType.ConstDecl, token)
         {
-            Value = token.Value;
             _children.Add(ident);
             _children.Add(expression);
         }
@@ -41,14 +40,83 @@ namespace FEFUPascalCompiler.Parser
         {
             return visitor.Visit(this);
         }
-        
-        public AstNode ConstIdent => _children[0];
+
+        public AstNode Ident => _children[0];
         public AstNode Expression => _children[1];
+    }
+
+    public class TypeDeclsPart : DeclsPart
+    {
+        public TypeDeclsPart(Token token, List<AstNode> decls) : base(decls, AstNodeType.TypeDeclsPart, token)
+        {
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+    }
+
+    public class TypeDecl : AstNode
+    {
+        public TypeDecl(Token token, AstNode ident, AstNode identType) : base(AstNodeType.TypeDecl, token)
+        {
+            _children.Add(ident);
+            _children.Add(identType);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public AstNode Ident => _children[0];
+        public AstNode IdentType => _children[1];
     }
 
     public class VariableDeclsPart : DeclsPart
     {
-        public VariableDeclsPart(Token token, List<AstNode> decls) : base(decls, AstNodeType.VarDeclsPart)
+        public VariableDeclsPart(Token token, List<AstNode> decls) : base(decls, AstNodeType.VarDeclsPart, token)
+        {
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+    }
+
+    public class VarDecl : AstNode
+    {
+        public VarDecl(Token token, List<AstNode> identList, AstNode identsType, AstNode expression = null)
+            : base(AstNodeType.VarDecl, token)
+        {
+            _children.InsertRange(0, identList);
+            _children.Add(identsType);
+            if (expression != null)
+            {
+                _children.Add(expression);
+            }
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        private bool _hasExpression = false;
+
+        public List<AstNode> IdentList => _hasExpression
+            ? _children.GetRange(0, _children.Count - 2)
+            : _children.GetRange(0, _children.Count - 1);
+
+        public AstNode IdentsType => _hasExpression ? _children[_children.Count - 2] : _children[_children.Count - 1];
+        public AstNode Expression => _hasExpression ? _children[_children.Count - 1] : null;
+    }
+
+    public class ProcFuncDeclsPart : DeclsPart
+    {
+        public ProcFuncDeclsPart(List<AstNode> decls, AstNodeType type, Token token = null) : base(decls, type, token)
         {
         }
 
@@ -56,5 +124,5 @@ namespace FEFUPascalCompiler.Parser
         {
             throw new System.NotImplementedException();
         }
-    }
+    } 
 }
