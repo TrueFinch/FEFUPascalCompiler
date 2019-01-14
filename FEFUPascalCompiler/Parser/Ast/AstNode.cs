@@ -25,9 +25,10 @@ namespace FEFUPascalCompiler.Parser
                 IndexRange,
             RecordType,
                 FieldSection,
+            PointerType,
         //Other
         IdentList,
-        Ident,
+            Ident,
         ConstIntegerLiteral,
         ConstDoubleLiteral,
         BinOperation,

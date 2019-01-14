@@ -61,7 +61,7 @@ namespace FEFUPascalCompiler.Parser
         private AstNode ParseType()
         {
             var typesParsers = new List<TypesParser>
-                {ParseSimpleTest, ParseArrayType, ParseRecordType, ParsePointerType, ParseProcedureType};
+                {ParseSimpleType, ParseArrayType, ParseRecordType, ParsePointerType, ParseProcedureType};
             foreach (var tp in typesParsers)
             {
                 var type = tp();
@@ -75,7 +75,7 @@ namespace FEFUPascalCompiler.Parser
             return null;
         }
 
-        private AstNode ParseSimpleTest()
+        private AstNode ParseSimpleType()
         {
             var ident = ParseIdent();
             if (ident == null)
@@ -247,7 +247,21 @@ namespace FEFUPascalCompiler.Parser
 
         private AstNode ParsePointerType()
         {
-            throw new NotImplementedException();
+            var token = PeekToken();
+            if (token.Type != TokenType.Carriage)
+            {
+                return null; //this is not pointer type
+            }
+
+            NextToken();
+            var simpleType = ParseSimpleType();
+            if (simpleType == null)
+            {
+                //exception -- pointer must be on a simple type
+                return null;
+            }
+
+            return PointerType(token, simpleType);
         }
 
         private AstNode ParseProcedureType()

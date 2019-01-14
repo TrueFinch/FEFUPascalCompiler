@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using FEFUPascalCompiler.Parser.AstVisitor;
 using FEFUPascalCompiler.Tokens;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace FEFUPascalCompiler.Parser
 {
@@ -70,18 +71,37 @@ namespace FEFUPascalCompiler.Parser
         public FieldSection(Token colon, AstNode identList, AstNode identsType) : base(AstNodeType.FieldSection)
         {
             Colon = colon;
+            
             _children.Add(identList);
             _children.Add(identsType);
-            Value = colon.ToString();
+            Value = colon.Value;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
         {
-            throw new System.NotImplementedException();
+            return visitor.Visit(this);
         }
         
         public Token Colon { get; }
         public AstNode Idents => _children[0];
         public AstNode IdentsType => _children[1];
+    }
+
+    public class PointerType : AstNode
+    {
+        public PointerType(Token carriage, AstNode simpleType) : base(AstNodeType.PointerType)
+        {
+            Carriage = carriage;
+            _children.Add(simpleType);
+            Value = Carriage.Value;
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+        
+        public Token Carriage { get; }
+        public AstNode SimpleType => _children[0];
     }
 }
