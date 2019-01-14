@@ -6,7 +6,7 @@ namespace FEFUPascalCompiler.Parser
 {
     public class CompoundStatement : AstNode
     {
-        public CompoundStatement(Token beginToken, Token endToken, List<AstNode> statements) 
+        public CompoundStatement(Token beginToken, Token endToken, List<AstNode> statements)
             : base(AstNodeType.CompoundStatement)
         {
             BeginToken = beginToken;
@@ -18,7 +18,7 @@ namespace FEFUPascalCompiler.Parser
         {
             return visitor.Visit(this);
         }
-        
+
         public Token BeginToken { get; }
         public Token EndToken { get; }
         public List<AstNode> Statements => _children;
@@ -35,10 +35,10 @@ namespace FEFUPascalCompiler.Parser
             return visitor.Visit(this);
         }
     }
-    
+
     public class AssignStatement : AstNode
     {
-        public AssignStatement(Token assignToken, AstNode left, AstNode right) 
+        public AssignStatement(Token assignToken, AstNode left, AstNode right)
             : base(AstNodeType.AssignmentStatement, assignToken)
         {
             _children.Add(left);
@@ -57,8 +57,8 @@ namespace FEFUPascalCompiler.Parser
 
     public class IfStatement : AstNode
     {
-        public IfStatement(Token ifToken, AstNode expression, Token thenToken, AstNode thenStatement, 
-                           Token elseToken = null, AstNode elseStatement = null) : base(AstNodeType.IfStatement)
+        public IfStatement(Token ifToken, AstNode expression, Token thenToken, AstNode thenStatement,
+            Token elseToken = null, AstNode elseStatement = null) : base(AstNodeType.IfStatement)
         {
             IfToken = ifToken;
             _children.Add(expression);
@@ -72,7 +72,7 @@ namespace FEFUPascalCompiler.Parser
         {
             return visitor.Visit(this);
         }
-        
+
         public Token IfToken { get; }
         public Token ThenToken { get; }
         public Token ElseToken { get; }
@@ -83,7 +83,7 @@ namespace FEFUPascalCompiler.Parser
 
     public class WhileStatement : AstNode
     {
-        public WhileStatement(Token whileToken, AstNode expression, Token doToken,  AstNode statement) 
+        public WhileStatement(Token whileToken, AstNode expression, Token doToken, AstNode statement)
             : this(whileToken, expression, doToken, statement, AstNodeType.WhileStatement)
         {
         }
@@ -97,7 +97,7 @@ namespace FEFUPascalCompiler.Parser
             _children.Add(expression);
             _children.Add(statement);
         }
-        
+
         public override T Accept<T>(IAstVisitor<T> visitor)
         {
             return visitor.Visit(this);
@@ -108,17 +108,62 @@ namespace FEFUPascalCompiler.Parser
         public AstNode Expression => _children[0];
         public AstNode Statement => _children[1];
     }
-    
+
     public class DoWhileStatement : WhileStatement
     {
-        public WhileStatement(Token whileToken, AstNode expression, Token doToken,  AstNode statement) 
+        public DoWhileStatement(Token whileToken, AstNode expression, Token doToken, AstNode statement)
             : base(whileToken, expression, doToken, statement, AstNodeType.DoWhileStatement)
         {
         }
-        
+
         public override T Accept<T>(IAstVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
+    }
+
+    public class ForStatement : AstNode
+    {
+        public ForStatement(Token forToken, AstNode iterator, Token assignToken, AstNode range,
+            Token doToken, AstNode expression)
+            : base(AstNodeType.ForStatement)
+        {
+            ForToken = forToken;
+            _children.Add(iterator);
+            AssignToken = assignToken;
+            _children.Add(range);
+            DoToken = doToken;
+            _children.Add(expression);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public Token ForToken { get; }
+        public Token AssignToken { get; }
+        public Token DoToken { get; }
+
+        public AstNode Iterator => _children[0];
+        public AstNode Range => _children[1];
+        public AstNode Expression => _children[2];
+    }
+
+    public class ForRange : AstNode
+    {
+        public ForRange(Token token, AstNode start, AstNode finish) : base(AstNodeType.ForRange, token)
+        {
+            _children.Add(start);
+            _children.Add(finish);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public AstNode Start => _children[0];
+        public AstNode Finish => _children[1];
     }
 }

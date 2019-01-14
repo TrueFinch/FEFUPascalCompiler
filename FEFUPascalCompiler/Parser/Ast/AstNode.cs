@@ -38,6 +38,7 @@ namespace FEFUPascalCompiler.Parser
             WhileStatement,
             DoWhileStatement,
             ForStatement,
+                ForRange,
         //Other
         FormalParamSection,
             Modifier,
