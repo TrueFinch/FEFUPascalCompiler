@@ -16,7 +16,7 @@ namespace FEFUPascalCompiler.Tokens
         public TokenType Type { get; protected set; }
 
         public string Lexeme { get; }
-        
+
         public string Value { get; protected set; }
 
         protected Token(int line, int column, string lexeme)
@@ -57,12 +57,12 @@ namespace FEFUPascalCompiler.Tokens
                 {TokenType.Bracket, (line, column, lexeme) => new BracketToken(line, column, lexeme)}
             };
     }
-    
+
     //TODO: change int64 ti int32
     public class IntegerNumberToken : Token
     {
         public IntegerNumberToken(int line, int column, string lexeme)
-            : base(line, column, TokenType.DecIntegerNumber, lexeme)
+            : base(line, column, basisToTokenType[basis[lexeme[0]]], lexeme)
         {
             Value = ConvertToInteger(lexeme);
         }
@@ -103,14 +103,14 @@ namespace FEFUPascalCompiler.Tokens
             {'0', 10}, {'1', 10}, {'2', 10}, {'3', 10}, {'4', 10}, {'5', 10}, {'6', 10}, {'7', 10}, {'8', 10},
             {'9', 10},
         };
-        
+
         private static Dictionary<int, TokenType> basisToTokenType = new Dictionary<int, TokenType>
         {
-            {2, TokenType.BinIntegerNumber}, {8, TokenType.OctIntegerNumber}, 
+            {2, TokenType.BinIntegerNumber}, {8, TokenType.OctIntegerNumber},
             {10, TokenType.DecIntegerNumber}, {16, TokenType.HexIntegerNumber},
         };
     }
-    
+
     //TODO: change double to float
     public class DoubleNumberToken : Token
     {
@@ -255,6 +255,7 @@ namespace FEFUPascalCompiler.Tokens
             {
                 return lexeme;
             }
+
             return ((char) Convert.ToUInt32(lexeme.Substring(1))).ToString();
         }
 

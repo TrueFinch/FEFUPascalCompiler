@@ -4,6 +4,9 @@ namespace FEFUPascalCompiler.Tokens
 {
     public enum TokenType
     {
+        //TODO: add tests for carriage and at_sign
+        AtSign,
+        Carriage,
         //TODO: add tests for comparing_operators operators
         //logic operators
         NotEqualOperator,
@@ -257,6 +260,8 @@ namespace FEFUPascalCompiler.Tokens
             {">=", TokenType.GreaterOrEqualOperator},
             {">", TokenType.GreaterOperator},
             {"=", TokenType.EqualOperator},
+            {"^", TokenType.Carriage},
+            {"@", TokenType.AtSign},
         };
     }
 }
