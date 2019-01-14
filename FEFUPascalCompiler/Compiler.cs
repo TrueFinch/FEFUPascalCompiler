@@ -5,6 +5,7 @@ using System.Text;
 using FEFUPascalCompiler.Lexer;
 using FEFUPascalCompiler.Tokens;
 using FEFUPascalCompiler.Parser;
+using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.ParserParts;
 using FEFUPascalCompiler.Parser.AstVisitor;
 

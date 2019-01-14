@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
 using FEFUPascalCompiler.Parser.AstVisitor;
 using FEFUPascalCompiler.Tokens;
 
-namespace FEFUPascalCompiler.Parser
+namespace FEFUPascalCompiler.Parser.AstNodes
 {
     public abstract class DeclsPart : AstNode
     {

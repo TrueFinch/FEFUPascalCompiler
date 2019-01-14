@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using FEFUPascalCompiler.Parser.AstVisitor;
 using FEFUPascalCompiler.Tokens;
 
-namespace FEFUPascalCompiler.Parser
+namespace FEFUPascalCompiler.Parser.AstNodes
 {
     public class SimpleType : AstNode
     {

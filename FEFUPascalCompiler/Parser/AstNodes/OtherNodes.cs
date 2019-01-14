@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using FEFUPascalCompiler.Parser.AstVisitor;
 using FEFUPascalCompiler.Tokens;
 
-namespace FEFUPascalCompiler.Parser
+namespace FEFUPascalCompiler.Parser.AstNodes
 {
     public class FormalParamSection : AstNode
     {
