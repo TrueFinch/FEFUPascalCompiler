@@ -6,29 +6,6 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 {
     internal partial class PascalParser
     {
-        private AstNode ParseTypeDecl()
-        {
-            var constIdent = ParseIdent();
-            var token = PeekToken();
-            if (token == null || token.Type != TokenType.EqualOperator)
-            {
-                //some parser exception
-                return null;
-            }
-
-            NextToken();
-            var type = ParseType();
-            token = PeekToken();
-            if (token == null || token.Type != TokenType.Semicolon)
-            {
-                //some parser exception
-                return null;
-            }
-
-            NextToken();
-            return new TypeDecl(constIdent, type);
-        }
-
         private AstNode ParseType()
         {
             var typesParsers = new List<TypesParser>

@@ -84,6 +84,29 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new ConstDeclsPart(token, typeDecls);
         }
 
+        private AstNode ParseTypeDecl()
+        {
+            var typeIdent = ParseIdent();
+            var token = PeekToken();
+            if (token == null || token.Type != TokenType.EqualOperator)
+            {
+                //some parser exception
+                return null;
+            }
+
+            NextToken();
+            var type = ParseType();
+            token = PeekToken();
+            if (token == null || token.Type != TokenType.Semicolon)
+            {
+                //some parser exception
+                return null;
+            }
+
+            NextToken();
+            return new TypeDecl(typeIdent, type);
+        }
+        
         private AstNode ParseVariableDeclsPart()
         {
             var token = PeekToken();
