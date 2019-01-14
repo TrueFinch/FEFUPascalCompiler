@@ -58,9 +58,8 @@
                     <func_header> ::= "function" <ident> "(" [<formal_param_list>] ")" ":" <simple_type> 
                     
                             <formal_param_list> ::= <formal_param_section> {";" <formal_param_section>}
-                                <formal_param_section> ::= [<modifier>] <parameter>
+                                <formal_param_section> ::= [<modifier>] <ident_list> ":" <param_type>
                                     <modifier> ::= "var"|"const"|"out"
-                                    <parameter> ::= <ident_list> ":" <param_type>
                                         <param_type> ::= <simple_type> | <conformant_array>
                                             <conformant_array> ::= "array" "of" <simple_type>
                     <subroutine_block> ::= <block> | "forward"

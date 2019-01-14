@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using FEFUPascalCompiler.Parser.AstVisitor;
 using FEFUPascalCompiler.Tokens;
 
@@ -32,6 +31,8 @@ namespace FEFUPascalCompiler.Parser
             ProcSignature,
             FuncSignature,
         //Other
+        FormalParamSection,
+            Modifier,
         IdentList,
             Ident,
         ConstIntegerLiteral,
@@ -60,7 +61,7 @@ namespace FEFUPascalCompiler.Parser
 
         public abstract T Accept<T>(IAstVisitor<T> visitor);
 
-        public Token Token { get; }
+        public Token Token { get; protected set; }
         public AstNodeType Type { get; }
         protected string Value { get; set; }
         protected List<AstNode> _children = new List<AstNode>();
@@ -98,37 +99,6 @@ namespace FEFUPascalCompiler.Parser
 
         public List<AstNode> DeclsParts => _children.GetRange(0, _children.Count - 1);
         public AstNode MainCompound => _children[_children.Count - 1];
-    }
-
-    public class IdentList : AstNode
-    {
-        public IdentList(List<AstNode> identList) : base(AstNodeType.IdentList)
-        {
-            _children.InsertRange(0, identList);
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public List<AstNode> Idents => _children;
-    }
-
-    public class Ident : AstNode
-    {
-        public Ident(Token token) : this(token, AstNodeType.Ident)
-        {
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        protected Ident(Token token, AstNodeType type) : base(type, token)
-        {
-        }
     }
 
     public class ConstIntegerLiteral : AstNode

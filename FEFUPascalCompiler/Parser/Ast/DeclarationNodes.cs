@@ -93,10 +93,7 @@ namespace FEFUPascalCompiler.Parser
         {
             _children.InsertRange(0, identList);
             _children.Add(identsType);
-            if (expression != null)
-            {
-                _children.Add(expression);
-            }
+            _children.Add(expression);
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -104,14 +101,10 @@ namespace FEFUPascalCompiler.Parser
             return visitor.Visit(this);
         }
 
-        private bool _hasExpression = false;
+        public List<AstNode> IdentList => _children.GetRange(0, _children.Count - 2);
 
-        public List<AstNode> IdentList => _hasExpression
-            ? _children.GetRange(0, _children.Count - 2)
-            : _children.GetRange(0, _children.Count - 1);
-
-        public AstNode IdentsType => _hasExpression ? _children[_children.Count - 2] : _children[_children.Count - 1];
-        public AstNode Expression => _hasExpression ? _children[_children.Count - 1] : null;
+        public AstNode IdentsType => _children[_children.Count - 2];
+        public AstNode Expression => _children[_children.Count - 1];
     }
 
     public class ProcFuncDeclsPart : DeclsPart
