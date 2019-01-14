@@ -38,6 +38,8 @@ namespace FEFUPascalCompiler.Parser
         }
     }
     
+    
+    
     public class IdentList : AstNode
     {
         public IdentList(List<AstNode> identList) : base(AstNodeType.IdentList)

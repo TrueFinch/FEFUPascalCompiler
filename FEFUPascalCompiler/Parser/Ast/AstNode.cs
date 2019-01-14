@@ -33,6 +33,7 @@ namespace FEFUPascalCompiler.Parser
         //Other
         FormalParamSection,
             Modifier,
+            ConformantArray,
         IdentList,
             Ident,
         ConstIntegerLiteral,

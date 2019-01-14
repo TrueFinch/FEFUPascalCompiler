@@ -145,4 +145,23 @@ namespace FEFUPascalCompiler.Parser
         public List<AstNode> ParamList => _children.GetRange(0, _children.Count - 1);
         public AstNode ReturnType => _children[_children.Count - 1];
     }
+
+    public class ConformantArray : AstNode
+    {
+        public ConformantArray(Token arrayToken, Token ofToken, AstNode arrayType) : base(AstNodeType.ConformantArray)
+        {
+            ArrayToken = arrayToken;
+            OfToken = ofToken;
+            _children.Add(arrayType);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+        
+        public Token ArrayToken { get; }
+        public Token OfToken { get; }
+        public AstNode ArrayType => _children[0];
+    }
 }
