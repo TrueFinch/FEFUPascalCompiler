@@ -33,6 +33,8 @@ namespace FEFUPascalCompiler.Parser
         //Statements
         CompoundStatement,
             EmptyStatement,
+            AssignmentStatement,
+            IfStatement,
         //Other
         FormalParamSection,
             Modifier,
@@ -156,22 +158,5 @@ namespace FEFUPascalCompiler.Parser
         public Token Operation { get; }
         public AstNode Left => _children[0];
         public AstNode Right => _children[1];
-    }
-
-    public class AssignStatement : BinOperation
-    {
-        public AssignStatement(AssignToken operation, AstNode left, AstNode right) : base(left, right)
-        {
-            Operation = operation;
-//            Value = string.Format("{0} {1} {2}", left.ToString(), operation.Value, right.ToString());
-            Value = operation.Value;
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public new AssignToken Operation { get; }
     }
 }
