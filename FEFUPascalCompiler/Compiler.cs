@@ -5,6 +5,7 @@ using System.Text;
 using FEFUPascalCompiler.Lexer;
 using FEFUPascalCompiler.Tokens;
 using FEFUPascalCompiler.Parser;
+using FEFUPascalCompiler.Parser.ParserParts;
 using FEFUPascalCompiler.Parser.AstVisitor;
 
 //TODO: change logic of Peek Next - we want that on start we have valid token got by Peek and that already use Next
@@ -45,14 +46,14 @@ namespace FEFUPascalCompiler
                 LastException = new Exception("Lexer is not ready or stopped. Don't panic and wait for help.");
             }
 
-            if (!_parser.IsReady())
+            if (!_pascalParser.IsReady())
             {
                 LastException = new Exception("Parser is not ready or stopped. Don't panic and wait for help.");
             }
 
             try
             {
-                _ast = _parser.Parse();
+                _ast = _pascalParser.Parse();
             }
             catch (Exception e)
             {
@@ -67,14 +68,14 @@ namespace FEFUPascalCompiler
                 LastException = new Exception("Lexer is not ready or stopped. Don't panic and wait for help.");
             }
 
-            if (!_parser.IsReady())
+            if (!_pascalParser.IsReady())
             {
                 LastException = new Exception("Parser is not ready or stopped. Don't panic and wait for help.");
             }
 
             try
             {
-                _ast = _parser.ParseSingleExpression();
+                _ast = _pascalParser.ParseSingleExpression();
             }
             catch (Exception e)
             {
@@ -148,14 +149,14 @@ namespace FEFUPascalCompiler
         public Compiler()
         {
             _lexer = new LexerDfa();
-            _parser = new Parser.Parser(Peek, Next, PeekAndNext, NextAndPeek);
+            _pascalParser = new PascalParser(Peek, Next, PeekAndNext, NextAndPeek);
         }
 
         public Exception LastException = null;
 
         private AstNode _ast;
         private LexerDfa _lexer;
-        private Parser.Parser _parser;
+        private PascalParser _pascalParser;
         private StreamReader _input;
     } // FEFUPascalCompiler class
 } // FEFUPascalCompiler namespace

@@ -62,7 +62,7 @@
                                     <modifier> ::= "var"|"const"|"out"
                                     <parameter> ::= <ident_list> ":" <param_type>
                                         <param_type> ::= <simple_type> | <conformant_array>
-                                            <conformant_array> ::= "array" "of" (<simple_type>)
+                                            <conformant_array> ::= "array" "of" <simple_type>
                     <subroutine_block> ::= <block> | "forward"
                         <block> ::= {<const_decls_part>|<type_decls_part>|<variable_decls_part>} <compound_statement>
 
@@ -84,7 +84,7 @@
                         <if_statement> ::= "if" "(" <expression> ")" "then" <statement> ["else" <statement>]
                         
         
-<type> ::= <simple_type>|<array_type>|<record_type>|<pointer_type>|<procedure_type>
+<type> ::= <simple_type>|<array_type>|<record_type>|<pointer_type>|<func_signature>|<proc_signature>
     <simple_type> ::= <ident>
     
     <array_type> ::= "array" "[" <index_ranges> "]" "of" <type>
@@ -95,10 +95,10 @@
         <fields_list> ::= <field_section> {";" <field_section>}
             <field_section> ::= <ident_list> ":" <type>
 
-    <pointer_type> ::= "^" <simple_type>
-    <procedure_type> ::= <func_signature>|<proc_signature>
-        <func_signature> ::= "function" [<formal_param_list>] ":" <simple_type> 
-        <proc_signature> ::= "procedure" [<formal_param_list>]
+    <pointer_type> ::= "^" <simple_type> //TODO: ask nastya about pointer on simple type - cause this is ident but what
+                                         //TODO: about keywords like char, double, integer array?
+    <func_signature> ::= "function" [<formal_param_list>] ":" <simple_type> 
+    <proc_signature> ::= "procedure" [<formal_param_list>]
         
 
 <expression> ::= <simple_expr>[<comparing_operator> <simple_expr>]

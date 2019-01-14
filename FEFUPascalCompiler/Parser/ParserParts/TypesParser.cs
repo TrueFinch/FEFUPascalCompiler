@@ -2,39 +2,10 @@ using System;
 using System.Collections.Generic;
 using FEFUPascalCompiler.Tokens;
 
-namespace FEFUPascalCompiler.Parser
+namespace FEFUPascalCompiler.Parser.ParserParts
 {
-    internal partial class Parser
+    internal partial class PascalParser
     {
-        private AstNode ParseTypeDeclsPart()
-        {
-            var token = PeekToken();
-            if (token.Type != TokenType.Type)
-            {
-                //it means this is not types declaration block so we are returning null and no exceptions
-                return null;
-            }
-
-            var constDecls = new List<AstNode>();
-            NextToken();
-            var constDecl = ParseTypeDecl();
-            if (constDecl == null)
-            {
-                //some parser exception
-                return null;
-            }
-
-            constDecls.Add(constDecl);
-            do
-            {
-                constDecl = ParseTypeDecl();
-                if (constDecl == null) break;
-                constDecls.Add(constDecl);
-            } while (true);
-
-            return new ConstDeclsPart(constDecls);
-        }
-
         private AstNode ParseTypeDecl()
         {
             var constIdent = ParseIdent();
@@ -55,7 +26,7 @@ namespace FEFUPascalCompiler.Parser
             }
 
             NextToken();
-            return new ConstDecl(constIdent, type);
+            return new TypeDecl(constIdent, type);
         }
 
         private AstNode ParseType()
@@ -261,10 +232,39 @@ namespace FEFUPascalCompiler.Parser
                 return null;
             }
 
-            return PointerType(token, simpleType);
+            return new PointerType(token, simpleType);
         }
 
         private AstNode ParseProcedureType()
+        {
+            var funcSignature = ParseFuncSignature();
+            if (funcSignature != null)
+            {
+                return funcSignature;
+            }
+
+            var procSignature = ParseProcSignature();
+            if (procSignature != null)
+            {
+                return procSignature;
+            }
+
+            return null; // this is not func or proc signature
+        }
+
+        private AstNode ParseFuncSignature()
+        {
+            var token = PeekToken();
+            if (token == null || token.Type != TokenType.Function)
+            {
+                return null; // this is not func signature
+            }
+
+            var formalParamList = ParseFormalParamList();
+            
+        }
+
+        private AstNode ParseProcSignature()
         {
             throw new NotImplementedException();
         }
