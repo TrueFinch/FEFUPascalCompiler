@@ -138,8 +138,20 @@ namespace FEFUPascalCompiler.Lexer
                     {LexerState.Colon                      , InitColonStateNode                      },
                     {LexerState.Comma                      , InitCommaStateNode                      },
                     {LexerState.Dot                        , InitDotStateNode                        },
+                    {LexerState.Carriage                   , InitCarriageStateNode                   },
+                    {LexerState.AtSign                     , InitAtSignStateNode                     },
                     // @formatter:on
                 };
+
+            private static Node? InitAtSignStateNode(Node node)
+            {
+                return node.Type != LexerState.AtSign ? (Node?) null : node;
+            }
+
+            private static Node? InitCarriageStateNode(Node node)
+            {
+                return node.Type != LexerState.Carriage ? (Node?) null : node;
+            }
 
             private static Node? InitNotEqualOperatorStateNode(Node node)
             {
@@ -232,6 +244,8 @@ namespace FEFUPascalCompiler.Lexer
                 node.Transitions.TryAdd(':',  new Pair<LexerState, int>(LexerState.Colon                 , 1));
                 node.Transitions.TryAdd(',',  new Pair<LexerState, int>(LexerState.Comma                 , 1));
                 node.Transitions.TryAdd('.',  new Pair<LexerState, int>(LexerState.Dot                   , 1));
+                node.Transitions.TryAdd('^',  new Pair<LexerState, int>(LexerState.Carriage              , 1));
+                node.Transitions.TryAdd('@',  new Pair<LexerState, int>(LexerState.AtSign                , 1));
                 // @formatter:on
                 return node;
             }

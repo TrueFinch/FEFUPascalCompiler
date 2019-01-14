@@ -55,7 +55,10 @@ namespace FEFUPascalCompiler.Lexer
             SingleLineComment,
             InvalidSign,
             SignCodeStart,
-            SignCodeFinish
+            SignCodeFinish,
+            
+            Carriage,
+            AtSign,
         }
 
 
@@ -82,6 +85,12 @@ namespace FEFUPascalCompiler.Lexer
                 {LexerState.DivArithmOperator     , TokenType.BinOperator       },
                 {LexerState.PowArithmOperator     , TokenType.BinOperator       },
                 {LexerState.DoubleDotOperator     , TokenType.BinOperator       },
+                {LexerState.NotEqualOperator      , TokenType.BinOperator       },
+                {LexerState.EqualOperator         , TokenType.BinOperator       },
+                {LexerState.LessOperator          , TokenType.BinOperator       },
+                {LexerState.LessOrEqualOperator   , TokenType.BinOperator       },
+                {LexerState.GreaterOperator       , TokenType.BinOperator       },
+                {LexerState.GreaterOrEqualOperator, TokenType.BinOperator       },
                 {LexerState.StringConstFinish     , TokenType.StringConst       },
                 {LexerState.OpenSquareBracket     , TokenType.OpenSquareBracket },         
 //                {LexerState.SignCodeFinish        , TokenType.StringConst       },
@@ -89,10 +98,10 @@ namespace FEFUPascalCompiler.Lexer
                 {LexerState.CloseBracket          , TokenType.Separator         },
                 {LexerState.OpenBracket           , TokenType.Separator         },
                 {LexerState.ExpDouble             , TokenType.DoubleNumber      },
-                {LexerState.BinNumber             , TokenType.DecIntegerNumber     },
-                {LexerState.OctNumber             , TokenType.DecIntegerNumber     },
-                {LexerState.DecNumber             , TokenType.DecIntegerNumber     },
-                {LexerState.HexNumber             , TokenType.DecIntegerNumber     },
+                {LexerState.BinNumber             , TokenType.DecIntegerNumber  },
+                {LexerState.OctNumber             , TokenType.DecIntegerNumber  },
+                {LexerState.DecNumber             , TokenType.DecIntegerNumber  },
+                {LexerState.HexNumber             , TokenType.DecIntegerNumber  },
                 {LexerState.SemiColon             , TokenType.Separator         },
                 {LexerState.Assign                , TokenType.AssignOperator    },
                 {LexerState.Colon                 , TokenType.Separator         },
@@ -100,6 +109,8 @@ namespace FEFUPascalCompiler.Lexer
                 {LexerState.Comma                 , TokenType.Separator         },
                 {LexerState.Dot                   , TokenType.Separator         },
                 {LexerState.SignCodeFinish        , TokenType.CharConst         },
+                {LexerState.Carriage              , TokenType.Separator         },
+                {LexerState.AtSign                , TokenType.Separator         },
                 // @formatter:on
             };
 

@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using FEFUPascalCompiler.Lexer;
+using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Tokens;
 
-namespace FEFUPascalCompiler.Parser
+namespace FEFUPascalCompiler.Parser.ParserParts
 {
     internal delegate Token PeekAndNext();
 
@@ -18,7 +17,7 @@ namespace FEFUPascalCompiler.Parser
 
     internal delegate AstNode TypesParser();
 
-    internal partial class Parser
+    internal partial class PascalParser
     {
         public bool IsReady()
         {
@@ -79,56 +78,6 @@ namespace FEFUPascalCompiler.Parser
             var declParts = ParseDeclsParts();
             var mainCompound = ParseCompoundStatement();
             return new MainBlock(declParts, mainCompound);
-        }
-
-        private List<AstNode> ParseDeclsParts()
-        {
-            List<AstNode> declParts = new List<AstNode>();
-            var declParsers = new List<DeclPartParser>
-                {ParseConstDeclsPart, ParseTypeDeclsPart, ParseVarDeclsPart, ParseaProcFuncDeclsPart};
-            bool partsExist;
-            do
-            {
-                partsExist = false;
-                foreach (var declParser in declParsers)
-                {
-                    var tmp = declParser();
-                    if (tmp == null) continue;
-                    declParts.Add(tmp);
-                    partsExist = true;
-                }
-            } while (partsExist);
-
-            return declParts;
-        }
-
-        private AstNode ParseConstDeclsPart()
-        {
-            var token = PeekToken();
-            if (token.Type != TokenType.Const)
-            {
-                //it means this is not constants declaration block so we are returning null and no exceptions
-                return null;
-            }
-
-            var constDecls = new List<AstNode>();
-            NextToken();
-            var constDecl = ParseConstDecl();
-            if (constDecl == null)
-            {
-                //some parser exception
-                return null;
-            }
-
-            constDecls.Add(constDecl);
-            do
-            {
-                constDecl = ParseConstDecl();
-                if (constDecl == null) break;
-                constDecls.Add(constDecl);
-            } while (true);
-
-            return new ConstDeclsPart(constDecls);
         }
 
         private AstNode ParseConstDecl()
@@ -276,42 +225,7 @@ namespace FEFUPascalCompiler.Parser
             return new AssignStatement(assignToken as AssignToken, left, right);
         }
 
-        public AstNode ParseIdentList()
-        {
-            var identList = new List<AstNode> {ParseIdent()};
-            if (identList[0] == null)
-            {
-                //exception -- this is not ident list
-            }
-            
-            while (PeekToken().Type == TokenType.Comma)
-            {
-                var ident = ParseIdent();
-                if (ident == null)
-                {
-                    //exception unexpected lexeme
-                    return null;
-                }
-                identList.Add(ident);
-                NextToken();
-            }
-
-            return new IdentList(identList);
-        }
-
-        private AstNode ParseIdent()
-        {
-            var token = PeekToken();
-            if (token.Type != TokenType.Ident)
-            {
-                //this is not ident, may be this is key word? Think about it
-                return null;
-            }
-
-            return new Ident(PeekAndNext());
-        }
-
-        public Parser(PeekToken peekToken, NextToken nextToken, PeekAndNext peekAndNext, NextAndPeek nextAndPeek)
+        public PascalParser(PeekToken peekToken, NextToken nextToken, PeekAndNext peekAndNext, NextAndPeek nextAndPeek)
         {
             PeekToken = peekToken;
             NextToken = nextToken;

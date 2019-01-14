@@ -28,12 +28,11 @@
 //# RBNF RULES:                                                                                                        #
 //#  1.     ::=    -- equal by definition                  ;                                                           #
 //#  2.      |     -- or (alternative)                     ;                                                           #
-//#  3.      .     -- end of the rule                      ;                                                           #
-//#  4.     [X]    -- a zero or one entry of X             ;                                                           #
-//#  5.     {X}    -- zero and more entries of X           ;                                                           #
-//#  6.    (X|Y)   -- group: or X, or Y                    ;                                                           #
-//#  7.    "XYZ"   -- terminal sign XYZ                    ;                                                           #
-//#  8. <Metaname> -- not terminal sign with name Metaname ;                                                           #                           
+//#  3.     [X]    -- a zero or one entry of X             ;                                                           #
+//#  4.     {X}    -- zero and more entries of X           ;                                                           #
+//#  5.    (X|Y)   -- group: or X, or Y                    ;                                                           #
+//#  6.    "XYZ"   -- terminal sign XYZ                    ;                                                           #
+//#  7. <Metaname> -- not terminal sign with name Metaname ;                                                           #                           
 //*====================================================================================================================*                                                                                                                             
                                                                                                                                      
 <program> ::= "program" <ident>  ";" <main_block> "." 
@@ -58,11 +57,10 @@
                     <func_header> ::= "function" <ident> "(" [<formal_param_list>] ")" ":" <simple_type> 
                     
                             <formal_param_list> ::= <formal_param_section> {";" <formal_param_section>}
-                                <formal_param_section> ::= [<modifier>] <parameter>
+                                <formal_param_section> ::= [<modifier>] <ident_list> ":" <param_type>
                                     <modifier> ::= "var"|"const"|"out"
-                                    <parameter> ::= <ident_list> ":" <param_type>
                                         <param_type> ::= <simple_type> | <conformant_array>
-                                            <conformant_array> ::= "array" "of" (<simple_type>)
+                                            <conformant_array> ::= "array" "of" <simple_type>
                     <subroutine_block> ::= <block> | "forward"
                         <block> ::= {<const_decls_part>|<type_decls_part>|<variable_decls_part>} <compound_statement>
 
@@ -76,15 +74,16 @@
                         <assignment_statement> ::= <expression> <assignment_symbol> <expression>
                             <assignment_symbol> ::= ":="|"+="|"-="|"*="|"/="
                             
-                    <structured_statement> ::= <compound_statement>|<if_statement>|<loop_statement>
-                        <loop_statement> ::= <while_statement>|<for_statement>
+                    <structured_statement> ::= <if_statement>|<loop_statement>|<compound_statement>
+                        <if_statement> ::= "if" "(" <expression> ")" "then" <statement> ["else" <statement>]
+                        <loop_statement> ::= <while_statement>|<do_while_statement>|<for_statement>
                             <while_statement> ::= "while" <expression> "do" <statement>
+                            <do_while_statement> ::= "do" <statement> "while" <expression>
                             <for_statement> ::= "for" <ident> ":=" <for_range> "do" <statement>
                                 <for_range> ::= <expression> ("to"|"downto") <expression>
-                        <if_statement> ::= "if" "(" <expression> ")" "then" <statement> ["else" <statement>]
                         
         
-<type> ::= <simple_type>|<array_type>|<record_type>|<pointer_type>|<procedure_type>
+<type> ::= <simple_type>|<array_type>|<record_type>|<pointer_type>|<func_signature>|<proc_signature>
     <simple_type> ::= <ident>
     
     <array_type> ::= "array" "[" <index_ranges> "]" "of" <type>
@@ -95,10 +94,10 @@
         <fields_list> ::= <field_section> {";" <field_section>}
             <field_section> ::= <ident_list> ":" <type>
 
-    <pointer_type> ::= "^" <simple_type>
-    <procedure_type> ::= <func_signature>|<proc_signature>
-        <func_signature> ::= "function" [<formal_param_list>] ":" <simple_type> 
-        <proc_signature> ::= "procedure" [<formal_param_list>]
+    <pointer_type> ::= "^" <simple_type> //TODO: ask nastya about pointer on simple type - cause this is ident but what
+                                         //TODO: about keywords like char, double, integer array?
+    <func_signature> ::= "function" [<formal_param_list>] ":" <simple_type> 
+    <proc_signature> ::= "procedure" [<formal_param_list>]
         
 
 <expression> ::= <simple_expr>[<comparing_operator> <simple_expr>]
