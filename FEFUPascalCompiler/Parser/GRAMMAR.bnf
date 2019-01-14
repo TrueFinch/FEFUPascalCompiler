@@ -28,12 +28,11 @@
 //# RBNF RULES:                                                                                                        #
 //#  1.     ::=    -- equal by definition                  ;                                                           #
 //#  2.      |     -- or (alternative)                     ;                                                           #
-//#  3.      .     -- end of the rule                      ;                                                           #
-//#  4.     [X]    -- a zero or one entry of X             ;                                                           #
-//#  5.     {X}    -- zero and more entries of X           ;                                                           #
-//#  6.    (X|Y)   -- group: or X, or Y                    ;                                                           #
-//#  7.    "XYZ"   -- terminal sign XYZ                    ;                                                           #
-//#  8. <Metaname> -- not terminal sign with name Metaname ;                                                           #                           
+//#  3.     [X]    -- a zero or one entry of X             ;                                                           #
+//#  4.     {X}    -- zero and more entries of X           ;                                                           #
+//#  5.    (X|Y)   -- group: or X, or Y                    ;                                                           #
+//#  6.    "XYZ"   -- terminal sign XYZ                    ;                                                           #
+//#  7. <Metaname> -- not terminal sign with name Metaname ;                                                           #                           
 //*====================================================================================================================*                                                                                                                             
                                                                                                                                      
 <program> ::= "program" <ident>  ";" <main_block> "." 
@@ -77,8 +76,9 @@
                             
                     <structured_statement> ::= <if_statement>|<loop_statement>|<compound_statement>
                         <if_statement> ::= "if" "(" <expression> ")" "then" <statement> ["else" <statement>]
-                        <loop_statement> ::= <while_statement>|<for_statement>
+                        <loop_statement> ::= <while_statement>|<do_while_statement>|<for_statement>
                             <while_statement> ::= "while" <expression> "do" <statement>
+                            <do_while_statement> ::= "do" <statement> "while" <expression>
                             <for_statement> ::= "for" <ident> ":=" <for_range> "do" <statement>
                                 <for_range> ::= <expression> ("to"|"downto") <expression>
                         

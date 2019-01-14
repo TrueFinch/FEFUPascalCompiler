@@ -81,4 +81,44 @@ namespace FEFUPascalCompiler.Parser
         public AstNode ElseStatement => _children[2];
     }
 
+    public class WhileStatement : AstNode
+    {
+        public WhileStatement(Token whileToken, AstNode expression, Token doToken,  AstNode statement) 
+            : this(whileToken, expression, doToken, statement, AstNodeType.WhileStatement)
+        {
+        }
+
+        protected WhileStatement(Token whileToken, AstNode expression, Token doToken, AstNode statement,
+            AstNodeType type)
+            : base(type)
+        {
+            WhileToken = whileToken;
+            DoToken = doToken;
+            _children.Add(expression);
+            _children.Add(statement);
+        }
+        
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public Token WhileToken { get; }
+        public Token DoToken { get; }
+        public AstNode Expression => _children[0];
+        public AstNode Statement => _children[1];
+    }
+    
+    public class DoWhileStatement : WhileStatement
+    {
+        public WhileStatement(Token whileToken, AstNode expression, Token doToken,  AstNode statement) 
+            : base(whileToken, expression, doToken, statement, AstNodeType.DoWhileStatement)
+        {
+        }
+        
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+    }
 }

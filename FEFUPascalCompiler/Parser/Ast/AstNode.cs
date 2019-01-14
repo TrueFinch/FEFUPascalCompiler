@@ -35,6 +35,9 @@ namespace FEFUPascalCompiler.Parser
             EmptyStatement,
             AssignmentStatement,
             IfStatement,
+            WhileStatement,
+            DoWhileStatement,
+            ForStatement,
         //Other
         FormalParamSection,
             Modifier,
