@@ -142,6 +142,23 @@ namespace FEFUPascalCompiler.Parser
         public AstNode ProcHeader => _children[0];
         public AstNode Block => _children[1];
     }
+
+    public class ProcHeader : AstNode
+    {
+        public ProcHeader(Token token, AstNode name, List<AstNode> paramList) : base(AstNodeType.ProcHeader, token)
+        {
+            _children.Add(name);
+            _children.InsertRange(1, paramList);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public AstNode Name => _children[0];
+        public List<AstNode> ParamList => _children.GetRange(1, _children.Count - 1);
+    }
     
     public class FuncDecl : AstNode
     {
@@ -158,5 +175,25 @@ namespace FEFUPascalCompiler.Parser
 
         public AstNode FuncHeader => _children[0];
         public AstNode Block => _children[1];
+    }
+    
+    public class FuncHeader : AstNode
+    {
+        public FuncHeader(Token token, AstNode name, List<AstNode> paramList, AstNode returnType) 
+            : base(AstNodeType.FuncHeader, token)
+        {
+            _children.Add(name);
+            _children.InsertRange(1, paramList);
+            _children.Add(returnType);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public AstNode Name => _children[0];
+        public List<AstNode> ParamList => _children.GetRange(1, _children.Count - 2);
+        public AstNode ReturnType => _children[_children.Count - 1];
     }
 }

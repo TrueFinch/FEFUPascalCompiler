@@ -19,7 +19,9 @@ namespace FEFUPascalCompiler.Parser
                     VarDecl,
                 ProcFuncDeclsPart,
                     ProcDecl,
+                        ProcHeader,
                     FuncDecl,
+                        FuncHeader,
         //Types
             SimpleType,
             ArrayType,
