@@ -75,12 +75,12 @@
                         <assignment_statement> ::= <expression> <assignment_symbol> <expression>
                             <assignment_symbol> ::= ":="|"+="|"-="|"*="|"/="
                             
-                    <structured_statement> ::= <compound_statement>|<if_statement>|<loop_statement>
+                    <structured_statement> ::= <if_statement>|<loop_statement>|<compound_statement>
+                        <if_statement> ::= "if" "(" <expression> ")" "then" <statement> ["else" <statement>]
                         <loop_statement> ::= <while_statement>|<for_statement>
                             <while_statement> ::= "while" <expression> "do" <statement>
                             <for_statement> ::= "for" <ident> ":=" <for_range> "do" <statement>
                                 <for_range> ::= <expression> ("to"|"downto") <expression>
-                        <if_statement> ::= "if" "(" <expression> ")" "then" <statement> ["else" <statement>]
                         
         
 <type> ::= <simple_type>|<array_type>|<record_type>|<pointer_type>|<func_signature>|<proc_signature>

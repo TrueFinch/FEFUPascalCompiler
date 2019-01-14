@@ -11,6 +11,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             if (identList[0] == null)
             {
                 //exception -- this is not ident list
+                return null;
             }
             
             while (PeekToken().Type == TokenType.Comma)

@@ -30,6 +30,9 @@ namespace FEFUPascalCompiler.Parser
             PointerType,
             ProcSignature,
             FuncSignature,
+        //Statements
+        CompoundStatement,
+            EmptyStatement,
         //Other
         FormalParamSection,
             Modifier,

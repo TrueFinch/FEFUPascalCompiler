@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using FEFUPascalCompiler.Parser.AstVisitor;
 using FEFUPascalCompiler.Tokens;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace FEFUPascalCompiler.Parser
 {
@@ -153,6 +152,7 @@ namespace FEFUPascalCompiler.Parser
             ArrayToken = arrayToken;
             OfToken = ofToken;
             _children.Add(arrayType);
+            Value = string.Format("{0} {1}", arrayToken.Value, ofToken.Value);
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
