@@ -8,10 +8,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
     {
         public AstNode ParseFormalParamList()
         {
-            
+            //TODO
         }
         
-        public AstNode ParseIdentList()
+        public List<AstNode> ParseIdentList()
         {
             var identList = new List<AstNode> {ParseIdent()};
             if (identList[0] == null)
@@ -32,7 +32,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 NextToken();
             }
 
-            return new IdentList(identList);
+            return identList;
         }
 
         private AstNode ParseIdent()

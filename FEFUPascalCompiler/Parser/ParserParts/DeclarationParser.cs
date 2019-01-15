@@ -67,8 +67,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
             NextToken();
-            var typeDecls = new List<AstNode>();
-            typeDecls.Add(ParseTypeDecl());
+            var typeDecls = new List<AstNode> {ParseTypeDecl()};
             if (typeDecls[0] == null)
             {
                 //some parser exception
@@ -105,10 +104,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
             NextToken();
-            return new TypeDecl(token, typeIdent, type);
+            return new TypeDecl(typeIdent, type);
         }
         
-        private AstNode ParseVariableDeclsPart()
+        private AstNode ParseVarDeclsPart()
         {
             var token = PeekToken();
             if (token.Type != TokenType.Var)
@@ -117,7 +116,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
             NextToken();
-            var varDecls = new List<AstNode> {ParseVarDeclsPart()};
+            var varDecls = new List<AstNode> {ParseVarDecl()};
             if (varDecls[0] == null)
             {
                 //exception - variable declaration expected but not found
@@ -135,9 +134,9 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
         private AstNode ParseVarDecl()
         {
-            var typeIdent = ParseIdent();
+            var varIdents = ParseIdentList();
             var token = PeekToken();
-            if (token == null || token.Type != TokenType.EqualOperator)
+            if (token == null || token.Type != TokenType.Colon)
             {
                 //some parser exception
                 return null;
@@ -145,15 +144,32 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             NextToken();
             var type = ParseType();
-            var ttoken = PeekToken();
-            if (ttoken == null || ttoken.Type != TokenType.Semicolon)
+
+            if (varIdents.Count == 1)
+            {
+                if (PeekToken().Type == TokenType.EqualOperator)
+                {
+                    NextToken();
+                    var expr = ParseExpression();
+                    if (PeekToken() == null || PeekToken().Type != TokenType.Semicolon)
+                    {
+                        //some parser exception
+                        return null;
+                    }
+
+                    NextToken();
+                    return new InitVarDecl(varIdents[0], type, expr);
+                }
+            }
+            
+            if (PeekToken() == null || PeekToken().Type != TokenType.Semicolon)
             {
                 //some parser exception
                 return null;
             }
 
             NextToken();
-            return new TypeDecl(token, typeIdent, type);
+            return new SimpleVarDecl(varIdents, type);
         }
     }
 }
