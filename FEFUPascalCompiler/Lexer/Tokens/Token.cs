@@ -13,18 +13,11 @@ namespace FEFUPascalCompiler.Tokens
 
         public int Column { get; }
 
-        public TokenType Type { get; protected set; }
+        public TokenType Type { get; }
 
         public string Lexeme { get; }
 
         public string Value { get; protected set; }
-
-        protected Token(int line, int column, string lexeme)
-        {
-            Line = line;
-            Column = column;
-            Lexeme = lexeme;
-        }
 
         protected Token(int line, int column, TokenType type, string lexeme)
         {
@@ -32,6 +25,7 @@ namespace FEFUPascalCompiler.Tokens
             Column = column;
             Type = type;
             Lexeme = lexeme;
+            Value = lexeme.ToLower();
         }
 
         public override string ToString()
@@ -64,7 +58,7 @@ namespace FEFUPascalCompiler.Tokens
         public IntegerNumberToken(int line, int column, string lexeme)
             : base(line, column, basisToTokenType[basis[lexeme[0]]], lexeme)
         {
-            Value = ConvertToInteger(lexeme);
+            NumberValue = ConvertToInteger(lexeme);
         }
 
         private long ConvertToInteger(string lexeme)
@@ -91,10 +85,10 @@ namespace FEFUPascalCompiler.Tokens
 
         public override string ToString()
         {
-            return base.ToString() + $"{Value,-30}" + '|';
+            return base.ToString() + $"{NumberValue,-30}" + '|';
         }
 
-        public new long Value { get; }
+        public long NumberValue { get; }
 
         //base of the number system
         private static Dictionary<char, int> basis = new Dictionary<char, int>
@@ -117,7 +111,7 @@ namespace FEFUPascalCompiler.Tokens
         public DoubleNumberToken(int line, int column, string lexeme)
             : base(line, column, TokenType.DoubleNumber, lexeme)
         {
-            Value = LexemeToDouble(lexeme);
+            NumberValue = LexemeToDouble(lexeme);
         }
 
         private double LexemeToDouble(string lexeme)
@@ -139,10 +133,10 @@ namespace FEFUPascalCompiler.Tokens
 
         public override string ToString()
         {
-            return base.ToString() + $"{Value,-30}" + '|';
+            return base.ToString() + $"{NumberValue,-30}" + '|';
         }
 
-        public new double Value { get; }
+        public double NumberValue { get; }
     }
 
     public class IdentToken : Token
@@ -153,7 +147,6 @@ namespace FEFUPascalCompiler.Tokens
                     : TokenType.Ident,
                 lexeme)
         {
-            Value = lexeme.ToLower();
         }
 
         public override string ToString()
@@ -167,7 +160,6 @@ namespace FEFUPascalCompiler.Tokens
         public BinOperatorToken(int line, int column, string lexeme)
             : base(line, column, Dictionaries.LexemeToTokenType[lexeme.ToLower()], lexeme)
         {
-            Value = lexeme.ToLower();
         }
 
         public override string ToString()
@@ -181,7 +173,6 @@ namespace FEFUPascalCompiler.Tokens
         public AssignToken(int line, int column, string lexeme)
             : base(line, column, Dictionaries.LexemeToTokenType[lexeme.ToLower()], lexeme)
         {
-            Value = lexeme.ToLower();
         }
 
         public override string ToString()
@@ -195,7 +186,6 @@ namespace FEFUPascalCompiler.Tokens
         public SeparatorToken(int line, int column, string lexeme)
             : base(line, column, Dictionaries.LexemeToTokenType[lexeme.ToLower()], lexeme)
         {
-            Value = lexeme.ToLower();
         }
 
         public override string ToString()
@@ -270,7 +260,6 @@ namespace FEFUPascalCompiler.Tokens
         public MultilineCommentToken(int line, int column, string lexeme)
             : base(line, column, TokenType.MultiLineComment, lexeme)
         {
-            Value = lexeme;
         }
 
         public override string ToString()
@@ -284,7 +273,6 @@ namespace FEFUPascalCompiler.Tokens
         public SingleLineCommentToken(int line, int column, string lexeme)
             : base(line, column, TokenType.SingleLineComment, lexeme)
         {
-            Value = lexeme;
         }
 
         public override string ToString()
@@ -298,7 +286,6 @@ namespace FEFUPascalCompiler.Tokens
         public BracketToken(int line, int column, string lexeme)
             : base(line, column, Dictionaries.LexemeToTokenType[lexeme.ToLower()], lexeme)
         {
-            Value = lexeme.ToLower();
         }
 
         public override string ToString()
