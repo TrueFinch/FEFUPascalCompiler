@@ -58,7 +58,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
     public class TypeDecl : AstNode
     {
-        public TypeDecl(Token token, AstNode ident, AstNode identType) : base(AstNodeType.TypeDecl, token)
+        public TypeDecl(AstNode ident, AstNode identType) : base(AstNodeType.TypeDecl)
         {
             _children.Add(ident);
             _children.Add(identType);
@@ -85,10 +85,10 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
     }
 
-    public class MultipleVarDecl : AstNode
+    public class SimpleVarDecl : AstNode
     {
-        public MultipleVarDecl(Token token, List<AstNode> identList, AstNode identsType)
-            : base(AstNodeType.VarDecl, token)
+        public SimpleVarDecl(List<AstNode> identList, AstNode identsType)
+            : base(AstNodeType.SimpleVarDecl)
         {
             _children.InsertRange(0, identList);
             _children.Add(identsType);
@@ -104,10 +104,10 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode IdentsType => _children[_children.Count - 1];
     }
 
-    public class SingleVarDecl : AstNode
+    public class InitVarDecl : AstNode
     {
-        public SingleVarDecl(Token token, AstNode ident, AstNode identsType, AstNode expression)
-            : base(AstNodeType.VarDecl, token)
+        public InitVarDecl(AstNode ident, AstNode identsType, AstNode expression)
+            : base(AstNodeType.InitVarDecl)
         {
             _children.Add(ident);
             _children.Add(identsType);
