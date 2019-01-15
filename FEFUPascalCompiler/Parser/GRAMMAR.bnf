@@ -104,7 +104,7 @@
         
 
 <expression> ::= <simple_expr>[<comparing_operator> <simple_expr>]
-    <comparing_operator> ::= "<>"|"<"|"<="|">="|">"|"="|"=="
+    <comparing_operator> ::= "<>"|"<"|"<="|">="|">"|"="
     <simple_expr> ::= <term> [<additive_operator> <term>] 
         <additive_operator> ::= "+"|"-"|"or"|"xor"
         <term> ::= <simple_term> [<multiplying_operator> <simple_term>] 
