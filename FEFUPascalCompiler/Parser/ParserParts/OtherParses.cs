@@ -6,6 +6,11 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 {
     internal partial class PascalParser
     {
+        public AstNode ParseFormalParamList()
+        {
+            
+        }
+        
         public AstNode ParseIdentList()
         {
             var identList = new List<AstNode> {ParseIdent()};

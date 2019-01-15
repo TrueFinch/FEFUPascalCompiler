@@ -103,12 +103,6 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new ConstDecl(token, constIdent, expression);
         }
 
-
-        private AstNode ParseVarDeclsPart()
-        {
-            throw new NotImplementedException();
-        }
-
         private AstNode ParseaProcFuncDeclsPart()
         {
             throw new NotImplementedException();

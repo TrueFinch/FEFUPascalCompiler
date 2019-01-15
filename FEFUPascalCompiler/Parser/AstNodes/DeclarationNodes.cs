@@ -73,9 +73,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode IdentType => _children[1];
     }
 
-    public class VariableDeclsPart : DeclsPart
+    public class VarDeclsPart : DeclsPart
     {
-        public VariableDeclsPart(Token token, List<AstNode> decls) : base(decls, AstNodeType.VarDeclsPart, token)
+        public VarDeclsPart(Token token, List<AstNode> decls) : base(decls, AstNodeType.VarDeclsPart, token)
         {
         }
 
@@ -85,12 +85,31 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
     }
 
-    public class VarDecl : AstNode
+    public class MultipleVarDecl : AstNode
     {
-        public VarDecl(Token token, List<AstNode> identList, AstNode identsType, AstNode expression = null)
+        public MultipleVarDecl(Token token, List<AstNode> identList, AstNode identsType)
             : base(AstNodeType.VarDecl, token)
         {
             _children.InsertRange(0, identList);
+            _children.Add(identsType);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public List<AstNode> IdentList => _children.GetRange(0, _children.Count - 1);
+
+        public AstNode IdentsType => _children[_children.Count - 1];
+    }
+
+    public class SingleVarDecl : AstNode
+    {
+        public SingleVarDecl(Token token, AstNode ident, AstNode identsType, AstNode expression)
+            : base(AstNodeType.VarDecl, token)
+        {
+            _children.Add(ident);
             _children.Add(identsType);
             _children.Add(expression);
         }
@@ -100,12 +119,12 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public List<AstNode> IdentList => _children.GetRange(0, _children.Count - 2);
-
-        public AstNode IdentsType => _children[_children.Count - 2];
-        public AstNode Expression => _children[_children.Count - 1];
+        public AstNode IdentList => _children[0];
+        public AstNode IdentsType => _children[1];
+        public AstNode Expression => _children[2];
     }
 
+    
     public class ProcFuncDeclsPart : DeclsPart
     {
         public ProcFuncDeclsPart(List<AstNode> decls) : base(decls, AstNodeType.ProcFuncDeclsPart)

@@ -97,15 +97,15 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             NextToken();
             var type = ParseType();
-            token = PeekToken();
-            if (token == null || token.Type != TokenType.Semicolon)
+            var ttoken = PeekToken();
+            if (ttoken == null || ttoken.Type != TokenType.Semicolon)
             {
                 //some parser exception
                 return null;
             }
 
             NextToken();
-            return new TypeDecl(typeIdent, type);
+            return new TypeDecl(token, typeIdent, type);
         }
         
         private AstNode ParseVariableDeclsPart()
@@ -117,8 +117,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
             NextToken();
-            var varDecls = new List<AstNode>();
-            varDecls.Add(ParseVarDeclsPart());
+            var varDecls = new List<AstNode> {ParseVarDeclsPart()};
             if (varDecls[0] == null)
             {
                 //exception - variable declaration expected but not found
@@ -132,6 +131,29 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             } while (true);
 
             return new VarDeclsPart(token, varDecls);
+        }
+
+        private AstNode ParseVarDecl()
+        {
+            var typeIdent = ParseIdent();
+            var token = PeekToken();
+            if (token == null || token.Type != TokenType.EqualOperator)
+            {
+                //some parser exception
+                return null;
+            }
+
+            NextToken();
+            var type = ParseType();
+            var ttoken = PeekToken();
+            if (ttoken == null || ttoken.Type != TokenType.Semicolon)
+            {
+                //some parser exception
+                return null;
+            }
+
+            NextToken();
+            return new TypeDecl(token, typeIdent, type);
         }
     }
 }

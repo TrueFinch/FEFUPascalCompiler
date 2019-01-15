@@ -97,8 +97,8 @@
         <fields_list> ::= <field_section> {";" <field_section>}
             <field_section> ::= <ident_list> ":" <type>
 
-    <pointer_type> ::= "^" <simple_type> //TODO: ask nastya about pointer on simple type - cause this is ident but what
-                                         //TODO: about keywords like char, double, integer array?
+    <pointer_type> ::= "^" <simple_type>
+    
     <func_signature> ::= "function" [<formal_param_list>] ":" <simple_type> 
     <proc_signature> ::= "procedure" [<formal_param_list>]
         
