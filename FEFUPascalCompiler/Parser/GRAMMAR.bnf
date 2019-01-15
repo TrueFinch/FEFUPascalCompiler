@@ -111,19 +111,19 @@
             <multiplying_operator> ::= "*"|"/"|"div"|"mod"|"and"|"shr"|"shl" 
             <simple_term> ::= [<unary_operator>] <factor>
                 <unary_operator> ::= "+"|"-"|"not"|"@"
-                <factor> ::= <variable_ref>|("("<expression>")")|<constant>|"nil"
+                <factor> ::= ("("<expression>")")|<constant>|"nil"|<variable_ref>
                     <variable_ref> ::= (<ident>|<array_access>|<record_access>|<function_call>)["^"]
-                        <array_access> ::= <variable_ref> "[" <expression> {"," <expression>} "]"
+                        <array_access> ::= <variable_ref> "[" <param_list> "]"
                         <record_access> ::= <variable_ref> "." <ident>
-                        <function_call> ::= <variable_ref> <param_list>
-                            <param_list> ::= "(" [<expression> {"," <expression>}] ")"
+                        <function_call> ::= <variable_ref> "(" [<param_list>] ")"
+                            <param_list> ::= <expression> {"," <expression>}
 
 
 <ident_list> ::= <ident> {"," <ident>}
     <ident> ::= <letter> {<letter>|<dec_digit>}
-        <letter> ::= "_"|"A"|"B"|"C"|"D"|"E"|"F"|"G"|"H"|"I"|"J"|"K"|"L"|"M"|"N"|"O"|"P"|"Q"|"R"|"S"|"T"|"U"|"V"|"W"|
-                     "X"|"Y"|"Z"|"a"|"b"|"c"|"d"|"e"|"f"|"g"|"h"|"i"|"j"|"k"|"l"|"m"|"n"|"o"|"p"|"q"|"r"|"s"|"t"|"u"|
-                     "v"|"w"|"x"|"y"|"z" 
+        <letter> ::= "_"|"A"|"B"|"C"|"D"|"E"|"F"|"G"|"H"|"I"|"J"|"K"|"L"|"M"|"N"|"O"|"P"|"Q"|   
+                     "R"|"S"|"T"|"U"|"V"|"W"|"X"|"Y"|"Z"|"a"|"b"|"c"|"d"|"e"|"f"|"g"|"h"|"i"|
+                     "j"|"k"|"l"|"m"|"n"|"o"|"p"|"q"|"r"|"s"|"t"|"u"|"v"|"w"|"x"|"y"|"z" 
                      
 <constant> ::= <int_number>|<number>|<char>|<string>
     <number> ::= <dec_int> {<dec_int>} ["." <dec_int>] [("E"|"e") <dec_int>]
