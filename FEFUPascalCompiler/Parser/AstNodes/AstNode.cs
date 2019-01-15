@@ -39,6 +39,13 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             DoWhileStatement,
             ForStatement,
                 ForRange,
+        //Expressions
+        BinOperator,
+            ComparingOperator,
+            AdditiveOperator,
+        ArrayAccess,
+        RecordAccess,
+        FunctionCall,
         //Other
         FormalParamSection,
             Modifier,
@@ -47,7 +54,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             Ident,
         ConstIntegerLiteral,
         ConstDoubleLiteral,
-        BinOperation,
         // @formatter:on
     }
 
@@ -128,7 +134,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public ConstDoubleLiteral(DoubleNumberToken token) : base(AstNodeType.ConstDoubleLiteral)
         {
             Token = token;
-            Value = token.Value.ToString(new NumberFormatInfo {NumberDecimalSeparator = "."});
+            Value = token.NumberValue.ToString(new NumberFormatInfo {NumberDecimalSeparator = "."});
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -137,30 +143,5 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public DoubleNumberToken Token { get; }
-    }
-
-    public class BinOperation : AstNode
-    {
-        public BinOperation(Token operation, AstNode left, AstNode right) : this(left, right)
-        {
-            Operation = operation;
-//            Value = string.Format("{0} {1} {2}", left.ToString(), operation.Value, right.ToString());
-            Value = operation.Value;
-        }
-
-        protected BinOperation(AstNode left, AstNode right) : base(AstNodeType.BinOperation)
-        {
-            _children.Add(left);
-            _children.Add(right);
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public Token Operation { get; }
-        public AstNode Left => _children[0];
-        public AstNode Right => _children[1];
     }
 }

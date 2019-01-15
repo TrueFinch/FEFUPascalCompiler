@@ -47,7 +47,10 @@
                 <type_decl> ::= <ident> "=" <type> ";" 
                         
             <variable_decls_part> ::= "var" <variable_decl> {<variable_decl>} 
-                <variable_decl> ::= (<ident_list> ":" <type>) | (<ident> ":" <type> "=" <expression>)
+                //TODO: remove variable decl node class for ast. Add multiple_variable_decl and single_variable_decl node class
+                <variable_decl> ::= <multiple_variable_decl> | <single_variable_decl>
+                    <multiple_variable_decl> ::= <ident_list> ":" <type>
+                    <single_variable_decl> ::= <ident> ":" <type> "=" <expression>
                     
             <proc_and_func_decls_part> ::= {(<proc_decl>|<func_decl>)}
                 <proc_decl> ::= <proc_header> ";" <subroutine_block> ";"

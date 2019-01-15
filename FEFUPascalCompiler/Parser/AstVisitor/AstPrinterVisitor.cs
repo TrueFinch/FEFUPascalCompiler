@@ -23,7 +23,7 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
             return new AstPrinterNode(node.ToString());
         }
 
-        public AstPrinterNode Visit(BinOperation node)
+        public AstPrinterNode Visit(BinOperator node)
         {
             var printer = new AstPrinterNode(node.ToString());
             printer.AddChild(node.Left.Accept(this));

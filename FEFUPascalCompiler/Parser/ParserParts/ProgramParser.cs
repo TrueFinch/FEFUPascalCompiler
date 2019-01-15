@@ -131,7 +131,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
                 NextToken();
                 var right = ParseTerm();
-                left = new BinOperation(operationToken, left, right);
+                left = new BinOperator(operationToken, left, right);
             }
 
             return left;
@@ -155,7 +155,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
                 NextToken();
                 var right = ParseFactor();
-                left = new BinOperation(operationToken, left, right);
+                left = new BinOperator(operationToken, left, right);
             }
 
             return left;
