@@ -83,6 +83,7 @@ namespace FEFUPascalCompiler.Tokens
         Not,
         Of,
         Or,
+        Out,
         Packed,
         Pass,
         Procedure,
@@ -172,6 +173,7 @@ namespace FEFUPascalCompiler.Tokens
             {"not", TokenType.Not},
             {"of", TokenType.Of},
             {"or", TokenType.Or},
+            {"out", TokenType.Out}, //TODO add out keyword to tests
             {"packed", TokenType.Packed},
             {"pass", TokenType.Pass},
             {"procedure", TokenType.Procedure},
