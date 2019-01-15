@@ -43,6 +43,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         BinOperator,
             ComparingOperator,
             AdditiveOperator,
+            MultiplyingOperator,
+            UnaryOperator,
         ArrayAccess,
         RecordAccess,
         FunctionCall,
@@ -97,7 +99,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public AstNode Header => _children[0];
-        public AstNode MainBlock => (MainBlock) _children[1];
+        public AstNode MainBlock => _children[1];
     }
 
     public class MainBlock : AstNode

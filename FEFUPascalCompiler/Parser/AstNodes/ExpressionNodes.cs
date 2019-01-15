@@ -87,6 +87,33 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 //        }
 //    }
 
+    public class MultiplyingOperator : BinOperator{
+        public MultiplyingOperator(Token token, AstNode left, AstNode right)
+            : base(AstNodeType.MultiplyingOperator, token, left, right)
+        {
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+    }
+    
+    public class UnaryOperator : AstNode{
+        public UnaryOperator(Token token, AstNode right)
+            : base(AstNodeType.UnaryOperator, token)
+        {
+            _children.Add(right);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public AstNode Right => _children[0];
+    }
+    
     public class ArrayAccess : AstNode
     {
         public ArrayAccess(AstNode arrayIdent, List<AstNode> accessExpressions) : base(AstNodeType.ArrayAccess)
