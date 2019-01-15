@@ -98,7 +98,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
         private AstNode ParseIndexRange()
         {
-            var leftBound = ParseDecInt();
+            var leftBound = ParseConstIntegerLiteral();
             if (leftBound == null)
             {
                 //exception -- wrong range bounds 
@@ -113,7 +113,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
             NextToken();
-            var rightBound = ParseDecInt();
+            var rightBound = ParseConstIntegerLiteral();
             if (rightBound == null)
             {
                 //exception -- wrong range bounds 
@@ -239,6 +239,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
             var formalParamList = ParseFormalParamList();
+            
             
         }
 
