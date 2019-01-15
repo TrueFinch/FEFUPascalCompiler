@@ -39,6 +39,15 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             DoWhileStatement,
             ForStatement,
                 ForRange,
+        //Expressions
+        BinOperator,
+            ComparingOperator,
+            AdditiveOperator,
+            MultiplyingOperator,
+            UnaryOperator,
+        ArrayAccess,
+        RecordAccess,
+        FunctionCall,
         //Other
         FormalParamSection,
             Modifier,
@@ -47,7 +56,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             Ident,
         ConstIntegerLiteral,
         ConstDoubleLiteral,
-        BinOperation,
+        ConstCharLiteral,
+        ConstStringLiteral,
+        Nil,
         // @formatter:on
     }
 
@@ -59,7 +70,15 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             Type = type;
             if (token != null)
             {
-                Value = token.Value;
+                if (token.Type == TokenType.DoubleNumber)
+                {
+                    Value = (token as DoubleNumberToken)?.NumberValue.ToString(new NumberFormatInfo
+                        {NumberDecimalSeparator = "."});
+                }
+                else
+                {
+                    Value = token.Value;
+                }
             }
             else
             {
@@ -91,7 +110,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public AstNode Header => _children[0];
-        public AstNode MainBlock => (MainBlock) _children[1];
+        public AstNode MainBlock => _children[1];
     }
 
     public class MainBlock : AstNode
@@ -109,58 +128,5 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
         public List<AstNode> DeclsParts => _children.GetRange(0, _children.Count - 1);
         public AstNode MainCompound => _children[_children.Count - 1];
-    }
-
-    public class ConstIntegerLiteral : AstNode
-    {
-        public ConstIntegerLiteral(IntegerNumberToken token) : base(AstNodeType.ConstIntegerLiteral, token)
-        {
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
-
-    public class ConstDoubleLiteral : AstNode
-    {
-        public ConstDoubleLiteral(DoubleNumberToken token) : base(AstNodeType.ConstDoubleLiteral)
-        {
-            Token = token;
-            Value = token.Value.ToString(new NumberFormatInfo {NumberDecimalSeparator = "."});
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public DoubleNumberToken Token { get; }
-    }
-
-    public class BinOperation : AstNode
-    {
-        public BinOperation(Token operation, AstNode left, AstNode right) : this(left, right)
-        {
-            Operation = operation;
-//            Value = string.Format("{0} {1} {2}", left.ToString(), operation.Value, right.ToString());
-            Value = operation.Value;
-        }
-
-        protected BinOperation(AstNode left, AstNode right) : base(AstNodeType.BinOperation)
-        {
-            _children.Add(left);
-            _children.Add(right);
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public Token Operation { get; }
-        public AstNode Left => _children[0];
-        public AstNode Right => _children[1];
     }
 }

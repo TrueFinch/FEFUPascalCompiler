@@ -54,7 +54,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 constDecls.Add(constDecl);
             } while (true);
 
-            return new ConstDeclsPart(constDecls);
+            return new ConstDeclsPart(token, constDecls);
         }
 
         private AstNode ParseTypeDeclsPart()

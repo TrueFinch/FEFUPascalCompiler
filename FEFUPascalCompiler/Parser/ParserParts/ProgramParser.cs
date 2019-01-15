@@ -92,15 +92,15 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             NextToken();
             var expression = ParseExpression();
-            token = PeekToken();
-            if (token == null || token.Type != TokenType.Semicolon)
+            var semicolonToken = PeekToken();
+            if (semicolonToken == null || semicolonToken.Type != TokenType.Semicolon)
             {
                 //some parser exception
                 return null;
             }
 
             NextToken();
-            return new ConstDecl(constIdent, expression);
+            return new ConstDecl(token, constIdent, expression);
         }
 
 
@@ -112,95 +112,6 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private AstNode ParseaProcFuncDeclsPart()
         {
             throw new NotImplementedException();
-        }
-
-        private AstNode ParseExpression()
-        {
-            var left = ParseTerm();
-
-            while (true)
-            {
-                var operationToken = PeekToken();
-                if (operationToken == null
-                    || operationToken.Type != TokenType.SumOperator && operationToken.Type != TokenType.DifOperator
-                                                                    && operationToken.Type != TokenType.Or &&
-                                                                    operationToken.Type != TokenType.Xor)
-                {
-                    break;
-                }
-
-                NextToken();
-                var right = ParseTerm();
-                left = new BinOperation(operationToken, left, right);
-            }
-
-            return left;
-        }
-
-        private AstNode ParseTerm()
-        {
-            var left = ParseFactor();
-
-            while (true)
-            {
-                var operationToken = PeekToken();
-                if (operationToken == null
-                    || operationToken.Type != TokenType.MulOperator
-                    && operationToken.Type != TokenType.DivOperator && operationToken.Type != TokenType.And
-                    && operationToken.Type != TokenType.Mod && operationToken.Type != TokenType.Div
-                    && operationToken.Type != TokenType.Shl && operationToken.Type != TokenType.Shr)
-                {
-                    break;
-                }
-
-                NextToken();
-                var right = ParseFactor();
-                left = new BinOperation(operationToken, left, right);
-            }
-
-            return left;
-        }
-
-        private AstNode ParseFactor()
-        {
-//            var token = PeekAndNext();
-            var token = PeekToken();
-
-            switch (token.Type)
-            {
-                case TokenType.Ident:
-                {
-                    return ParseIdent();
-                }
-                case TokenType.DecIntegerNumber:
-                {
-                    NextToken();
-                    return new ConstIntegerLiteral(token as IntegerNumberToken);
-                }
-                case TokenType.DoubleNumber:
-                {
-                    NextToken();
-                    return new ConstDoubleLiteral(token as DoubleNumberToken);
-                }
-                case TokenType.OpenBracket:
-                {
-                    NextToken();
-                    var expression = ParseExpression();
-                    token = PeekAndNext();
-                    if (token.Type != TokenType.CloseBracket)
-                    {
-                        //some parser exception
-                    }
-
-                    return expression;
-                }
-                default:
-                {
-                    //some parser exception
-
-                    return null;
-                }
-            }
         }
 
         private AstNode ParseAssingStatement()
