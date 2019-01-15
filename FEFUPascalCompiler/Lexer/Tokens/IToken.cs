@@ -41,10 +41,7 @@ namespace FEFUPascalCompiler.Tokens
         Colon,
 
         //data types
-        BinIntegerNumber,
-        DecIntegerNumber,
-        OctIntegerNumber,
-        HexIntegerNumber,
+        IntegerNumber,
         DoubleNumber,
         StringConst,
         CharConst,
