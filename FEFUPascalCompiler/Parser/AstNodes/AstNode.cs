@@ -56,6 +56,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             Ident,
         ConstIntegerLiteral,
         ConstDoubleLiteral,
+        ConstCharLiteral,
+        ConstStringLiteral,
+        Nil,
         // @formatter:on
     }
 
@@ -67,7 +70,15 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             Type = type;
             if (token != null)
             {
-                Value = token.Value;
+                if (token.Type == TokenType.DoubleNumber)
+                {
+                    Value = (token as DoubleNumberToken)?.NumberValue.ToString(new NumberFormatInfo
+                        {NumberDecimalSeparator = "."});
+                }
+                else
+                {
+                    Value = token.Value;
+                }
             }
             else
             {
@@ -117,33 +128,5 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
         public List<AstNode> DeclsParts => _children.GetRange(0, _children.Count - 1);
         public AstNode MainCompound => _children[_children.Count - 1];
-    }
-
-    public class ConstIntegerLiteral : AstNode
-    {
-        public ConstIntegerLiteral(IntegerNumberToken token) : base(AstNodeType.ConstIntegerLiteral, token)
-        {
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
-
-    public class ConstDoubleLiteral : AstNode
-    {
-        public ConstDoubleLiteral(DoubleNumberToken token) : base(AstNodeType.ConstDoubleLiteral)
-        {
-            Token = token;
-            Value = token.NumberValue.ToString(new NumberFormatInfo {NumberDecimalSeparator = "."});
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public DoubleNumberToken Token { get; }
     }
 }
