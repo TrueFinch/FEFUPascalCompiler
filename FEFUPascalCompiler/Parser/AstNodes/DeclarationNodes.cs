@@ -139,7 +139,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     
     public class ProcDecl : AstNode
     {
-        public ProcDecl(Token token, AstNode procHeader, AstNode block) : base(AstNodeType.ProcDecl, token)
+        public ProcDecl(AstNode procHeader, AstNode block) : base(AstNodeType.ProcDecl)
         {
             _children.Add(procHeader);
             _children.Add(block);
@@ -156,7 +156,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
     public class ProcHeader : AstNode
     {
-        public ProcHeader(Token token, AstNode name, List<AstNode> paramList) : base(AstNodeType.ProcHeader, token)
+        public ProcHeader(AstNode name, List<AstNode> paramList) : base(AstNodeType.ProcHeader)
         {
             _children.Add(name);
             _children.InsertRange(1, paramList);
@@ -173,7 +173,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     
     public class FuncDecl : AstNode
     {
-        public FuncDecl(Token token, AstNode funcHeader, AstNode block) : base(AstNodeType.FuncDecl, token)
+        public FuncDecl(AstNode funcHeader, AstNode block) : base(AstNodeType.FuncDecl)
         {
             _children.Add(funcHeader);
             _children.Add(block);
@@ -190,8 +190,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     
     public class FuncHeader : AstNode
     {
-        public FuncHeader(Token token, AstNode name, List<AstNode> paramList, AstNode returnType) 
-            : base(AstNodeType.FuncHeader, token)
+        public FuncHeader(AstNode name, List<AstNode> paramList, AstNode returnType) 
+            : base(AstNodeType.FuncHeader)
         {
             _children.Add(name);
             _children.InsertRange(1, paramList);
@@ -206,5 +206,23 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode Name => _children[0];
         public List<AstNode> ParamList => _children.GetRange(1, _children.Count - 2);
         public AstNode ReturnType => _children[_children.Count - 1];
+    }
+
+    public class SubroutineBlock : AstNode
+    {
+        public SubroutineBlock(List<AstNode> declParts, AstNode compoundStatement) 
+            : base(AstNodeType.SubroutineBlock)
+        {
+            _children.InsertRange(0, declParts);
+            _children.Add(compoundStatement);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public List<AstNode> DeclParts => _children.GetRange(0, _children.Count - 1);
+        public AstNode CompoundStatement => _children[_children.Count - 1];
     }
 }

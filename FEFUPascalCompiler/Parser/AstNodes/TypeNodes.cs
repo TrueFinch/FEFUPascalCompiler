@@ -130,7 +130,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     public class FuncSignature : AstNode
     {
         public FuncSignature(Token token, List<AstNode> paramSections, AstNode returnType)
-            : base(AstNodeType.ProcSignature, token)
+            : base(AstNodeType.FuncSignature, token)
         {
             _children.InsertRange(0, paramSections);
             _children.Add(returnType);
