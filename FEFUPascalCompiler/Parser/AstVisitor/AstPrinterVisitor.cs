@@ -415,13 +415,13 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
             {
                 var lastIndex = canvas[currDepth].Length;
                 var needInsert = offset + leftPadding - canvas[currDepth].Length;
-                canvas[currDepth].Insert(lastIndex, ".", needInsert);
+                canvas[currDepth].Insert(lastIndex, _bgSign.ToString(), needInsert);
             }
 
             canvas[currDepth].Insert(offset + leftPadding, Header);
 
             if (isNeedSpace)
-                canvas[currDepth].Insert(canvas[currDepth].Length, "..");
+                canvas[currDepth].Insert(canvas[currDepth].Length, _bgSpace);
 
             var start = (Width + 1) / 2 + offset;
             for (var i = 0; i < _children.Count; ++i)
@@ -446,11 +446,11 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
 
             if (Math.Max(start, finish) > canvas[currDepth].Length - 1)
             {
-                canvas[currDepth].Insert(canvas[currDepth].Length, ".",
+                canvas[currDepth].Insert(canvas[currDepth].Length, _bgSign.ToString(),
                     Math.Max(start, finish) - canvas[currDepth].Length + 1);
             }
 
-            canvas[currDepth].Replace('.', '─', Math.Min(start, finish),
+            canvas[currDepth].Replace(_bgSign, '─', Math.Min(start, finish),
                 Math.Max(start, finish) - Math.Min(start, finish));
 
             canvas[currDepth][start] = '┴';
@@ -485,6 +485,20 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
             return width;
         }
 
+        public void AlignBG(in List<StringBuilder> canvas)
+        {
+            var maxWidth = 0;
+            foreach (var strBuilder in canvas)
+            {
+                maxWidth = maxWidth > strBuilder.Length ? maxWidth : strBuilder.Length;
+            }
+
+            foreach (var stringBuilder in canvas)
+            {
+                stringBuilder.Insert(stringBuilder.Length, _bgSign.ToString(), maxWidth - stringBuilder.Length);
+            }
+        }
+        
         public AstPrinterNode(string header)
         {
             Header = header;
@@ -493,5 +507,7 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
         public int Width => Math.Max(Header.Length, ChildrenWidth());
         public string Header { get; }
         private List<AstPrinterNode> _children = new List<AstPrinterNode>();
+        private char _bgSign = ' ';
+        private string _bgSpace = " ";
     }
 }
