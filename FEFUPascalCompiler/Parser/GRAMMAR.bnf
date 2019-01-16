@@ -79,8 +79,8 @@
                     <structured_statement> ::= <if_statement>|<loop_statement>|<compound_statement>
                         <if_statement> ::= "if" "(" <expression> ")" "then" <statement> ["else" <statement>]
                         <loop_statement> ::= <while_statement>|<do_while_statement>|<for_statement>
-                            <while_statement> ::= "while" <expression> "do" <statement>
-                            <do_while_statement> ::= "do" <statement> "while" <expression>
+                            <while_statement> ::= "while" "(" <expression> ")" "do" <statement>
+                            <do_while_statement> ::= "do" <statement> "while" "(" <expression> ")"
                             <for_statement> ::= "for" <ident> ":=" <for_range> "do" <statement>
                                 <for_range> ::= <expression> ("to"|"downto") <expression>
                         
