@@ -214,13 +214,48 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 declarations.Add(procDecl);
                 stopParse = false;
             }
+
+            return new ProcFuncDeclsPart(declarations);
         }
 
         private AstNode ParseFuncDecl()
         {
-            throw new NotImplementedException();
+            var funcHeader = ParseFuncHeader();
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Semicolon}, 
+                string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+
+            var funcSubroutineBlock = ParseSubroutineBlock();
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Semicolon},
+                string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+            
+            return new FuncDecl(funcHeader, funcSubroutineBlock);
         }
 
+        private AstNode ParseFuncHeader()
+        {
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Function}, 
+                string.Format("{0} {1} : syntax error, 'function' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+            
+            var funcName = ParseIdent();
+            var paramList = ParseFormalParamList();
+            
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Colon},
+                string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+
+            var returnType = ParseSimpleType();
+            
+            return new FuncHeader(funcName, paramList, returnType);
+        }
+
+        private AstNode ParseSubroutineBlock()
+        {
+            throw new NotImplementedException();
+        }
+        
         private AstNode ParseProcDecl()
         {
             throw new NotImplementedException();
