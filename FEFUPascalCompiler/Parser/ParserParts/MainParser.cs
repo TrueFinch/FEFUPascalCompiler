@@ -53,5 +53,11 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private NextToken NextToken { get; }
         private PeekAndNext PeekAndNext { get; }
         private NextAndPeek NextAndPeek { get; }
+
+        private void CheckToken(TokenType actual, List<TokenType> Expected, string errMessage)
+        {
+            if (!Expected.Contains(actual))
+                throw new Exception(errMessage);
+        }
     }
 }
