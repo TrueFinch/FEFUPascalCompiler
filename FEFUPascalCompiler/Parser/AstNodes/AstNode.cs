@@ -23,6 +23,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
                     FuncDecl,
                         FuncHeader,
                     SubroutineBlock,
+                    Forward,
         //Types
             SimpleType,
             ArrayType,

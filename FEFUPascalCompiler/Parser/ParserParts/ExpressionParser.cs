@@ -124,11 +124,11 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             var token = PeekToken();
 
-            if (token == null)
-            {
-                //exception -- unexpected end of file
-                return null;
-            }
+//            if (token == null)
+//            { TODO: delete this
+//                //exception -- unexpected end of file
+//                return null;
+//            }
 
             switch (token.Type)
             {
@@ -182,11 +182,11 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             var token = PeekToken();
 
-            if (token == null)
-            {
-                //exception -- unexpected end of file
-                return null;
-            }
+//            if (token == null)
+//            {TODO: delete this
+//                //exception -- unexpected end of file
+//                return null;
+//            }
 
             var left = ParseIdent();
             if (left == null)
@@ -198,7 +198,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             bool breakWhile = false;
             while (!breakWhile)
             {
-                token = NextAndPeek();
+                token = PeekToken();
                 switch (token.Type)
                 {
                     case TokenType.OpenSquareBracket:

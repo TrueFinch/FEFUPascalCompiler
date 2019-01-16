@@ -119,12 +119,12 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public AstNode IdentList => _children[0];
-        public AstNode IdentsType => _children[1];
+        public AstNode Ident => _children[0];
+        public AstNode IdentType => _children[1];
         public AstNode Expression => _children[2];
     }
 
-    
+
     public class ProcFuncDeclsPart : DeclsPart
     {
         public ProcFuncDeclsPart(List<AstNode> decls) : base(decls, AstNodeType.ProcFuncDeclsPart)
@@ -136,7 +136,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
     }
-    
+
     public class ProcDecl : AstNode
     {
         public ProcDecl(AstNode procHeader, AstNode block) : base(AstNodeType.ProcDecl)
@@ -170,7 +170,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode Name => _children[0];
         public List<AstNode> ParamList => _children.GetRange(1, _children.Count - 1);
     }
-    
+
     public class FuncDecl : AstNode
     {
         public FuncDecl(AstNode funcHeader, AstNode block) : base(AstNodeType.FuncDecl)
@@ -187,10 +187,10 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode FuncHeader => _children[0];
         public AstNode Block => _children[1];
     }
-    
+
     public class FuncHeader : AstNode
     {
-        public FuncHeader(AstNode name, List<AstNode> paramList, AstNode returnType) 
+        public FuncHeader(AstNode name, List<AstNode> paramList, AstNode returnType)
             : base(AstNodeType.FuncHeader)
         {
             _children.Add(name);
@@ -208,23 +208,33 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode ReturnType => _children[_children.Count - 1];
     }
 
-//    public class SubroutineBlock : AstNode
-//    {
-//        public SubroutineBlock(List<AstNode> declParts, AstNode compoundStatement = null, Token token = null) 
-//            : base(AstNodeType.SubroutineBlock)
-//        {
-//            _children.InsertRange(0, declParts);
-//            
-//            _children.Add(compoundStatement);
-//        }
-//
-//        public override T Accept<T>(IAstVisitor<T> visitor)
-//        {
-//            return visitor.Visit(this);
-//        }
-//
-//        public bool IsForward = false;
-//        public List<AstNode> DeclParts => _children.GetRange(0, _children.Count - 1);
-//        public AstNode CompoundStatement => _children[_children.Count - 1];
-//    }
-//}
+    public class SubroutineBlock : AstNode
+    {
+        public SubroutineBlock(List<AstNode> declParts, AstNode compoundStatement)
+            : base(AstNodeType.SubroutineBlock)
+        {
+            _children.InsertRange(0, declParts);
+            _children.Add(compoundStatement);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+        
+        public List<AstNode> DeclParts => _children.GetRange(0, _children.Count - 1);
+        public AstNode CompoundStatement => _children[_children.Count - 1];
+    }
+    
+    public class Forward : AstNode
+    {
+        public Forward(Token token) : base(AstNodeType.Forward, token)
+        {
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+    }
+}

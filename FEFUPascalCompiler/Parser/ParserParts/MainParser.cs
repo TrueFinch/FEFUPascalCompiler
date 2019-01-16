@@ -38,6 +38,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 return null;
             }
 
+            NextToken();
             return ParseProgram();
         }
 

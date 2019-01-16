@@ -17,7 +17,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var statements = ParseStatementsPart();
 
             var endToken = PeekToken();
-            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Colon},
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.End},
                 string.Format("{0} {1} : syntax error, 'end' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
 
@@ -27,14 +27,17 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private List<AstNode> ParseStatementsPart()
         {
             var statements = new List<AstNode>();
-            bool stopParseStatements = false;
 
-            while (!stopParseStatements)
+            while (true)
             {
                 var stmt = ParseStatement();
+                if (stmt == null)
+                {
+                    break;
+                }
                 statements.Add(stmt);
-                CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Colon},
-                    string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
+                CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
+                    string.Format("{0}, {1} : syntax error, ';' expected, but {2} found",
                         PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
             }
 
@@ -50,8 +53,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 stmt = ParseSimpleStatement();
                 if (stmt == null)
                 {
-                    throw new Exception(string.Format("{0} {1} : syntax error, statement expected",
-                        stmtStartToken.Line, stmtStartToken.Column));
+                    return null; // this is not statement
                 }
             }
 
@@ -66,6 +68,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
             var stmt = ParseAssingStatement();
+            if (stmt == null)
+            {
+                return null; //this is not simple statement
+            }
             if (stmt.Type == AstNodeType.AssignmentStatement
                 || stmt.Type != AstNodeType.AssignmentStatement && stmt.Type == AstNodeType.FunctionCall)
             {
@@ -117,9 +123,13 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 {
                     return ParseDoWhileStatement();
                 }
-                default:
+                case TokenType.Begin:
                 {
                     return ParseCompoundStatement();
+                }
+                default:
+                {
+                    return null; // this is not structured statement
                 }
             }
         }
@@ -128,18 +138,18 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             var ifToken = PeekAndNext();
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.OpenBracket},
-                string.Format("{0} {1} : syntax error, '(' expected, but {2} found",
+                string.Format("{0}, {1} : syntax error, '(' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
 
             var ifExpr = ParseExpression();
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseBracket},
-                string.Format("{0} {1} : syntax error, ')' expected, but {2} found",
+                string.Format("{0}, {1} : syntax error, ')' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
 
             var thenToken = PeekToken();
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Then},
-                string.Format("{0} {1} : syntax error, 'then' expected, but {2} found",
+                string.Format("{0}, {1} : syntax error, 'then' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
 
             var thenStmt = ParseStatement();
@@ -164,20 +174,20 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var iterator = ParseIdent();
             if (iterator == null)
             {
-                throw new Exception(string.Format("{0} {1} : syntax error, identifier expected, but {2} found",
+                throw new Exception(string.Format("{0}, {1} : syntax error, identifier expected, but {2} found",
                     iteratorToken.Line, iteratorToken.Column, iteratorToken));
             }
 
             var assignToken = PeekToken();
-            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.AssignOperator},
-                string.Format("{0} {1} : syntax error, ':=' expected, but {2} found",
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.SimpleAssignOperator},
+                string.Format("{0}, {1} : syntax error, ':=' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
 
             var forRange = ParseForRange();
             
             var doToken = PeekToken();
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Do},
-                string.Format("{0} {1} : syntax error, 'do' expected, but {2} found",
+                string.Format("{0}, {1} : syntax error, 'do' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
 
             var stmt = ParseStatement();
@@ -191,7 +201,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             var directionToken = PeekToken();
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.To, TokenType.Downto},
-                string.Format("{0} {1} : syntax error, 'to' or 'downto' expected, but {2} found",
+                string.Format("{0}, {1} : syntax error, 'to' or 'downto' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
 
             var toExpr = ParseExpression();
@@ -204,19 +214,19 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var whileToken = PeekToken();
             
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.OpenBracket},
-                string.Format("{0} {1} : syntax error, '(' expected, but {2} found",
+                string.Format("{0}, {1} : syntax error, '(' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
 
             var conditionExpr = ParseExpression();
             
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseBracket},
-                string.Format("{0} {1} : syntax error, ')' expected, but {2} found",
+                string.Format("{0}, {1} : syntax error, ')' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
             
             var doToken = PeekToken();
             
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Do},
-                string.Format("{0} {1} : syntax error, 'do' expected, but {2} found",
+                string.Format("{0}, {1} : syntax error, 'do' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
 
             var stmt = ParseStatement();
@@ -233,17 +243,17 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var whileToken = PeekToken();
             
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.While},
-                string.Format("{0} {1} : syntax error, 'while' expected, but {2} found",
+                string.Format("{0}, {1} : syntax error, 'while' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
             
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.OpenBracket},
-                string.Format("{0} {1} : syntax error, '(' expected, but {2} found",
+                string.Format("{0}, {1} : syntax error, '(' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
 
             var conditionExpr = ParseExpression();
             
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseBracket},
-                string.Format("{0} {1} : syntax error, ')' expected, but {2} found",
+                string.Format("{0}, {1} : syntax error, ')' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
             
             return new WhileStatement(whileToken, conditionExpr, doToken, stmt);

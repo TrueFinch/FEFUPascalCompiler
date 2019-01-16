@@ -147,7 +147,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
         public AstNode Iterator => _children[0];
         public AstNode Range => _children[1];
-        public AstNode Expression => _children[2];
+        public AstNode Statement => _children[2];
     }
 
     public class ForRange : AstNode

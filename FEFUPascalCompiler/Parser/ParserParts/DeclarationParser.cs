@@ -9,23 +9,54 @@ namespace FEFUPascalCompiler.Parser.ParserParts
     {
         private List<AstNode> ParseDeclsParts()
         {
-            List<AstNode> declParts = new List<AstNode>();
-            var declParsers = new List<DeclPartParser>
-                {ParseConstDeclsPart, ParseTypeDeclsPart, ParseVarDeclsPart, ParseProcFuncDeclsPart};
-            bool partsExist;
-            do
+            List<AstNode> declsParts = new List<AstNode>();
+            bool stopParse = false;
+            
+            while (!stopParse)
             {
-                partsExist = false;
-                foreach (var declParser in declParsers)
+                AstNode declsPart = null;
+                switch (PeekToken().Type)
                 {
-                    var tmp = declParser();
-                    if (tmp == null) continue;
-                    declParts.Add(tmp);
-                    partsExist = true;
+                    case TokenType.Const:
+                    {
+                        declsPart = ParseConstDeclsPart();
+                        break;
+                    }
+                    case TokenType.Type:
+                    {
+                        declsPart = ParseTypeDeclsPart();
+                        break;
+                    }
+                    case TokenType.Var:
+                    {
+                        declsPart = ParseVarDeclsPart();
+                        break;
+                    }
+                    case TokenType.Procedure:
+                    {
+                        declsPart = ParseProcDecl();
+                        break;
+                    }
+                    case TokenType.Function:
+                    {
+                        declsPart = ParseFuncDecl();
+                        break;
+                    }
+                    default:
+                    {
+                        stopParse = true;
+                        break;
+                    }
                 }
-            } while (partsExist);
 
-            return declParts;
+                if (declsPart == null)
+                {
+                    continue;
+                }
+                declsParts.Add(declsPart);
+            }
+            
+            return declsParts;
         }
 
         private AstNode ParseConstDeclsPart()
@@ -142,7 +173,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var varDecls = new List<AstNode> {ParseVarDecl()};
             if (varDecls[0] == null)
             {
-                //exception - variable declaration expected but not found
+                throw new Exception(string.Format("{0}, {1} : Empty var block", PeekToken().Line, PeekToken().Column));
             }
 
             do
@@ -202,17 +233,23 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             while (!stopParse)
             {
                 stopParse = true;
-                var funcDecl = ParseFuncDecl();
-                if (funcDecl != null)
+                switch (PeekToken().Type)
                 {
-                    declarations.Add(funcDecl);
-                    stopParse = false;
+                    case TokenType.Procedure:
+                    {
+                        stopParse = false;
+                        var procDecl = ParseProcDecl();
+                        declarations.Add(procDecl);
+                        break;
+                    }
+                    case TokenType.Function:
+                    {
+                        stopParse = false;
+                        var funcDecl = ParseFuncDecl();
+                        declarations.Add(funcDecl);
+                        break;
+                    }
                 }
-
-                var procDecl = ParseProcDecl();
-                if (procDecl == null) continue;
-                declarations.Add(procDecl);
-                stopParse = false;
             }
 
             return new ProcFuncDeclsPart(declarations);
@@ -243,7 +280,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var paramList = ParseFormalParamList();
             
             CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Colon},
-                string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
+                string.Format("{0} {1} : syntax error, ':' expected, but {2} found", 
                     PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
 
             var returnType = ParseSimpleType();
@@ -253,12 +290,78 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
         private AstNode ParseSubroutineBlock()
         {
-            throw new NotImplementedException();
+            if (PeekToken().Type == TokenType.Forward)
+            {
+                return new Forward(PeekAndNext());
+            }
+
+            var declsParts = new List<AstNode>();
+            bool stopParse = false;
+            while(!stopParse)
+            {
+                stopParse = true;
+                switch (PeekToken().Type)
+                {
+                    case TokenType.Const:
+                    {
+                        stopParse = false;
+                        var constDeclsPart = ParseConstDeclsPart();
+                        declsParts.Add(constDeclsPart);
+                        break;
+                    }
+                    case TokenType.Type:
+                    {
+                        stopParse = false;
+                        var typeDeclsPart = ParseTypeDeclsPart();
+                        declsParts.Add(typeDeclsPart);
+                        break;
+                    }
+                    case TokenType.Var:
+                    {
+                        stopParse = false;
+                        var varDeclsPart = ParseVarDeclsPart();
+                        declsParts.Add(varDeclsPart);
+                        break;
+                    }
+                }
+            }
+
+            var compound = ParseCompoundStatement();
+            
+            return new SubroutineBlock(declsParts, compound);
         }
         
         private AstNode ParseProcDecl()
         {
-            throw new NotImplementedException();
+            var procHeader = ParseProcHeader();
+            
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Semicolon}, 
+                string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+
+            var procSubroutineBlock = ParseSubroutineBlock();
+            
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Semicolon},
+                string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+            
+            return new ProcDecl(procHeader, procSubroutineBlock);
+        }
+
+        private AstNode ParseProcHeader()
+        {
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Function}, 
+                string.Format("{0} {1} : syntax error, 'procedure' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+            
+            var funcName = ParseIdent();
+            var paramList = ParseFormalParamList();
+            
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Colon},
+                string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+            
+            return new ProcHeader(funcName, paramList);
         }
     }
 }

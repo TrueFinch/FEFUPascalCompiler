@@ -96,7 +96,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
     public class PointerType : AstNode
     {
-        public PointerType(Token carriage, AstNode simpleType) : base(AstNodeType.PointerType)
+        public PointerType(Token carriage, AstNode simpleType) : base(AstNodeType.PointerType, carriage)
         {
             Carriage = carriage;
             _children.Add(simpleType);
