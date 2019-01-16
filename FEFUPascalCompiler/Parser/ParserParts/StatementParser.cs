@@ -223,5 +223,30 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             
             return new WhileStatement(whileToken, conditionExpr, doToken, stmt);
         }
+        
+        private AstNode ParseDoWhileStatement()
+        {
+            var doToken = PeekToken();
+            
+            var stmt = ParseStatement();
+            
+            var whileToken = PeekToken();
+            
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.While},
+                string.Format("{0} {1} : syntax error, 'while' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+            
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.OpenBracket},
+                string.Format("{0} {1} : syntax error, '(' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+
+            var conditionExpr = ParseExpression();
+            
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseBracket},
+                string.Format("{0} {1} : syntax error, ')' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+            
+            return new WhileStatement(whileToken, conditionExpr, doToken, stmt);
+        }
     }
 }
