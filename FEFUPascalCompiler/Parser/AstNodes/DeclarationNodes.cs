@@ -208,21 +208,23 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode ReturnType => _children[_children.Count - 1];
     }
 
-    public class SubroutineBlock : AstNode
-    {
-        public SubroutineBlock(List<AstNode> declParts, AstNode compoundStatement) 
-            : base(AstNodeType.SubroutineBlock)
-        {
-            _children.InsertRange(0, declParts);
-            _children.Add(compoundStatement);
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public List<AstNode> DeclParts => _children.GetRange(0, _children.Count - 1);
-        public AstNode CompoundStatement => _children[_children.Count - 1];
-    }
-}
+//    public class SubroutineBlock : AstNode
+//    {
+//        public SubroutineBlock(List<AstNode> declParts, AstNode compoundStatement = null, Token token = null) 
+//            : base(AstNodeType.SubroutineBlock)
+//        {
+//            _children.InsertRange(0, declParts);
+//            
+//            _children.Add(compoundStatement);
+//        }
+//
+//        public override T Accept<T>(IAstVisitor<T> visitor)
+//        {
+//            return visitor.Visit(this);
+//        }
+//
+//        public bool IsForward = false;
+//        public List<AstNode> DeclParts => _children.GetRange(0, _children.Count - 1);
+//        public AstNode CompoundStatement => _children[_children.Count - 1];
+//    }
+//}

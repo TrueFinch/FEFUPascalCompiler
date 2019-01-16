@@ -9,9 +9,18 @@ namespace FEFUPascalCompiler.Parser.ParserParts
     {
         private AstNode ParseCompoundStatement()
         {
-            throw new NotImplementedException();
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Begin},
+                string.Format("{0} {1} : syntax error, 'begin' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+            
+            var stmtPart = ParseStatementsPart();
+            
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Colon},
+                string.Format("{0} {1} : syntax error, 'end' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+
         }
-        
+
         private AstNode ParseAssingStatement()
         {
             var left = ParseExpression();
