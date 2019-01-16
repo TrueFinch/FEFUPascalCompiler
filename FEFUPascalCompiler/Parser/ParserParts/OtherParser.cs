@@ -7,7 +7,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 {
     internal partial class PascalParser
     {
-        public AstNode ParseFormalParamList()
+        public List<AstNode> ParseFormalParamList()
         {
             var token = PeekToken();
             if (token == null)
@@ -16,16 +16,37 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 return null;
             }
 
+            if (PeekToken().Type != TokenType.OpenBracket)
+            {
+                //exception -- open bracket is missing;
+                return null;
+            }
+            
             var paramSections = new List<AstNode>();
 
             while (true)
             {
-                paramSections.Add(ParseFormalParamSection());
-                if (paramSections[0] == null)
+                var section = ParseFormalParamSection();
+                if (section == null)
                 {
                     return null; // param list is empty
                 }
+
+                paramSections.Add(section);
+
+                if (PeekToken() == null || PeekToken().Type != TokenType.Semicolon)
+                {
+                    break;
+                }
             }
+
+            if (PeekToken().Type != TokenType.CloseBracket)
+            {
+                //exception -- close bracket is missing
+                return null;
+            }
+            
+            return paramSections;
         }
 
         private AstNode ParseFormalParamSection()
@@ -40,7 +61,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             AstNode modifier = null;
             if (PeekToken() != null && (PeekToken().Type == TokenType.Var
-                || PeekToken().Type == TokenType.Const || PeekToken().Type == TokenType.Out))
+                                        || PeekToken().Type == TokenType.Const || PeekToken().Type == TokenType.Out))
             {
                 modifier = new Modifier(PeekToken());
             }
@@ -55,7 +76,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
             var paramType = ParseParamType();
-            
+
             return new FormalParamSection(identsList, paramType, modifier);
         }
 
@@ -78,6 +99,11 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 {
                     return ParseConformatArray();
                 }
+                default:
+                {
+                    //exception -- syntax error
+                    return null;
+                }
             }
         }
 
@@ -95,6 +121,9 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             {
                 return new ConformantArray(arrayToken, ofToken, ParseSimpleType());
             }
+
+            //exception -- syntax error
+            return null;
         }
 
         public List<AstNode> ParseIdentList()

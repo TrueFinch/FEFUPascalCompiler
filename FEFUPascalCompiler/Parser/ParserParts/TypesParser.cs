@@ -238,14 +238,29 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 return null; // this is not func signature
             }
 
+            NextToken();
             var formalParamList = ParseFormalParamList();
             
-            
+            if (PeekToken() == null || PeekToken().Type != TokenType.Colon)
+            {
+                return null; // this is not func signature
+            }
+
+            var returnType = ParseSimpleType();
+            return new FuncSignature(token, formalParamList, returnType);
         }
 
         private AstNode ParseProcSignature()
         {
-            throw new NotImplementedException();
+            var token = PeekToken();
+            if (token == null || token.Type != TokenType.Procedure)
+            {
+                return null; // this is not func signature
+            }
+
+            NextToken();
+            var formalParamList = ParseFormalParamList();
+            return new ProcSignature(token, formalParamList);
         }
     }
 }
