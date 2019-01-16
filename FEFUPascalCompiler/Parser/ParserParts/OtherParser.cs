@@ -135,8 +135,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 return null;
             }
 
-            while (PeekToken().Type == TokenType.Comma)
+            while (true)
             {
+                if (PeekToken().Type != TokenType.Comma)
+                {
+                    break;
+                }
+
+                NextToken();
                 var ident = ParseIdent();
                 if (ident == null)
                 {
@@ -145,7 +151,6 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 }
 
                 identList.Add(ident);
-                NextToken();
             }
 
             return identList;
@@ -165,6 +170,9 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
         private AstNode ParseConstIntegerLiteral()
         {
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.IntegerNumber},
+                string.Format("{0} {1} : syntax error, integer expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
             return new ConstIntegerLiteral(PeekAndNext());
         }
     }

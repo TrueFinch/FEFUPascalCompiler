@@ -59,33 +59,28 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 return null; // this is not array type
             }
 
-            token = NextAndPeek();
-            if (token.Type != TokenType.OpenSquareBracket)
-            {
-                return null; //some parser exception -- this already mistake
-            }
-
             NextToken();
-            var index_ranges = ParseIndexRanges();
-            token = PeekToken();
-            if (token.Type != TokenType.OpenSquareBracket)
-            {
-                return null; //some parser exception -- this already mistake
-            }
+            
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.OpenSquareBracket},
+                string.Format("{0} {1} : syntax error, '[' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            token = NextAndPeek();
-            if (token.Type != TokenType.Of)
-            {
-                return null; //some parser exception -- this already mistake
-            }
+            var indexRanges = ParseIndexRanges();
+            
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.CloseSquareBracket},
+                string.Format("{0} {1} : syntax error, ']' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Of},
+                string.Format("{0} {1} : syntax error, '[' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var type = ParseType();
             if (type == null)
-            {
-                //some parser exception
-            }
+                throw new Exception(string.Format("{0} {1} : syntax error, type expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            return new ArrayType(index_ranges, type);
+            return new ArrayType(indexRanges, type);
         }
 
         private List<AstNode> ParseIndexRanges()
@@ -100,13 +95,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             
             while (PeekToken().Type == TokenType.Comma)
             {
+                NextToken();
                 var indexRange = ParseIndexRange();
                 if (indexRange == null)
                 {
-                    //exception unexpected lexeme
+                    throw new Exception(string.Format("{0} {1} : syntax error, index range expected, but {2} found", 
+                        PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
                 }
                 indexRanges.Add(indexRange);
-                NextToken();
             }
 
             return indexRanges;
@@ -122,13 +118,11 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
             var token = PeekToken();
-            if (token.Type != TokenType.DoubleDotOperator)
-            {
-                //exception -- no double dot
-                return null;
-            }
+            
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.DoubleDotOperator},
+                string.Format("{0} {1} : syntax error, ':' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            NextToken();
             var rightBound = ParseConstIntegerLiteral();
             if (rightBound == null)
             {
