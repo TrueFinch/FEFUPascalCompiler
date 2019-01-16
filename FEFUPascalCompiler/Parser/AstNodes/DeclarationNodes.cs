@@ -58,7 +58,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
     public class TypeDecl : AstNode
     {
-        public TypeDecl(Token token, AstNode ident, AstNode identType) : base(AstNodeType.TypeDecl, token)
+        public TypeDecl(AstNode ident, AstNode identType) : base(AstNodeType.TypeDecl)
         {
             _children.Add(ident);
             _children.Add(identType);
@@ -73,9 +73,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode IdentType => _children[1];
     }
 
-    public class VariableDeclsPart : DeclsPart
+    public class VarDeclsPart : DeclsPart
     {
-        public VariableDeclsPart(Token token, List<AstNode> decls) : base(decls, AstNodeType.VarDeclsPart, token)
+        public VarDeclsPart(Token token, List<AstNode> decls) : base(decls, AstNodeType.VarDeclsPart, token)
         {
         }
 
@@ -85,12 +85,31 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
     }
 
-    public class VarDecl : AstNode
+    public class SimpleVarDecl : AstNode
     {
-        public VarDecl(Token token, List<AstNode> identList, AstNode identsType, AstNode expression = null)
-            : base(AstNodeType.VarDecl, token)
+        public SimpleVarDecl(List<AstNode> identList, AstNode identsType)
+            : base(AstNodeType.SimpleVarDecl)
         {
             _children.InsertRange(0, identList);
+            _children.Add(identsType);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public List<AstNode> IdentList => _children.GetRange(0, _children.Count - 1);
+
+        public AstNode IdentsType => _children[_children.Count - 1];
+    }
+
+    public class InitVarDecl : AstNode
+    {
+        public InitVarDecl(AstNode ident, AstNode identsType, AstNode expression)
+            : base(AstNodeType.InitVarDecl)
+        {
+            _children.Add(ident);
             _children.Add(identsType);
             _children.Add(expression);
         }
@@ -100,12 +119,12 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public List<AstNode> IdentList => _children.GetRange(0, _children.Count - 2);
-
-        public AstNode IdentsType => _children[_children.Count - 2];
-        public AstNode Expression => _children[_children.Count - 1];
+        public AstNode IdentList => _children[0];
+        public AstNode IdentsType => _children[1];
+        public AstNode Expression => _children[2];
     }
 
+    
     public class ProcFuncDeclsPart : DeclsPart
     {
         public ProcFuncDeclsPart(List<AstNode> decls) : base(decls, AstNodeType.ProcFuncDeclsPart)
@@ -120,7 +139,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     
     public class ProcDecl : AstNode
     {
-        public ProcDecl(Token token, AstNode procHeader, AstNode block) : base(AstNodeType.ProcDecl, token)
+        public ProcDecl(AstNode procHeader, AstNode block) : base(AstNodeType.ProcDecl)
         {
             _children.Add(procHeader);
             _children.Add(block);
@@ -137,7 +156,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
     public class ProcHeader : AstNode
     {
-        public ProcHeader(Token token, AstNode name, List<AstNode> paramList) : base(AstNodeType.ProcHeader, token)
+        public ProcHeader(AstNode name, List<AstNode> paramList) : base(AstNodeType.ProcHeader)
         {
             _children.Add(name);
             _children.InsertRange(1, paramList);
@@ -154,7 +173,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     
     public class FuncDecl : AstNode
     {
-        public FuncDecl(Token token, AstNode funcHeader, AstNode block) : base(AstNodeType.FuncDecl, token)
+        public FuncDecl(AstNode funcHeader, AstNode block) : base(AstNodeType.FuncDecl)
         {
             _children.Add(funcHeader);
             _children.Add(block);
@@ -171,8 +190,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     
     public class FuncHeader : AstNode
     {
-        public FuncHeader(Token token, AstNode name, List<AstNode> paramList, AstNode returnType) 
-            : base(AstNodeType.FuncHeader, token)
+        public FuncHeader(AstNode name, List<AstNode> paramList, AstNode returnType) 
+            : base(AstNodeType.FuncHeader)
         {
             _children.Add(name);
             _children.InsertRange(1, paramList);
@@ -188,4 +207,24 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public List<AstNode> ParamList => _children.GetRange(1, _children.Count - 2);
         public AstNode ReturnType => _children[_children.Count - 1];
     }
-}
+
+//    public class SubroutineBlock : AstNode
+//    {
+//        public SubroutineBlock(List<AstNode> declParts, AstNode compoundStatement = null, Token token = null) 
+//            : base(AstNodeType.SubroutineBlock)
+//        {
+//            _children.InsertRange(0, declParts);
+//            
+//            _children.Add(compoundStatement);
+//        }
+//
+//        public override T Accept<T>(IAstVisitor<T> visitor)
+//        {
+//            return visitor.Visit(this);
+//        }
+//
+//        public bool IsForward = false;
+//        public List<AstNode> DeclParts => _children.GetRange(0, _children.Count - 1);
+//        public AstNode CompoundStatement => _children[_children.Count - 1];
+//    }
+//}

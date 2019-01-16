@@ -47,19 +47,18 @@
                 <type_decl> ::= <ident> "=" <type> ";" 
                         
             <variable_decls_part> ::= "var" <variable_decl> {<variable_decl>} 
-                //TODO: remove variable decl node class for ast. Add multiple_variable_decl and single_variable_decl node class
-                <variable_decl> ::= <multiple_variable_decl> | <single_variable_decl>
-                    <multiple_variable_decl> ::= <ident_list> ":" <type>
-                    <single_variable_decl> ::= <ident> ":" <type> "=" <expression>
+                <variable_decl> ::= <simple_variable_decl> | <init_variable_decl> ";"
+                    <simple_variable_decl> ::= <ident_list> ":" <type>
+                    <init_variable_decl> ::= <ident> ":" <type> "=" <expression>
                     
             <proc_and_func_decls_part> ::= {(<proc_decl>|<func_decl>)}
                 <proc_decl> ::= <proc_header> ";" <subroutine_block> ";"
-                     <proc_header> ::= "procedure" <ident> "(" [<formal_param_list>] ")" 
+                     <proc_header> ::= "procedure" <ident> <formal_param_list> 
                     
                 <func_decl> ::= <func_header> ";" <subroutine_block> ";"
-                    <func_header> ::= "function" <ident> "(" [<formal_param_list>] ")" ":" <simple_type> 
+                    <func_header> ::= "function" <ident> <formal_param_list> ":" <simple_type> 
                     
-                            <formal_param_list> ::= <formal_param_section> {";" <formal_param_section>}
+                            <formal_param_list> ::= "(" [ <formal_param_section> {";" <formal_param_section>} ] ")" 
                                 <formal_param_section> ::= [<modifier>] <ident_list> ":" <param_type>
                                     <modifier> ::= "var"|"const"|"out"
                                         <param_type> ::= <simple_type> | <conformant_array>
@@ -80,8 +79,8 @@
                     <structured_statement> ::= <if_statement>|<loop_statement>|<compound_statement>
                         <if_statement> ::= "if" "(" <expression> ")" "then" <statement> ["else" <statement>]
                         <loop_statement> ::= <while_statement>|<do_while_statement>|<for_statement>
-                            <while_statement> ::= "while" <expression> "do" <statement>
-                            <do_while_statement> ::= "do" <statement> "while" <expression>
+                            <while_statement> ::= "while" "(" <expression> ")" "do" <statement>
+                            <do_while_statement> ::= "do" <statement> "while" "(" <expression> ")"
                             <for_statement> ::= "for" <ident> ":=" <for_range> "do" <statement>
                                 <for_range> ::= <expression> ("to"|"downto") <expression>
                         
@@ -97,10 +96,10 @@
         <fields_list> ::= <field_section> {";" <field_section>}
             <field_section> ::= <ident_list> ":" <type>
 
-    <pointer_type> ::= "^" <simple_type> //TODO: ask nastya about pointer on simple type - cause this is ident but what
-                                         //TODO: about keywords like char, double, integer array?
-    <func_signature> ::= "function" [<formal_param_list>] ":" <simple_type> 
-    <proc_signature> ::= "procedure" [<formal_param_list>]
+    <pointer_type> ::= "^" <simple_type>
+    
+    <func_signature> ::= "function" <formal_param_list> ":" <simple_type> 
+    <proc_signature> ::= "procedure" <formal_param_list>
         
 
 <expression> ::= <simple_expr>[<comparing_operator> <simple_expr>]

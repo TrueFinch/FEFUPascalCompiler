@@ -7,9 +7,10 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 {
     public class FormalParamSection : AstNode
     {
-        public FormalParamSection(AstNode paramList, AstNode paramType, AstNode modifier = null) : base(AstNodeType.FormalParamSection)
+        public FormalParamSection(List<AstNode> paramList, AstNode paramType, AstNode modifier = null)
+            : base(AstNodeType.FormalParamSection)
         {
-            _children.Add(paramList);
+            _children.InsertRange(0, paramList);
             _children.Add(paramType);
             _children.Add(modifier);
         }
@@ -18,10 +19,10 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             return visitor.Visit(this);
         }
-        
-        public AstNode ParamList => _children[0];
-        public AstNode ParamType => _children[1];
-        public AstNode ParamModifier => _children[2];
+
+        public List<AstNode> ParamList => _children.GetRange(0, _children.Count - 2);
+        public AstNode ParamType => _children[_children.Count - 2];
+        public AstNode ParamModifier => _children[_children.Count - 1];
     }
 
     public class Modifier : AstNode
@@ -35,21 +36,21 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
     }
-    
-    public class IdentList : AstNode
-    {
-        public IdentList(List<AstNode> identList) : base(AstNodeType.IdentList)
-        {
-            _children.InsertRange(0, identList);
-        }
 
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public List<AstNode> Idents => _children;
-    }
+//    public class IdentList : AstNode
+//    {
+//        public IdentList(List<AstNode> identList) : base(AstNodeType.IdentList)
+//        {
+//            _children.InsertRange(0, identList);
+//        }
+//
+//        public override T Accept<T>(IAstVisitor<T> visitor)
+//        {
+//            return visitor.Visit(this);
+//        }
+//
+//        public List<AstNode> Idents => _children;
+//    }
 
     public class Ident : AstNode
     {
@@ -66,7 +67,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
         }
     }
-    
+
     public class ConstIntegerLiteral : AstNode
     {
         public ConstIntegerLiteral(Token token) : base(AstNodeType.ConstIntegerLiteral, token)
@@ -114,7 +115,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
     }
-    
+
     public class Nil : AstNode
     {
         public Nil(Token token) : base(AstNodeType.Nil, token)

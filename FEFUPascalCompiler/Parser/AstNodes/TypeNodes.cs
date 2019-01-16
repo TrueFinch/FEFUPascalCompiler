@@ -75,11 +75,11 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
     public class FieldSection : AstNode
     {
-        public FieldSection(Token colon, AstNode identList, AstNode identsType) : base(AstNodeType.FieldSection)
+        public FieldSection(Token colon, List<AstNode> identList, AstNode identsType) : base(AstNodeType.FieldSection)
         {
             Colon = colon;
 
-            _children.Add(identList);
+            _children.InsertRange(0, identList);
             _children.Add(identsType);
             Value = colon.Value;
         }
@@ -90,7 +90,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public Token Colon { get; }
-        public AstNode Idents => _children[0];
+        public List<AstNode> Idents => _children.GetRange(0, _children.Count - 1);
         public AstNode IdentsType => _children[1];
     }
 
@@ -130,7 +130,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     public class FuncSignature : AstNode
     {
         public FuncSignature(Token token, List<AstNode> paramSections, AstNode returnType)
-            : base(AstNodeType.ProcSignature, token)
+            : base(AstNodeType.FuncSignature, token)
         {
             _children.InsertRange(0, paramSections);
             _children.Add(returnType);
