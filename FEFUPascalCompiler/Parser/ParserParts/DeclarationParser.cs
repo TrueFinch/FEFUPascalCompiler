@@ -11,7 +11,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             List<AstNode> declParts = new List<AstNode>();
             var declParsers = new List<DeclPartParser>
-                {ParseConstDeclsPart, ParseTypeDeclsPart, ParseVarDeclsPart, ParseaProcFuncDeclsPart};
+                {ParseConstDeclsPart, ParseTypeDeclsPart, ParseVarDeclsPart, ParseProcFuncDeclsPart};
             bool partsExist;
             do
             {
@@ -27,7 +27,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             return declParts;
         }
-        
+
         private AstNode ParseConstDeclsPart()
         {
             var token = PeekToken();
@@ -55,6 +55,29 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             } while (true);
 
             return new ConstDeclsPart(token, constDecls);
+        }
+
+        private AstNode ParseConstDecl()
+        {
+            var constIdent = ParseIdent();
+            var token = PeekToken();
+            if (token == null || token.Type != TokenType.EqualOperator)
+            {
+                //some parser exception
+                return null;
+            }
+
+            NextToken();
+            var expression = ParseExpression();
+            var semicolonToken = PeekToken();
+            if (semicolonToken == null || semicolonToken.Type != TokenType.Semicolon)
+            {
+                //some parser exception
+                return null;
+            }
+
+            NextToken();
+            return new ConstDecl(token, constIdent, expression);
         }
 
         private AstNode ParseTypeDeclsPart()
@@ -106,13 +129,13 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             NextToken();
             return new TypeDecl(typeIdent, type);
         }
-        
+
         private AstNode ParseVarDeclsPart()
         {
             var token = PeekToken();
             if (token.Type != TokenType.Var)
             {
-                  return null; //this is not var decl part
+                return null; //this is not var decl part
             }
 
             NextToken();
@@ -161,7 +184,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     return new InitVarDecl(varIdents[0], type, expr);
                 }
             }
-            
+
             if (PeekToken() == null || PeekToken().Type != TokenType.Semicolon)
             {
                 //some parser exception
@@ -170,6 +193,21 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             NextToken();
             return new SimpleVarDecl(varIdents, type);
+        }
+        
+        private AstNode ParseProcFuncDeclsPart()
+        {
+            throw new NotImplementedException();
+        }
+
+        private AstNode ParseFuncDecl()
+        {
+            throw new NotImplementedException();
+        }
+
+        private AstNode ParseProcDecl()
+        {
+            throw new NotImplementedException();
         }
     }
 }
