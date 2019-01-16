@@ -199,6 +199,23 @@
       <EmbeddedResource Include="LexerTests\NumberConstantsTests\CorrectDoubleNumbersTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="ParserTests\VariableDeclarationTests.in" />
+      <None Remove="ParserTests\1_VariableDeclarationTest.in" />
+      <EmbeddedResource Include="ParserTests\1_VariableDeclarationTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\1_VariableDeclarationTest.out" />
+      <EmbeddedResource Include="ParserTests\1_VariableDeclarationTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\2_VariableDeclarationTest.in" />
+      <EmbeddedResource Include="ParserTests\2_VariableDeclarationTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\2_VariableDeclarationTest.out" />
+      <EmbeddedResource Include="ParserTests\2_VariableDeclarationTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>
