@@ -125,7 +125,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     public class ForStatement : AstNode
     {
         public ForStatement(Token forToken, AstNode iterator, Token assignToken, AstNode range,
-            Token doToken, AstNode expression)
+            Token doToken, AstNode statement)
             : base(AstNodeType.ForStatement)
         {
             ForToken = forToken;
@@ -133,7 +133,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             AssignToken = assignToken;
             _children.Add(range);
             DoToken = doToken;
-            _children.Add(expression);
+            _children.Add(statement);
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -147,7 +147,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
         public AstNode Iterator => _children[0];
         public AstNode Range => _children[1];
-        public AstNode Expression => _children[2];
+        public AstNode Statement => _children[2];
     }
 
     public class ForRange : AstNode

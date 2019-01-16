@@ -73,6 +73,7 @@ namespace FEFUPascalCompiler.Tokens
         End,
         File,
         For,
+        Forward,
         Function,
         Goto,
         If,
@@ -116,7 +117,6 @@ namespace FEFUPascalCompiler.Tokens
         False,
         Get,
         Input,
-        Integer,
         Ln,
         Maxint,
         Minint,
@@ -144,7 +144,6 @@ namespace FEFUPascalCompiler.Tokens
         Unpack,
         Write,
         Writeln,
-
     }
 
     internal static class Dictionaries
@@ -163,6 +162,7 @@ namespace FEFUPascalCompiler.Tokens
             {"end", TokenType.End},
             {"file", TokenType.File},
             {"for", TokenType.For},
+            {"forward", TokenType.Forward},
             {"function", TokenType.Function},
             {"goto", TokenType.Goto},
             {"if", TokenType.If},
@@ -203,7 +203,6 @@ namespace FEFUPascalCompiler.Tokens
             {"false", TokenType.False},
             {"get", TokenType.Get},
             {"input", TokenType.Input},
-            {"integer", TokenType.Integer},
             {"ln", TokenType.Ln},
             {"maxint", TokenType.Maxint},
             {"minint", TokenType.Minint},

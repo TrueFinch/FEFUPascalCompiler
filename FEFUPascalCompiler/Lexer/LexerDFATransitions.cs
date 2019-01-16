@@ -64,6 +64,14 @@ namespace FEFUPascalCompiler.Lexer
             {LexerState.Colon                 , true },
             {LexerState.Comma                 , true },
             {LexerState.Dot                   , true },
+            {LexerState.NotEqualOperator      , true },
+            {LexerState.EqualOperator         , true },
+            {LexerState.LessOperator          , true },
+            {LexerState.LessOrEqualOperator   , true },
+            {LexerState.GreaterOperator       , true },
+            {LexerState.GreaterOrEqualOperator, true },
+            {LexerState.Carriage              , true },
+            {LexerState.AtSign                , true },
             // @formatter:on
         };
 

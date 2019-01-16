@@ -9,19 +9,35 @@ namespace FEFUPascalCompiler.Parser.ParserParts
     {
         private AstNode ParseType()
         {
-            var typesParsers = new List<TypesParser>
-                {ParseSimpleType, ParseArrayType, ParseRecordType, ParsePointerType, ParseProcedureType};
-            foreach (var tp in typesParsers)
+            switch (PeekToken().Type)
             {
-                var type = tp();
-                if (type != null)
+                case TokenType.Ident:
                 {
-                    return type;
+                    return ParseSimpleType();
+                }
+                case TokenType.Array:
+                {
+                    return ParseArrayType();
+                }
+                case TokenType.Record:
+                {
+                    return ParseRecordType();
+                }
+                case TokenType.Carriage:
+                {
+                    return ParsePointerType();
+                }
+                case TokenType.Procedure:
+                {
+                    return ParseProcSignature();
+                }
+                case TokenType.Function:
+                {
+                    return ParseFuncSignature();
                 }
             }
-
-            //some parser exception
-            return null;
+            throw new Exception(string.Format("{0}, {1} : syntax error, variable type expected, but {2} found",
+                PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
         }
 
         private AstNode ParseSimpleType()

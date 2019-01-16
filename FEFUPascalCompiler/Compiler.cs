@@ -90,16 +90,7 @@ namespace FEFUPascalCompiler
             var canvas = new List<StringBuilder>();
             astPrinter.PrintTree(canvas);
 
-            var maxWidth = 0;
-            foreach (var strBuilder in canvas)
-            {
-                maxWidth = maxWidth > strBuilder.Length ? maxWidth : strBuilder.Length;
-            }
-
-            foreach (var stringBuilder in canvas)
-            {
-                stringBuilder.Insert(stringBuilder.Length, ".", maxWidth - stringBuilder.Length);
-            }
+            astPrinter.AlignBG(in canvas);
             
             foreach (var strBuilder in canvas)
             {
