@@ -56,7 +56,7 @@
                      <proc_header> ::= "procedure" <ident> <formal_param_list> 
                     
                 <func_decl> ::= <func_header> ";" <subroutine_block> ";"
-                    <func_header> ::= "function" <ident> <formal_param_list>":" <simple_type> 
+                    <func_header> ::= "function" <ident> <formal_param_list> ":" <simple_type> 
                     
                             <formal_param_list> ::= "(" [ <formal_param_section> {";" <formal_param_section>} ] ")" 
                                 <formal_param_section> ::= [<modifier>] <ident_list> ":" <param_type>
