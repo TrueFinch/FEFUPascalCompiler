@@ -77,7 +77,7 @@ namespace FEFUPascalCompiler.Lexer
             {
                 // @formatter:off
                 {LexerState.MultiLineCommentFinish, TokenType.MultiLineComment  },
-                {LexerState.CloseSquareBracket    , TokenType.CloseSquareBracket},
+                {LexerState.CloseSquareBracket    , TokenType.Separator},
                 {LexerState.SingleLineComment     , TokenType.SingleLineComment },
                 {LexerState.SumArithmOperator     , TokenType.BinOperator       },
                 {LexerState.DifArithmOperator     , TokenType.BinOperator       },
@@ -92,7 +92,7 @@ namespace FEFUPascalCompiler.Lexer
                 {LexerState.GreaterOperator       , TokenType.BinOperator       },
                 {LexerState.GreaterOrEqualOperator, TokenType.BinOperator       },
                 {LexerState.StringConstFinish     , TokenType.StringConst       },
-                {LexerState.OpenSquareBracket     , TokenType.OpenSquareBracket },         
+                {LexerState.OpenSquareBracket     , TokenType.Separator },         
 //                {LexerState.SignCodeFinish        , TokenType.StringConst       },
                 {LexerState.DoubleNumber          , TokenType.DoubleNumber      },
                 {LexerState.CloseBracket          , TokenType.Separator         },
