@@ -194,10 +194,26 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             NextToken();
             return new SimpleVarDecl(varIdents, type);
         }
-        
+
         private AstNode ParseProcFuncDeclsPart()
         {
-            throw new NotImplementedException();
+            var declarations = new List<AstNode>();
+            bool stopParse = false;
+            while (!stopParse)
+            {
+                stopParse = true;
+                var funcDecl = ParseFuncDecl();
+                if (funcDecl != null)
+                {
+                    declarations.Add(funcDecl);
+                    stopParse = false;
+                }
+
+                var procDecl = ParseProcDecl();
+                if (procDecl == null) continue;
+                declarations.Add(procDecl);
+                stopParse = false;
+            }
         }
 
         private AstNode ParseFuncDecl()
