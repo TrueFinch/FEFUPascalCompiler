@@ -73,6 +73,7 @@ namespace FEFUPascalCompiler.Tokens
         End,
         File,
         For,
+        Forward,
         Function,
         Goto,
         If,
@@ -144,7 +145,6 @@ namespace FEFUPascalCompiler.Tokens
         Unpack,
         Write,
         Writeln,
-
     }
 
     internal static class Dictionaries
@@ -163,6 +163,7 @@ namespace FEFUPascalCompiler.Tokens
             {"end", TokenType.End},
             {"file", TokenType.File},
             {"for", TokenType.For},
+            {"forward", TokenType.Forward},
             {"function", TokenType.Function},
             {"goto", TokenType.Goto},
             {"if", TokenType.If},
