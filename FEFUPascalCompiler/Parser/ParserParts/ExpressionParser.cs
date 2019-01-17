@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Tokens;
@@ -238,9 +239,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                         
                         if (paramList == null)
                         {
-                            //exception -- params (even empty) expected
+                            throw new Exception(string.Format("{0}, {1} : syntax error, parameters list expected, but {2} found",
+                                PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
                         }
-
+                        
+                        CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseBracket},
+                            string.Format("{0}, {1} : syntax error, ')' expected, but {2} found",
+                                PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+                        
                         left = new FunctionCall(left, paramList);
                         break;
                     }
@@ -279,6 +285,8 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 {
                     break;
                 }
+
+                NextToken();
             }
 
             return paramList;

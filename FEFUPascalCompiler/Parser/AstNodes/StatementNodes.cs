@@ -160,7 +160,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
         public override T Accept<T>(IAstVisitor<T> visitor)
         {
-            throw new System.NotImplementedException();
+            return visitor.Visit(this);
         }
 
         public AstNode Start => _children[0];

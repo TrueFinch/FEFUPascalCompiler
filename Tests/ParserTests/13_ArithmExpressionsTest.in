@@ -1,0 +1,15 @@
+program a;
+var
+    I: float = 1;
+    D: integer = 2;
+    C: integer = 3;
+begin
+    Writeln(I + 1);
+    Writeln(I - -1);
+    Writeln(I * 2);
+    Writeln(I / 3);
+    Writeln(D mod 10);
+    Writeln(D div 10);
+    Writeln(D shr 10);
+    Writeln(D shl 10);
+end.

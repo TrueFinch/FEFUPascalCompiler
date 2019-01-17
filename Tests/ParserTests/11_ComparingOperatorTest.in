@@ -1,0 +1,19 @@
+program a;
+var
+    i, k: integer;
+begin
+    i := 4;
+    k := 2;
+    if (i > k) then
+        write(i);
+    if (k < i) then
+        writeln(k);
+    if (k <> i) then 
+        writeln(i, k);
+    if (i = 4) then
+        write(i);
+    if (k <= i) then
+        writeln(k);
+    if (i >= k) then
+        writeln(i, k);
+end.

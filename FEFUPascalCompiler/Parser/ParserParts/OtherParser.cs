@@ -10,18 +10,11 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         public List<AstNode> ParseFormalParamList()
         {
             var token = PeekToken();
-            if (token == null)
-            {
-                //exception
-                return null;
-            }
 
-            if (PeekToken().Type != TokenType.OpenBracket)
-            {
-                //exception -- open bracket is missing;
-                return null;
-            }
-            
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.OpenBracket},
+                string.Format("{0} {1} : syntax error, '(' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+
             var paramSections = new List<AstNode>();
 
             while (true)
@@ -29,50 +22,42 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 var section = ParseFormalParamSection();
                 if (section == null)
                 {
-                    return null; // param list is empty
+                    break; // param list is empty
                 }
 
                 paramSections.Add(section);
 
-                if (PeekToken() == null || PeekToken().Type != TokenType.Semicolon)
+                if (PeekToken().Type != TokenType.Semicolon)
                 {
                     break;
                 }
+
+                NextToken();
             }
 
-            if (PeekToken().Type != TokenType.CloseBracket)
-            {
-                //exception -- close bracket is missing
-                return null;
-            }
-            
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseBracket},
+                string.Format("{0} {1} : syntax error, ')' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+
             return paramSections;
         }
 
         private AstNode ParseFormalParamSection()
         {
             var token = PeekToken();
-            if (token == null)
-            {
-                //exception
-                return null;
-            }
-
-
+            
             AstNode modifier = null;
-            if (PeekToken() != null && (PeekToken().Type == TokenType.Var
+            if ((PeekToken().Type == TokenType.Var
                                         || PeekToken().Type == TokenType.Const || PeekToken().Type == TokenType.Out))
             {
-                modifier = new Modifier(PeekToken());
+                modifier = new Modifier(PeekAndNext());
             }
 
-            NextToken();
             var identsList = ParseIdentList();
 
             if (PeekToken() == null || PeekToken().Type != TokenType.Colon)
             {
-                //exception -- syntax error
-                return null;
+                return null; //section is empty
             }
 
             var paramType = ParseParamType();
@@ -128,13 +113,15 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
         public List<AstNode> ParseIdentList()
         {
-            var identList = new List<AstNode> {ParseIdent()};
-            if (identList[0] == null)
+            var identList = new List<AstNode>();
+            var ident = ParseIdent();
+            if (ident == null)
             {
                 //exception -- this is not ident list
-                return null;
+                return identList;
             }
 
+            identList.Add(ident);
             while (true)
             {
                 if (PeekToken().Type != TokenType.Comma)
@@ -143,7 +130,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 }
 
                 NextToken();
-                var ident = ParseIdent();
+                ident = ParseIdent();
                 if (ident == null)
                 {
                     //exception unexpected lexeme
@@ -170,8 +157,8 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
         private AstNode ParseConstIntegerLiteral()
         {
-            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.IntegerNumber},
-                string.Format("{0} {1} : syntax error, integer expected, but {2} found", 
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.IntegerNumber},
+                string.Format("{0} {1} : syntax error, integer expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
             return new ConstIntegerLiteral(PeekAndNext());
         }

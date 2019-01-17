@@ -240,7 +240,8 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
         public AstPrinterNode Visit(FormalParamSection node)
         {
             var printer = new AstPrinterNode(node.ToString());
-            printer.AddChild(node.ParamModifier.Accept(this));
+            if (node.ParamModifier != null)
+                printer.AddChild(node.ParamModifier.Accept(this));
             foreach (var param in node.ParamList)
             {
                 printer.AddChild(param.Accept(this));
@@ -397,6 +398,14 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
         {
             var printer = new AstPrinterNode(node.ToString());
             printer.AddChild(node.ArrayType.Accept(this));
+            return printer;
+        }
+
+        public AstPrinterNode Visit(ForRange node)
+        {
+            var printer = new AstPrinterNode(node.ToString());
+            printer.AddChild(node.Start.Accept(this));
+            printer.AddChild(node.Finish.Accept(this));
             return printer;
         }
     }

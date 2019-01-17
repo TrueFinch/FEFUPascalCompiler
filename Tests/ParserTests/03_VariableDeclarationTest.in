@@ -1,0 +1,8 @@
+program a;
+var
+    e: record end;
+    ee: record i: integer end;
+    eee: record i: integer; end;
+    eeee: record i, f: float; b: integer; end;
+begin
+end.

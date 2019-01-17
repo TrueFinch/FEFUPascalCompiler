@@ -1,0 +1,16 @@
+program a;
+var
+    i: integer;
+begin
+    i := 1;
+    if (i > 0) then
+    begin
+        i += 2;
+        write(i);
+    end
+    else
+    begin
+        i -= 2;
+        write(i);
+    end;
+end.

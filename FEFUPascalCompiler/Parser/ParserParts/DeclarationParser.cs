@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Tokens;
 
@@ -188,9 +189,9 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
         private AstNode ParseVarDecl()
         {
+            if (PeekToken().Type != TokenType.Ident)
+                return null;
             var varIdents = ParseIdentList();
-            if (varIdents == null)
-                return null; //this is not variable declaration
             
             var token = PeekToken();
             CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Colon},

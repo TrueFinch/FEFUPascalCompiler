@@ -1,0 +1,11 @@
+                                                                          a                                                                          
+                                                                          ┼                                                                          
+                                                                      MainBlock                                                                      
+       ┌──────────────────────────────────────────────────────────────────┴──────┐                                                                   
+      var                                                                CompoundStatement                                                           
+       ┼         ┌─────┬────────────┬───────────────────┬────────────────────┬───┴───────────────┬───────────────────┬────────────────────┐          
+ SimpleVarDecl   :=    :=      IfStatement         IfStatement          IfStatement         IfStatement         IfStatement          IfStatement     
+ ┌──┬──┴──┐     ┌┴─┐  ┌┴─┐   ┌──────┴──┐         ┌──────┴──┐         ┌───────┴──┐         ┌──────┴──┐         ┌──────┴──┐         ┌───────┴──┐       
+ i  k  integer  i  4  k  2   >    FunctionCall   <    FunctionCall   <>   FunctionCall    =    FunctionCall   <=   FunctionCall   >=   FunctionCall  
+                            ┌┴─┐    ┌──┴─┐      ┌┴─┐     ┌─┴───┐    ┌┴─┐     ┌──┴──┬──┐  ┌┴─┐    ┌──┴─┐      ┌┴─┐     ┌─┴───┐    ┌┴─┐     ┌──┴──┬──┐ 
+                            i  k  write  i      k  i  writeln  k    k  i  writeln  i  k  i  4  write  i      k  i  writeln  k    i  k  writeln  i  k 

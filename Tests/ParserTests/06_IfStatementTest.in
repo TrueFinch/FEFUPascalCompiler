@@ -1,0 +1,12 @@
+program a;
+var
+    i: integer;
+begin
+    i := 3;
+    if (1 + 1 = 2) then
+        if (i <> 3) then
+            i := 3
+        else
+            i := 4;
+    Write(i);
+end.

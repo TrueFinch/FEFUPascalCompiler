@@ -142,8 +142,6 @@ namespace FEFUPascalCompiler.Tokens
         True,
         Trunc,
         Unpack,
-        Write,
-        Writeln,
     }
 
     internal static class Dictionaries
@@ -228,8 +226,6 @@ namespace FEFUPascalCompiler.Tokens
             {"true", TokenType.True},
             {"trunc", TokenType.Trunc},
             {"unpack", TokenType.Unpack},
-            {"write", TokenType.Write},
-            {"writeln", TokenType.Writeln},
         };
 
         internal static readonly Dictionary<string, TokenType> LexemeToTokenType = new Dictionary<string, TokenType>
