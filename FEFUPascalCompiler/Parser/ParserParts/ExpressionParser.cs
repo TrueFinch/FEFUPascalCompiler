@@ -183,17 +183,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             var token = PeekToken();
 
-//            if (token == null)
-//            {TODO: delete this
-//                //exception -- unexpected end of file
-//                return null;
-//            }
-
             var left = ParseIdent();
             if (left == null)
             {
-                //exception - unexpected lexeme
-                return null;
+                return null; // this is not variable ref
             }
 
             bool breakWhile = false;
@@ -250,6 +243,17 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                         left = new FunctionCall(left, paramList);
                         break;
                     }
+                    case TokenType.Carriage:
+                    {
+                        if (left.Type == AstNodeType.DereferenceOperator)
+                        {
+                            throw new Exception(string.Format("{0}, {1} : syntax error, unexpected {2} found",
+                                PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
+                        }
+                        var carriageToken = PeekAndNext();
+                        left = new DereferenceOperator(carriageToken, left);
+                        break;
+                    }
                     default:
                     {
                         breakWhile = true;
@@ -257,7 +261,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     }
                 }
             }
-
+            
             return left;
         }
 

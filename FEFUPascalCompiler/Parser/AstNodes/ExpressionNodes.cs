@@ -162,4 +162,19 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode FuncIdent => _children[0];
         public List<AstNode> ParamList => _children.GetRange(1, _children.Count - 1);
     }
+    
+    public class DereferenceOperator : AstNode
+    {
+        public DereferenceOperator(Token token, AstNode leftExpr) : base(AstNodeType.DereferenceOperator, token)
+        {
+            _children.Add(leftExpr);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+        
+        public AstNode Expr => _children[0];
+    }
 }

@@ -49,5 +49,6 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
         T Visit(FuncSignature node);
         T Visit(ConformantArray node);
         T Visit(ForRange node);
+        T Visit(DereferenceOperator node);
     }
 }

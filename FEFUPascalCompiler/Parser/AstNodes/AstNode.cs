@@ -51,6 +51,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         ArrayAccess,
         RecordAccess,
         FunctionCall,
+        DereferenceOperator,
         //Other
         FormalParamSection,
             Modifier,

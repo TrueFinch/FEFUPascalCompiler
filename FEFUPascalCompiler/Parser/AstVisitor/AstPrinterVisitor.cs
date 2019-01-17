@@ -408,6 +408,13 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
             printer.AddChild(node.Finish.Accept(this));
             return printer;
         }
+
+        public AstPrinterNode Visit(DereferenceOperator node)
+        {
+            var printer = new AstPrinterNode(node.ToString());
+            printer.AddChild(node.Expr.Accept(this));
+            return printer;
+        }
     }
 
     public class AstPrinterNode
