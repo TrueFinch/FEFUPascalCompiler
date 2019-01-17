@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Tokens;
@@ -60,7 +61,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             if (left == null)
             {
-                //exception unexpected something
+                //exception unexpected something TODO: deal with it
                 return null;
             }
 
@@ -238,9 +239,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                         
                         if (paramList == null)
                         {
-                            //exception -- params (even empty) expected
+                            throw new Exception(string.Format("{0}, {1} : syntax error, parameters list expected, but {2} found",
+                                PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
                         }
-
+                        
+                        CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseBracket},
+                            string.Format("{0}, {1} : syntax error, ')' expected, but {2} found",
+                                PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+                        
                         left = new FunctionCall(left, paramList);
                         break;
                     }
@@ -258,10 +264,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private List<AstNode> ParseParamList()
         {
             var token = PeekToken();
-            if (token == null)
-            {
-                //exception -- 
-            }
+//            if (token == null) TODO: delete this
+//            {
+//                //exception -- 
+//            }
             
             List<AstNode> paramList = new List<AstNode>();
             
@@ -279,6 +285,8 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 {
                     break;
                 }
+
+                NextToken();
             }
 
             return paramList;

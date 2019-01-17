@@ -30,11 +30,9 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var mainBlock = ParseMainBlock();
 
             token = PeekToken();
-            if (token.Type != TokenType.Dot)
-            {
-                //some parser exception
-                return null;
-            }
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Dot},
+                string.Format("{0}, {1} : syntax error, '.' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             return new Program(header, mainBlock);
         }

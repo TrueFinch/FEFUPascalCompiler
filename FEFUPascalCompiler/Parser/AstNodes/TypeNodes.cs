@@ -75,13 +75,13 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
     public class FieldSection : AstNode
     {
-        public FieldSection(Token colon, List<AstNode> identList, AstNode identsType) : base(AstNodeType.FieldSection)
+        public FieldSection(Token colon, List<AstNode> identList, AstNode identsType) : base(AstNodeType.FieldSection, colon)
         {
             Colon = colon;
 
             _children.InsertRange(0, identList);
             _children.Add(identsType);
-            Value = colon.Value;
+            
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -91,7 +91,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
         public Token Colon { get; }
         public List<AstNode> Idents => _children.GetRange(0, _children.Count - 1);
-        public AstNode IdentsType => _children[1];
+        public AstNode IdentsType => _children[_children.Count - 1];
     }
 
     public class PointerType : AstNode

@@ -1,0 +1,9 @@
+       helloworld        
+           ┼             
+       MainBlock         
+           ┼             
+   CompoundStatement     
+           ┼             
+      FunctionCall       
+    ┌──────┴────┐        
+ writeln  Hello, world!  

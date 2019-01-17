@@ -36,6 +36,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     return ParseFuncSignature();
                 }
             }
+
             throw new Exception(string.Format("{0}, {1} : syntax error, variable type expected, but {2} found",
                 PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
         }
@@ -59,33 +60,28 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 return null; // this is not array type
             }
 
-            token = NextAndPeek();
-            if (token.Type != TokenType.OpenSquareBracket)
-            {
-                return null; //some parser exception -- this already mistake
-            }
-
             NextToken();
-            var index_ranges = ParseIndexRanges();
-            token = PeekToken();
-            if (token.Type != TokenType.OpenSquareBracket)
-            {
-                return null; //some parser exception -- this already mistake
-            }
 
-            token = NextAndPeek();
-            if (token.Type != TokenType.Of)
-            {
-                return null; //some parser exception -- this already mistake
-            }
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.OpenSquareBracket},
+                string.Format("{0} {1} : syntax error, '[' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+
+            var indexRanges = ParseIndexRanges();
+
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseSquareBracket},
+                string.Format("{0} {1} : syntax error, ']' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Of},
+                string.Format("{0} {1} : syntax error, '[' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var type = ParseType();
             if (type == null)
-            {
-                //some parser exception
-            }
+                throw new Exception(string.Format("{0} {1} : syntax error, type expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            return new ArrayType(index_ranges, type);
+            return new ArrayType(indexRanges, type);
         }
 
         private List<AstNode> ParseIndexRanges()
@@ -97,16 +93,18 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 //some parser exception -- need at list one list range here
                 return null;
             }
-            
+
             while (PeekToken().Type == TokenType.Comma)
             {
+                NextToken();
                 var indexRange = ParseIndexRange();
                 if (indexRange == null)
                 {
-                    //exception unexpected lexeme
+                    throw new Exception(string.Format("{0} {1} : syntax error, index range expected, but {2} found",
+                        PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
                 }
+
                 indexRanges.Add(indexRange);
-                NextToken();
             }
 
             return indexRanges;
@@ -122,13 +120,11 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
             var token = PeekToken();
-            if (token.Type != TokenType.DoubleDotOperator)
-            {
-                //exception -- no double dot
-                return null;
-            }
 
-            NextToken();
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.DoubleDotOperator},
+                string.Format("{0} {1} : syntax error, ':' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+
             var rightBound = ParseConstIntegerLiteral();
             if (rightBound == null)
             {
@@ -161,21 +157,24 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
         private List<AstNode> ParseFieldsList()
         {
-            var fieldsList = new List<AstNode> {ParseFieldSection()};
+            var fieldsList = new List<AstNode>();
+            var fieldSection = ParseFieldSection();
 
-            if (fieldsList[0] == null)
+            if (fieldSection == null)
             {
-                //some parser exception -- need at list one list range here
-                return null;
+                return fieldsList;
             }
-            
-            while (PeekToken().Type == TokenType.Comma)
+
+            fieldsList.Add(fieldSection);
+            while (PeekToken().Type == TokenType.Semicolon)
             {
-                var fieldSection = ParseFieldSection();
+                NextToken();
+                fieldSection = ParseFieldSection();
                 if (fieldSection == null)
                 {
-                    //exception unexpected lexeme
+                    break;
                 }
+
                 fieldsList.Add(fieldSection);
                 NextToken();
             }
@@ -249,18 +248,17 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private AstNode ParseFuncSignature()
         {
             var token = PeekToken();
-            if (token == null || token.Type != TokenType.Function)
+            if (token.Type != TokenType.Function)
             {
                 return null; // this is not func signature
             }
 
             NextToken();
             var formalParamList = ParseFormalParamList();
-            
-            if (PeekToken() == null || PeekToken().Type != TokenType.Colon)
-            {
-                return null; // this is not func signature
-            }
+
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Colon},
+                string.Format("{0} {1} : syntax error, ':' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var returnType = ParseSimpleType();
             return new FuncSignature(token, formalParamList, returnType);
@@ -276,6 +274,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             NextToken();
             var formalParamList = ParseFormalParamList();
+
             return new ProcSignature(token, formalParamList);
         }
     }

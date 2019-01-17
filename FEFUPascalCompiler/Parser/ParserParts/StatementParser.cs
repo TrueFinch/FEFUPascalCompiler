@@ -12,14 +12,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var beginToken = PeekToken();
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Begin},
                 string.Format("{0} {1} : syntax error, 'begin' expected, but {2} found",
-                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var statements = ParseStatementsPart();
 
             var endToken = PeekToken();
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.End},
                 string.Format("{0} {1} : syntax error, 'end' expected, but {2} found",
-                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             return new CompoundStatement(beginToken, endToken, statements);
         }
@@ -28,17 +28,25 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             var statements = new List<AstNode>();
 
+            var stmt = ParseStatement();
+            if (stmt == null)
+            {
+                return statements;
+            }
+            
+            statements.Add(stmt);
+            
             while (true)
             {
-                var stmt = ParseStatement();
+                CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
+                    string.Format("{0}, {1} : syntax error, ';' expected, but {2} found",
+                        PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+                stmt = ParseStatement();
                 if (stmt == null)
                 {
                     break;
                 }
                 statements.Add(stmt);
-                CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
-                    string.Format("{0}, {1} : syntax error, ';' expected, but {2} found",
-                        PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
             }
 
             return statements;
@@ -89,13 +97,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             {
                 return left;
             }
-
+            
             if (assignToken.Type != TokenType.SimpleAssignOperator
                 && assignToken.Type != TokenType.SumAssignOperator && assignToken.Type != TokenType.DifAssignOperator
                 && assignToken.Type != TokenType.MulAssignOperator && assignToken.Type != TokenType.DivAssignOperator)
             {
-                //some parser exception
-                return null;
+                return left; // this is not assign statement
             }
 
             NextToken();
@@ -168,14 +175,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
         private AstNode ParseForStatement()
         {
-            var forToken = PeekToken();
+            var forToken = PeekAndNext();
 
             var iteratorToken = PeekToken();
             var iterator = ParseIdent();
             if (iterator == null)
             {
                 throw new Exception(string.Format("{0}, {1} : syntax error, identifier expected, but {2} found",
-                    iteratorToken.Line, iteratorToken.Column, iteratorToken));
+                    iteratorToken.Line, iteratorToken.Column, iteratorToken.Lexeme));
             }
 
             var assignToken = PeekToken();

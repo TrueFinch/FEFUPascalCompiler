@@ -1,0 +1,8 @@
+program a;
+var
+    i: integer;
+begin
+    for i := 0 downto 5 do begin
+        write(i);
+    end;
+end.

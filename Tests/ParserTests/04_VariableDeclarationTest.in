@@ -1,0 +1,12 @@
+program a;
+var
+    e: function() : integer;
+    ee: procedure();
+    eee: function(i: integer) : integer;
+    eeee: procedure(i: integer);
+    eeeee: function(i, b: integer) : integer;
+    eeeeee: procedure(i, b: integer);
+    eeeeeee: function(i, b: integer; t: float) : integer;
+    eeeeeeee: procedure(i, b: integer; t: float);
+begin
+end.

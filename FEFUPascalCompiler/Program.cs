@@ -18,7 +18,8 @@ namespace FEFUPascalCompiler
         public static int Main(string[] args)
         {
             string inputFilePath = @"project.txt";
-
+            string outputFilePath = @"output.txt";
+            var output = new StreamWriter(outputFilePath);
             Compiler compiler = new Compiler();
             compiler.Input = new StreamReader(inputFilePath);
             
@@ -37,9 +38,9 @@ namespace FEFUPascalCompiler
             
             compiler.Input = new StreamReader(inputFilePath);
             compiler.Parse();
-            compiler.PrintAst();
+            compiler.PrintAst(output);
             
-            
+            output.Close();
             compiler.Input.Close();
             return 0;
         }

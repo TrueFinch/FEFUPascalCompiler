@@ -1,0 +1,13 @@
+program a;
+type rec = record
+            i: integer;
+           end;
+           
+     int = integer;
+     
+     RecArr15 = array [0 .. 15] of rec;
+var
+    i: int;
+    arr: IntArr15;
+begin
+end.

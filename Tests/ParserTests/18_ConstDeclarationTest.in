@@ -1,0 +1,9 @@
+program a;
+Const hello = 'Hello, world!';
+      n = 5;
+var
+    i: integer = 0;
+begin
+    for i := 0 to n - 1 do
+        writeln(hello);
+end.

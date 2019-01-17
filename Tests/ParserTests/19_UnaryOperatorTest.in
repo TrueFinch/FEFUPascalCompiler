@@ -1,0 +1,6 @@
+program a;
+var 
+    a
+begin
+    writeln(-1);
+end.

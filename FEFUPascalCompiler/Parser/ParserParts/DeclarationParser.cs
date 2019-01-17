@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Tokens;
 
@@ -150,14 +151,11 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             NextToken();
             var type = ParseType();
-            var ttoken = PeekToken();
-            if (ttoken == null || ttoken.Type != TokenType.Semicolon)
-            {
-                //some parser exception
-                return null;
-            }
-
-            NextToken();
+            
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Semicolon},
+                string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+            
             return new TypeDecl(typeIdent, type);
         }
 
@@ -188,15 +186,15 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
         private AstNode ParseVarDecl()
         {
-            var varIdents = ParseIdentList();
-            var token = PeekToken();
-            if (token == null || token.Type != TokenType.Colon)
-            {
-                //some parser exception
+            if (PeekToken().Type != TokenType.Ident)
                 return null;
-            }
+            var varIdents = ParseIdentList();
+            
+            var token = PeekToken();
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Colon},
+                string.Format("{0} {1} : syntax error, ':' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            NextToken();
             var type = ParseType();
 
             if (varIdents.Count == 1)
@@ -205,24 +203,18 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 {
                     NextToken();
                     var expr = ParseExpression();
-                    if (PeekToken() == null || PeekToken().Type != TokenType.Semicolon)
-                    {
-                        //some parser exception
-                        return null;
-                    }
-
-                    NextToken();
+                    CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Semicolon},
+                        string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
+                            PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+                    
                     return new InitVarDecl(varIdents[0], type, expr);
                 }
             }
 
-            if (PeekToken() == null || PeekToken().Type != TokenType.Semicolon)
-            {
-                //some parser exception
-                return null;
-            }
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Semicolon},
+                string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            NextToken();
             return new SimpleVarDecl(varIdents, type);
         }
 
@@ -260,12 +252,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var funcHeader = ParseFuncHeader();
             CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Semicolon}, 
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
-                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var funcSubroutineBlock = ParseSubroutineBlock();
             CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
-                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             
             return new FuncDecl(funcHeader, funcSubroutineBlock);
         }
@@ -274,14 +266,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Function}, 
                 string.Format("{0} {1} : syntax error, 'function' expected, but {2} found", 
-                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             
             var funcName = ParseIdent();
             var paramList = ParseFormalParamList();
             
             CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Colon},
                 string.Format("{0} {1} : syntax error, ':' expected, but {2} found", 
-                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var returnType = ParseSimpleType();
             
@@ -337,29 +329,25 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             
             CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Semicolon}, 
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
-                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var procSubroutineBlock = ParseSubroutineBlock();
             
             CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
-                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             
             return new ProcDecl(procHeader, procSubroutineBlock);
         }
 
         private AstNode ParseProcHeader()
         {
-            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Function}, 
+            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Procedure}, 
                 string.Format("{0} {1} : syntax error, 'procedure' expected, but {2} found", 
-                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             
             var funcName = ParseIdent();
             var paramList = ParseFormalParamList();
-            
-            CheckToken(PeekToken().Type, new List<TokenType>{TokenType.Colon},
-                string.Format("{0} {1} : syntax error, ';' expected, but {2} found", 
-                    PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
             
             return new ProcHeader(funcName, paramList);
         }
