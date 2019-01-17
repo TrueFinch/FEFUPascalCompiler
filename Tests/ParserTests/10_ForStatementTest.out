@@ -1,13 +1,13 @@
-                      a                      
-                      ┼                      
-                  MainBlock                  
-       ┌──────────────┴──────┐               
-      var            CompoundStatement       
-       ┼                     ┼               
- SimpleVarDecl          ForStatement         
- ┌─────┼        ┌────┬───────┴─────┐         
- i  integer     i  downto  CompoundStatement 
-                   ┌─┴┐         ┌──┴         
-                   0  5    FunctionCall      
-                             ┌──┴─┐          
-                           write  i          
+                      a                       
+                      ┼                       
+                  MainBlock                   
+       ┌──────────────┴──────┐                
+      var            CompoundStatement        
+       ┼                     ┼                
+ SimpleVarDecl          ForStatement          
+ ┌─────┼        ┌────┬───────┴─────┐          
+ i  integer     i  downto  CompoundStatement  
+                   ┌─┴┐         ┌──┴          
+                   0  5    FunctionCall       
+                             ┌──┴─┐           
+                           write  i           

@@ -517,6 +517,6 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
         public string Header { get; }
         private List<AstPrinterNode> _children = new List<AstPrinterNode>();
         private char _bgSign = ' ';
-        private string _bgSpace = " ";
+        private string _bgSpace = "  ";
     }
 }

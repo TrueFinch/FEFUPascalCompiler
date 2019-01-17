@@ -1,13 +1,13 @@
-                                                                                   a                                                                                   
-                                                                                   ┼                                                                                   
-                                                                               MainBlock                                                                               
-                     ┌─────────────────────────────────────────────────────────────┴────────────────────┐                                                              
-                    var                                                                         CompoundStatement                                                      
-      ┌─────────────┬┴─────────────┐              ┌──────────────┬──────────────┬──────────────┬────────┴─────┬───────────────┬───────────────┬───────────────┐        
- InitVarDecl   InitVarDecl    InitVarDecl   FunctionCall   FunctionCall   FunctionCall   FunctionCall    FunctionCall    FunctionCall    FunctionCall    FunctionCall  
- ┌────┴────┐  ┌─────┴─────┐  ┌─────┴─────┐     ┌──┴───┐       ┌──┴───┐       ┌──┴───┐       ┌──┴───┐       ┌──┴────┐       ┌──┴────┐       ┌──┴────┐       ┌──┴────┐   
- i  float  1  d  integer  2  c  integer  3  writeln   +    writeln   -    writeln   *    writeln   /    writeln   mod   writeln   div   writeln   shr   writeln   shl  
-                                                     ┌┴─┐           ┌┴─┐           ┌┴─┐           ┌┴─┐           ┌─┴┐            ┌─┴┐            ┌─┴┐            ┌─┴┐  
-                                                     i  1           i  -           i  2           i  3           d  10           d  10           d  10           d  10 
-                                                                       ┼                                                                                               
-                                                                       1                                                                                               
+                                                                                   a                                                                                    
+                                                                                   ┼                                                                                    
+                                                                               MainBlock                                                                                
+                     ┌─────────────────────────────────────────────────────────────┴────────────────────┐                                                               
+                    var                                                                         CompoundStatement                                                       
+      ┌─────────────┬┴─────────────┐              ┌──────────────┬──────────────┬──────────────┬────────┴─────┬───────────────┬───────────────┬───────────────┐         
+ InitVarDecl   InitVarDecl    InitVarDecl   FunctionCall   FunctionCall   FunctionCall   FunctionCall    FunctionCall    FunctionCall    FunctionCall    FunctionCall   
+ ┌────┴────┐  ┌─────┴─────┐  ┌─────┴─────┐     ┌──┴───┐       ┌──┴───┐       ┌──┴───┐       ┌──┴───┐       ┌──┴────┐       ┌──┴────┐       ┌──┴────┐       ┌──┴────┐    
+ i  float  1  d  integer  2  c  integer  3  writeln   +    writeln   -    writeln   *    writeln   /    writeln   mod   writeln   div   writeln   shr   writeln   shl   
+                                                     ┌┴─┐           ┌┴─┐           ┌┴─┐           ┌┴─┐           ┌─┴┐            ┌─┴┐            ┌─┴┐            ┌─┴┐   
+                                                     i  1           i  -           i  2           i  3           d  10           d  10           d  10           d  10  
+                                                                       ┼                                                                                                
+                                                                       1                                                                                                

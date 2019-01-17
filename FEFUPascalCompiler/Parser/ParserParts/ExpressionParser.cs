@@ -61,7 +61,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             if (left == null)
             {
-                //exception unexpected something
+                //exception unexpected something TODO: deal with it
                 return null;
             }
 
@@ -264,10 +264,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private List<AstNode> ParseParamList()
         {
             var token = PeekToken();
-            if (token == null)
-            {
-                //exception -- 
-            }
+//            if (token == null) TODO: delete this
+//            {
+//                //exception -- 
+//            }
             
             List<AstNode> paramList = new List<AstNode>();
             

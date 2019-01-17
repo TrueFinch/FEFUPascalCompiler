@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
-namespace Tests.ParserTests.VariableDeclaration
+namespace Tests.ParserTests
 {
     [TestFixture]
-    public class VariableDeclarationTestFixture
+    public class ParserTestFixture
     {
         private FEFUPascalCompiler.Compiler _compiler;
 
@@ -35,7 +34,7 @@ namespace Tests.ParserTests.VariableDeclaration
             {14, @"ParserTests/15_ProcedureDeclarationTest"},
             {15, @"ParserTests/16_HelloWorldTest"},
             {16, @"ParserTests/17_TypeDeclarationTest"},
-            {17, @"ParserTests/18_TypeDeclarationTest"},
+            {17, @"ParserTests/18_ConstDeclarationTest"},
             {18, @"ParserTests/19_UnaryOperatorTest"},
             {19, @"ParserTests/20_NilTest"},
         };
@@ -153,6 +152,42 @@ namespace Tests.ParserTests.VariableDeclaration
         public void ArithmExpressionsTest2()
         {
             Test(13);
+        }
+        
+        [Test]
+        public void FunctionDeclaration()
+        {
+            Test(14);
+        }
+        
+        [Test]
+        public void ProcedureDeclaration()
+        {
+            Test(15);
+        }
+        
+        [Test]
+        public void HelloWorldTest()
+        {
+            Test(16);
+        }
+        
+        [Test]
+        public void TypeDeclarationTest()
+        {
+            Test(17);
+        }
+        
+        [Test]
+        public void ConstDeclarationTest()
+        {
+            Test(18);
+        }
+        
+        [Test]
+        public void UnaryOperatorTest()
+        {
+            Test(19);
         }
         // CorrectProgramsTest test
     } // ParserTestFixture class

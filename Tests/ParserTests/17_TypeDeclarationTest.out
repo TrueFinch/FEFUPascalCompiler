@@ -1,0 +1,13 @@
+                                                  a                                                    
+                                                  ┼                                                    
+                                              MainBlock                                                
+                          ┌───────────────────────┴────────────────┬────────────────────────┐          
+                        type                                      var               CompoundStatement  
+        ┌──────────────┬──┴──────────────┐                  ┌──────┴───────┐                           
+    TypeDecl        TypeDecl          TypeDecl        SimpleVarDecl  SimpleVarDecl                     
+  ┌─────┴─┐        ┌───┴──┐        ┌─────┴────┐       ┌───┬─┴         ┌────┴─┐                         
+ rec  RecordType  int  integer  recarr15  ArrayType   i  int         arr  intarr15                     
+          ┼                                 ┌─┴───┐                                                    
+          :                                ..    rec                                                   
+      ┌───┴─┐                             ┌─┴┐                                                         
+      i  integer                          0  15                                                        

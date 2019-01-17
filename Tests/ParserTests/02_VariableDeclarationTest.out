@@ -1,15 +1,15 @@
-                                                               a                                                               
-                                                               ┼                                                               
-                                                           MainBlock                                                           
-                                                     ┌─────────┴─────────────────────────────────────────────────────┐         
-                                                    var                                                      CompoundStatement 
-        ┌─────────────────────┬──────────────────────┴─┬────────────────────────────────┐                                      
-  SimpleVarDecl         SimpleVarDecl            SimpleVarDecl                    SimpleVarDecl                                
- ┌──────┴─┐        ┌──────────┴─┐            ┌─────────┴──┐            ┌────────────────┴──┐                                   
- e    ArrayType    ee       ArrayType       eee       ArrayType       eeee             ArrayType                               
-     ┌────┴──┐          ┌─────┬─┴─────┐           ┌───────┴──┐               ┌─────┬───────┴─────┐                             
-     ..   integer       ..    ..   integer        ..     ArrayType           ..    ..        ArrayType                         
-    ┌┴─┐               ┌┴─┐  ┌┴─┐                ┌┴─┐   ┌────┴──┐           ┌┴─┐  ┌┴─┐   ┌─────┬─┴─────┐                       
-    0  5               0  5  0  5                0  5   ..   integer        0  5  0  5   ..    ..   integer                    
-                                                       ┌┴─┐                             ┌┴─┐  ┌┴─┐                             
-                                                       0  5                             0  5  0  5                             
+                                                               a                                                                
+                                                               ┼                                                                
+                                                           MainBlock                                                            
+                                                     ┌─────────┴─────────────────────────────────────────────────────┐          
+                                                    var                                                      CompoundStatement  
+        ┌─────────────────────┬──────────────────────┴─┬────────────────────────────────┐                                       
+  SimpleVarDecl         SimpleVarDecl            SimpleVarDecl                    SimpleVarDecl                                 
+ ┌──────┴─┐        ┌──────────┴─┐            ┌─────────┴──┐            ┌────────────────┴──┐                                    
+ e    ArrayType    ee       ArrayType       eee       ArrayType       eeee             ArrayType                                
+     ┌────┴──┐          ┌─────┬─┴─────┐           ┌───────┴──┐               ┌─────┬───────┴─────┐                              
+     ..   integer       ..    ..   integer        ..     ArrayType           ..    ..        ArrayType                          
+    ┌┴─┐               ┌┴─┐  ┌┴─┐                ┌┴─┐   ┌────┴──┐           ┌┴─┐  ┌┴─┐   ┌─────┬─┴─────┐                        
+    0  5               0  5  0  5                0  5   ..   integer        0  5  0  5   ..    ..   integer                     
+                                                       ┌┴─┐                             ┌┴─┐  ┌┴─┐                              
+                                                       0  5                             0  5  0  5                              

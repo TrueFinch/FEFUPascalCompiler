@@ -1,0 +1,12 @@
+program a;
+
+procedure add(const a, b: integer; out res: integer);
+forward;
+
+procedure add(const a, b: integer; out res: integer);
+begin
+    res := a + b;
+end;
+
+begin
+end.

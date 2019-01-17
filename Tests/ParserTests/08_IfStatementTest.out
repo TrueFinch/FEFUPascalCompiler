@@ -1,11 +1,11 @@
-                   a                   
-                   ┼                   
-               MainBlock               
-       ┌───────────┴──────┐            
-      var         CompoundStatement    
-       ┼         ┌────────┴──┐         
- SimpleVarDecl   :=     IfStatement    
- ┌─────┼        ┌┴─┐   ┌─────┴─────┐   
- i  integer     i  1   >    pass  pass 
-                      ┌┴─┐             
-                      i  0             
+                   a                    
+                   ┼                    
+               MainBlock                
+       ┌───────────┴──────┐             
+      var         CompoundStatement     
+       ┼         ┌────────┴──┐          
+ SimpleVarDecl   :=     IfStatement     
+ ┌─────┼        ┌┴─┐   ┌─────┴─────┐    
+ i  integer     i  1   >    pass  pass  
+                      ┌┴─┐              
+                      i  0              
