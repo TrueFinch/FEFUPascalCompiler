@@ -88,7 +88,9 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
 
-
+            symbolIndexRanges.Add(indexRange.Item1);
+            astNodesIndexRanges.Add(indexRange.Item2);
+            
             while (PeekToken().Type == TokenType.Comma)
             {
                 NextToken();
@@ -179,7 +181,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private AstNode ParseFieldSection()
         {
             var identList = ParseIdentList();
-            if (identList == null)
+            if (identList == null || identList.Count == 0)
             {
                 //this is empty ident list
                 return null;

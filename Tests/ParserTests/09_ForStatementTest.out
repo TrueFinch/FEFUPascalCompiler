@@ -5,7 +5,7 @@
       var         CompoundStatement    
        ┼                  ┼            
  SimpleVarDecl      ForStatement       
- ┌─────┼        ┌───┬─────┴───┐        
- i  integer     i   to   FunctionCall  
-                   ┌┴─┐    ┌──┴─┐      
-                   0  5  write  i      
+ ┌─────┴┐       ┌───┬─────┴───┐        
+ i  SimpleType  i   to   FunctionCall  
+       ┌┴          ┌┴─┐    ┌──┴─┐      
+    integer        0  5  write  i      

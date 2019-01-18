@@ -134,6 +134,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             var typeIdent = ParseIdent();
 
+            if (typeIdent == null)
+            {
+                // this meants that we get to another part of declaration or compound statement and met key word
+                return null; 
+            }
+            
             CheckDuplicateIdentifier(typeIdent.Token);
 
             var token = PeekToken();

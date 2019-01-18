@@ -5,9 +5,9 @@
       var                       CompoundStatement                   
        ┼         ┌──────────────────────┴──┐                        
  SimpleVarDecl   :=                   IfStatement                   
- ┌─────┼        ┌┴─┐   ┌────────────┬──────┴────────────┐           
- i  integer     i  1   >    CompoundStatement   CompoundStatement   
-                      ┌┴─┐   ┌──────┴──┐         ┌──────┴──┐        
-                      i  0   +=   FunctionCall   -=   FunctionCall  
+ ┌─────┴┐       ┌┴─┐   ┌────────────┬──────┴────────────┐           
+ i  SimpleType  i  1   >    CompoundStatement   CompoundStatement   
+       ┌┴             ┌┴─┐   ┌──────┴──┐         ┌──────┴──┐        
+    integer           i  0   +=   FunctionCall   -=   FunctionCall  
                             ┌┴─┐    ┌──┴─┐      ┌┴─┐    ┌──┴─┐      
                             i  2  write  i      i  2  write  i      

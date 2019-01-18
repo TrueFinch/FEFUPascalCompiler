@@ -94,11 +94,11 @@ namespace Tests.ParserTests
             Test(3);
         }
         
-        [Test]
-        public void VariableDeclarationTest4()
-        {
-            Test(4);
-        }
+//        [Test]
+//        public void VariableDeclarationTest4()
+//        {
+//            Test(4);
+//        }
         
         [Test]
         public void AssignmentStatementTest()

@@ -1,15 +1,15 @@
-                                                                           a                                                                            
-                                                                           ┼                                                                            
-                                                                       MainBlock                                                                        
-                              ┌────────────────────────────────────────────┴────────────────────┬────────────────────────────────────────────┐          
-                          ProcDecl                                                          ProcDecl                                 CompoundStatement  
-                         ┌────┴─────────────────────────┐                             ┌─────────┴─────────────────────────┐                             
-                     ProcHeader                      forward                      ProcHeader                       SubroutineBlock                      
-  ┌──────────────┬───────┴──────────────┐                      ┌──────────────┬───────┴──────────────┐                    ┼                             
- add    FormalParamSection      FormalParamSection            add    FormalParamSection      FormalParamSection   CompoundStatement                     
-        ┌────┬──┬┴─────┐        ┌────┬──┴────┐                       ┌────┬──┬┴─────┐        ┌────┬──┴────┐           ┌───┴                             
-      const  a  b  SimpleType  out  res  SimpleType                const  a  b  SimpleType  out  res  SimpleType     :=                                 
-                      ┌┴                    ┌┴                                     ┌┴                    ┌┴        ┌──┴─┐                               
-                   integer               integer                                integer               integer     res   +                               
-                                                                                                                       ┌┴─┐                             
-                                                                                                                       a  b                             
+                                                                            a                                                                             
+                                                                            ┼                                                                             
+                                                                        MainBlock                                                                         
+                              ┌─────────────────────────────────────────────┴────────────────────┬─────────────────────────────────────────────┐          
+                           ProcDecl                                                           ProcDecl                                 CompoundStatement  
+                          ┌───┴──────────────────────────┐                              ┌────────┴──────────────────────────┐                             
+                     ProcHeader                       forward                      ProcHeader                        SubroutineBlock                      
+  ┌───────────────┬───────┴──────────────┐                      ┌───────────────┬───────┴──────────────┐                    ┼                             
+ add1    FormalParamSection      FormalParamSection            add2    FormalParamSection      FormalParamSection   CompoundStatement                     
+         ┌────┬──┬┴─────┐        ┌────┬──┴────┐                        ┌────┬──┬┴─────┐        ┌────┬──┴────┐           ┌───┴                             
+       const  a  b  SimpleType  out  res  SimpleType                 const  a  b  SimpleType  out  res  SimpleType     :=                                 
+                       ┌┴                    ┌┴                                      ┌┴                    ┌┴        ┌──┴─┐                               
+                    integer               integer                                 integer               integer     res   +                               
+                                                                                                                         ┌┴─┐                             
+                                                                                                                         a  b                             

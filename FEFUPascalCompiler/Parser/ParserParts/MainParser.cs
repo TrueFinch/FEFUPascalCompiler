@@ -42,7 +42,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 return null;
             }
 
-            _symbolTableStack.Push(new OrderedDictionary());
+//            _symbolTableStack.Push(new OrderedDictionary());
             NextToken();
             return ParseProgram();
         }
