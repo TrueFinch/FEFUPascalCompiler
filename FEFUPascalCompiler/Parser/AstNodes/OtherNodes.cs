@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
-using FEFUPascalCompiler.Parser.AstVisitor;
+using FEFUPascalCompiler.Parser.Visitors;
 using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.AstNodes
@@ -51,22 +51,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 //
 //        public List<AstNode> Idents => _children;
 //    }
-
-    public class Ident : AstNode
-    {
-        public Ident(Token token) : this(token, AstNodeType.Ident)
-        {
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        protected Ident(Token token, AstNodeType type) : base(type, token)
-        {
-        }
-    }
 
     public class ConstIntegerLiteral : AstNode
     {
