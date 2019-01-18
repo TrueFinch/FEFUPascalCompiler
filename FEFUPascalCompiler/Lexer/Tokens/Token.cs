@@ -37,7 +37,7 @@ namespace FEFUPascalCompiler.Tokens
             new Dictionary<TokenType, Func<int, int, string, Token>>
             {
                 {TokenType.IntegerNumber, (line, column, lexeme) => new IntegerNumberToken(line, column, lexeme)},
-                {TokenType.DoubleNumber, (line, column, lexeme) => new DoubleNumberToken(line, column, lexeme)},
+                {TokenType.FloatNumber, (line, column, lexeme) => new DoubleNumberToken(line, column, lexeme)},
                 {TokenType.StringConst, (line, column, lexeme) => new StringConstToken(line, column, lexeme)},
                 {TokenType.BinOperator, (line, column, lexeme) => new BinOperatorToken(line, column, lexeme)},
                 {TokenType.AssignOperator, (line, column, lexeme) => new AssignToken(line, column, lexeme)},
@@ -61,7 +61,7 @@ namespace FEFUPascalCompiler.Tokens
             NumberValue = ConvertToInteger(lexeme);
         }
 
-        private long ConvertToInteger(string lexeme)
+        private int ConvertToInteger(string lexeme)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace FEFUPascalCompiler.Tokens
     public class DoubleNumberToken : Token
     {
         public DoubleNumberToken(int line, int column, string lexeme)
-            : base(line, column, TokenType.DoubleNumber, lexeme)
+            : base(line, column, TokenType.FloatNumber, lexeme)
         {
             NumberValue = LexemeToDouble(lexeme);
         }

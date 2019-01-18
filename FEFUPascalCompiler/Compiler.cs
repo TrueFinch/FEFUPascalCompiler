@@ -59,6 +59,7 @@ namespace FEFUPascalCompiler
             catch (Exception e)
             {
                 LastException = e;
+                Console.Out.WriteLine(e.Message);
             }
         }
 
@@ -81,6 +82,7 @@ namespace FEFUPascalCompiler
             catch (Exception e)
             {
                 LastException = e;
+                Console.Out.WriteLine(e.Message);
             }
         }
 

@@ -74,7 +74,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             Type = type;
             if (token != null)
             {
-                if (token.Type == TokenType.DoubleNumber)
+                if (token.Type == TokenType.FloatNumber)
                 {
                     Value = (token as DoubleNumberToken)?.NumberValue.ToString(new NumberFormatInfo
                         {NumberDecimalSeparator = "."});

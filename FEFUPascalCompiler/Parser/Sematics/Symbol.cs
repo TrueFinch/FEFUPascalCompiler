@@ -16,17 +16,32 @@ namespace FEFUPascalCompiler.Parser.Sematics
 
     public class FunctionSymbol : Symbol
     {
-        public FunctionSymbol(Type returnType, OrderedDictionary parameters, OrderedDictionary local, AstNode body, string ident = "") : base(ident)
+        public FunctionSymbol(/*Type returnType, OrderedDictionary parameters, OrderedDictionary local, AstNode body,*/ string ident = "") : base(ident)
         {
-            Parameters = parameters;
-            Local = local;
-            ReturnType = returnType;
-            Body = body;
+//            Parameters = parameters;
+//            Local = local;
+//            ReturnType = returnType;
+//            Body = body;
         }
         
-        public OrderedDictionary Parameters { get; }
-        public OrderedDictionary Local { get; }
-        public Type ReturnType { get; }
-        public AstNode Body { get; }
+        public OrderedDictionary Parameters { get; set; }
+        public OrderedDictionary Local { get; set; }
+        public Type ReturnType { get; set; }
+        public AstNode Body { get; set; }
+    }
+    
+    public class ProcedureSymbol : Symbol
+    {
+        public ProcedureSymbol(/*Type returnType, OrderedDictionary parameters, OrderedDictionary local, AstNode body,*/ string ident = "") : base(ident)
+        {
+//            Parameters = parameters;
+//            Local = local;
+//            ReturnType = returnType;
+//            Body = body;
+        }
+        
+        public OrderedDictionary Parameters { get; set; }
+        public OrderedDictionary Local { get; set; }
+        public AstNode Body { get; set; }
     }
 }

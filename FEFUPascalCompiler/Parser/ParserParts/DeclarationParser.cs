@@ -259,40 +259,62 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
         private AstNode ParseFuncDecl()
         {
-            _symbolTableStack.Push(new OrderedDictionary()); // this will be Parameters table
-            var funcHeader = ParseFuncHeader();
+            FunctionSymbol functionSymbol;
+            FuncHeader funcHeader;
+            (functionSymbol, funcHeader) = ParseFuncHeader();
+
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
-            
-            var parametersTable
-            
+
+            _symbolTableStack.Push(new OrderedDictionary()); // this will be local table
             var funcSubroutineBlock = ParseSubroutineBlock();
+            functionSymbol.Local = _symbolTableStack.Peek();
+            functionSymbol.Body = funcSubroutineBlock;
+            
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
-
-            _symbolTableStack.Peek()
-
+            
+            _symbolTableStack.Pop(); // pop local table
+            _symbolTableStack.Pop(); // pop parameters table
+            
+            _symbolTableStack.Peek().Add(functionSymbol.Ident, functionSymbol); // add function symbol to main table
+            
+            _symbolTableStack.Push(functionSymbol.Parameters); // push parameters table
+            _symbolTableStack.Push(functionSymbol.Local); // push local table
+            
+            // TODO: add type checking of block here
+            
+            _symbolTableStack.Pop(); // pop local table
+            _symbolTableStack.Pop(); // pop parameters table
+            
             return new FuncDecl(funcHeader, funcSubroutineBlock);
         }
 
-        private AstNode ParseFuncHeader()
+        private (FunctionSymbol, FuncHeader) ParseFuncHeader()
         {
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Function},
                 string.Format("{0} {1} : syntax error, 'function' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var funcName = ParseIdent();
+            CheckDuplicateIdentifier(funcName.Token);
+            var funcSymbol =  new FunctionSymbol(funcName.ToString());
+            
+            _symbolTableStack.Push(new OrderedDictionary()); //this will be Parameters table
             var paramList = ParseFormalParamList();
+
+            funcSymbol.Parameters = _symbolTableStack.Peek();
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Colon},
                 string.Format("{0} {1} : syntax error, ':' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var returnType = ParseSimpleType();
-
-            return new FuncHeader(funcName, paramList, returnType.);
+            funcSymbol.ReturnType = returnType.Item1;
+            
+            return (funcSymbol, new FuncHeader(funcName, paramList, returnType.Item2));
         }
 
         private AstNode ParseSubroutineBlock()
@@ -337,34 +359,59 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             return new SubroutineBlock(declsParts, compound);
         }
-
+        
+        //TODO: add declaration correctness 
         private AstNode ParseProcDecl()
         {
-            var procHeader = ParseProcHeader();
+            ProcedureSymbol procedureSymbol;
+            ProcHeader procHeader;
+            (procedureSymbol, procHeader) = ParseProcHeader();
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
+            _symbolTableStack.Push(new OrderedDictionary()); // this will be local table
             var procSubroutineBlock = ParseSubroutineBlock();
-
+            procedureSymbol.Local = _symbolTableStack.Peek();
+            procedureSymbol.Body = procSubroutineBlock;
+            
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
+            _symbolTableStack.Pop();  // pop local table
+            _symbolTableStack.Pop(); // pop parameters table
+            
+            _symbolTableStack.Peek().Add(procedureSymbol.Ident, procedureSymbol);
+            
+            _symbolTableStack.Push(procedureSymbol.Parameters); // push parameters table
+            _symbolTableStack.Push(procedureSymbol.Local);  // push local table
+            
+            //TODO: add type checking here
+            
+            _symbolTableStack.Pop();  // pop local table
+            _symbolTableStack.Pop(); // pop parameters table
+            
             return new ProcDecl(procHeader, procSubroutineBlock);
         }
 
-        private AstNode ParseProcHeader()
+        private (ProcedureSymbol, ProcHeader) ParseProcHeader()
         {
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Procedure},
                 string.Format("{0} {1} : syntax error, 'procedure' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            var funcName = ParseIdent();
+            var procName = ParseIdent();
+            CheckDuplicateIdentifier(procName.Token);
+            var procSymbol = new ProcedureSymbol(procName.ToString());
+            
+            _symbolTableStack.Push(new OrderedDictionary()); //this will be Parameters table
             var paramList = ParseFormalParamList();
 
-            return new ProcHeader(funcName, paramList);
+            procSymbol.Parameters = _symbolTableStack.Peek();
+            
+            return (procSymbol, new ProcHeader(procName, paramList));
         }
     }
 }

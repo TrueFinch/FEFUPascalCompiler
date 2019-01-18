@@ -41,6 +41,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 //throw exception wrong init of lexer
                 return null;
             }
+
             _symbolTableStack.Push(new OrderedDictionary());
             NextToken();
             return ParseProgram();
@@ -52,10 +53,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             NextToken = nextToken;
             PeekAndNext = peekAndNext;
             NextAndPeek = nextAndPeek;
+
+            InitSymbolTableStack();
         }
 
         private bool _isReady = true;
-        
+
         private PeekToken PeekToken { get; }
         private NextToken NextToken { get; }
         private PeekAndNext PeekAndNext { get; }
@@ -70,8 +73,9 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             mainTable.Add("Float".ToLower(), new FloatType());
             mainTable.Add("String".ToLower(), new StringType());
             mainTable.Add("Char".ToLower(), new CharType());
+            _symbolTableStack.Push(mainTable);
         }
-        
+
         private void CheckToken(TokenType actual, List<TokenType> expected, string errMessage)
         {
             if (!expected.Contains(actual))
@@ -87,16 +91,27 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             if (_symbolTableStack.Peek().Contains(ident.Value))
             {
-                throw new Exception(string.Format("{0}, {1} : Duplicate identifier {3}", 
+                throw new Exception(string.Format("{0}, {1} : Duplicate identifier '{2}'",
                     ident.Line, ident.Column, ident.Lexeme));
             }
         }
 
         private void CheckTypeDeclared(Token type)
         {
-            if (!_symbolTableStack.Peek().Contains(type.Value))
+            var iterator = _symbolTableStack.GetEnumerator();
+            bool declarationFound = false;
+            while (iterator.MoveNext())
             {
-                throw new Exception(string.Format("{0}, {1} : Undeclared type identifier {3}",
+                if (iterator.Current.Contains(type.Value))
+                {
+                    declarationFound = true;
+                    break;
+                }
+            }
+
+            if (!declarationFound)
+            {
+                throw new Exception(string.Format("{0}, {1} : Undeclared type identifier '{2}'",
                     type.Line, type.Column, type.Lexeme));
             }
         }
@@ -104,6 +119,21 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private bool CheckTypeDeclared(string typeIdent)
         {
             return _symbolTableStack.Peek().Contains(typeIdent);
+        }
+
+        private Symbol FindIdent(Token ident)
+        {
+            var iterator = _symbolTableStack.GetEnumerator();
+            while (iterator.MoveNext())
+            {
+                if (iterator.Current.Contains(ident.Value))
+                {
+                    return iterator.Current[ident.Value] as Symbol;
+                }
+            }
+
+            throw new Exception(string.Format("{0}, {1} : Undeclared variable identifier '{2}'",
+                ident.Line, ident.Column, ident.Lexeme));
         }
     }
 }

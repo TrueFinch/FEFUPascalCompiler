@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.Sematics;
 using FEFUPascalCompiler.Tokens;
+using Type = FEFUPascalCompiler.Parser.Sematics.Type;
 
 namespace FEFUPascalCompiler.Parser.ParserParts
 {
@@ -45,15 +47,20 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private AstNode ParseFormalParamSection()
         {
             var token = PeekToken();
-            
+
             AstNode modifier = null;
             if ((PeekToken().Type == TokenType.Var
-                                        || PeekToken().Type == TokenType.Const || PeekToken().Type == TokenType.Out))
+                 || PeekToken().Type == TokenType.Const
+                 || PeekToken().Type == TokenType.Out))
             {
                 modifier = new Modifier(PeekAndNext());
             }
 
             var identsList = ParseIdentList();
+            foreach (var ident in identsList)
+            {
+                CheckDuplicateIdentifier(ident.Token);
+            }
 
             if (PeekToken() == null || PeekToken().Type != TokenType.Colon)
             {
@@ -62,23 +69,22 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             var paramType = ParseParamType();
 
-            return new FormalParamSection(identsList, paramType, modifier);
-        }
-
-        private AstNode ParseParamType()
-        {
-            if (PeekToken() == null)
+            foreach (var ident in identsList)
             {
-                //exception unexpected end of file
-                return null;
+                _symbolTableStack.Peek().Add(ident.ToString(), new Parameter(paramType.Item1, modifier?.ToString()));
             }
 
+            return new FormalParamSection(identsList, paramType.Item2, modifier);
+        }
+
+        private (Type, AstNode) ParseParamType()
+        {
             NextToken();
             switch (PeekToken().Type)
             {
                 case TokenType.Ident:
                 {
-                    return new SimpleType(ParseIdent());
+                    return ParseSimpleType();
                 }
                 case TokenType.Array:
                 {
@@ -86,29 +92,25 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 }
                 default:
                 {
-                    //exception -- syntax error
-                    return null;
+                    throw new Exception(string.Format("{0}, {1} : syntax error, parameter type expected, but {2} found",
+                        PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
                 }
             }
         }
 
-        private AstNode ParseConformatArray()
+        private (Type, AstNode) ParseConformatArray()
         {
-            if (PeekToken() == null)
-            {
-                //exception unexpected end of file
-                return null;
-            }
-
             var arrayToken = PeekAndNext();
             var ofToken = PeekAndNext();
             if (arrayToken.Type == TokenType.Array && ofToken.Type == TokenType.Of)
             {
-                return new ConformantArray(arrayToken, ofToken, ParseSimpleType());
+                var simpleType = ParseSimpleType();
+                return (new ConformatArrayType(simpleType.Item1),
+                    new ConformantArray(arrayToken, ofToken, simpleType.Item2));
             }
 
-            //exception -- syntax error
-            return null;
+            throw new Exception(string.Format("{0}, {1} : syntax error, conformat array type expected, but {2} found",
+                PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
         }
 
         public List<AstNode> ParseIdentList()
@@ -159,6 +161,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.IntegerNumber},
                 string.Format("{0} {1} : syntax error, integer expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
+            return new ConstIntegerLiteral(PeekAndNext());
+        }
+
+        private AstNode ParseConstFloatLiteral()
+        {
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.FloatNumber},
+                string.Format("{0} {1} : syntax error, float expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
             return new ConstIntegerLiteral(PeekAndNext());
         }

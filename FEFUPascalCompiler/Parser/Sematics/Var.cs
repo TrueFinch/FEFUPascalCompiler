@@ -25,7 +25,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
     
     public class Parameter : Var
     {
-        public Parameter(string modifier, Type varType) : base("Parameter", varType)
+        public Parameter(Type varType, string modifier = "") : base("Parameter", varType)
         {
             Modifier = modifier;
         }

@@ -100,20 +100,20 @@ namespace FEFUPascalCompiler.Parser.Sematics
         public OrderedDictionary Table { get; }
     }
 
-    public class ArrayType : Type
+    public class ArrayTypeSymbol : Type
     {
-        public ArrayType(List<IndexRange<int, int>> indexRanges, Type elemType, string ident = "") : base(ident)
+        public ArrayTypeSymbol(List<IndexRange<int, int>> indexRanges, Type elemType, string ident = "") : base(ident)
         {
             IndexRanges = indexRanges;
             ElementType = elemType;
         }
 
-        public bool Equals(ref ArrayType type)
+        public bool Equals(ref ArrayTypeSymbol typeSymbol)
         {
-            var typeElementType = type.ElementType;
-            bool res = Ident == type.Ident && ElementType.Equals(ref typeElementType);
-            for (int i = 0; i < Math.Max(IndexRanges.Count, type.IndexRanges.Count); ++i)
-                res = res && IndexRanges[i] == type.IndexRanges[i];
+            var typeElementType = typeSymbol.ElementType;
+            bool res = Ident == typeSymbol.Ident && ElementType.Equals(ref typeElementType);
+            for (int i = 0; i < Math.Max(IndexRanges.Count, typeSymbol.IndexRanges.Count); ++i)
+                res = res && IndexRanges[i] == typeSymbol.IndexRanges[i];
 
             return res;
         }
@@ -122,6 +122,26 @@ namespace FEFUPascalCompiler.Parser.Sematics
         public Type ElementType { get; }
     }
 
+    public class ConformatArrayType : Type
+    {
+        public ConformatArrayType(Type elemType) : base("")
+        {
+            ElementType = elemType;
+        }
+        
+        public Type ElementType { get; }
+    }
+
+    public class PointerTypeSumbol : Type
+    {
+        public PointerTypeSumbol(Type referencedType, string ident = "") : base(ident)
+        {
+            ReferencedType = referencedType;
+        }
+        
+        public Type ReferencedType { get; }
+    }
+    
     public class IndexRange<T1, T2>
     {
             // @formatter:off

@@ -138,7 +138,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     NextToken();
                     return new ConstIntegerLiteral(token);
                 }
-                case TokenType.DoubleNumber:
+                case TokenType.FloatNumber:
                 {
                     NextToken();
                     return new ConstDoubleLiteral(token);
