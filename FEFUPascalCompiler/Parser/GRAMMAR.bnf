@@ -63,7 +63,7 @@
                                     <modifier> ::= "var"|"const"|"out"
                                         <param_type> ::= <simple_type> | <conformant_array>
                                             <conformant_array> ::= "array" "of" <simple_type>
-                    <subroutine_block> ::= <block> | "forward"
+                    <subroutine_block> ::= <block> | "forward" ";"
                         <block> ::= {<const_decls_part>|<type_decls_part>|<variable_decls_part>} <compound_statement>
 
                         

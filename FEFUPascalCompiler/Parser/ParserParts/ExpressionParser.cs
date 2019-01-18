@@ -20,7 +20,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
         private static readonly List<TokenType> MultiplyingOperators = new List<TokenType>
         {
-            TokenType.MulOperator, TokenType.DivOperator, TokenType.Div, 
+            TokenType.MulOperator, TokenType.DivOperator, TokenType.Div,
             TokenType.Mod, TokenType.And, TokenType.Shr, TokenType.Shl,
         };
 
@@ -201,14 +201,15 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                         var paramList = ParseParamList();
                         if (paramList == null || paramList.Count == 0)
                         {
-                            //exception -- indexes expected
+                            throw new Exception(string.Format(
+                                "{0}, {1} : syntax error, indexes expected, but {2} found",
+                                PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
                         }
 
                         token = PeekToken();
-                        if (token == null || token.Type != TokenType.CloseSquareBracket)
-                        {
-                            //exception -- an unclosed bracket
-                        }
+                        CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseSquareBracket},
+                            string.Format("{0}, {1} : syntax error, ']' expected, but {2} found",
+                                PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
                         left = new ArrayAccess(left, paramList);
                         break;
@@ -219,7 +220,9 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                         var field = ParseIdent();
                         if (field == null)
                         {
-                            //exception -- indexes expected
+                            throw new Exception(string.Format(
+                                "{0}, {1} : syntax error, field ident expected, but {2} found",
+                                PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
                         }
 
                         left = new RecordAccess(left, field);
@@ -227,19 +230,20 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     }
                     case TokenType.OpenBracket:
                     {
-                        NextToken();
+                        token = NextAndPeek();
                         var paramList = ParseParamList();
-                        
+
                         if (paramList == null)
                         {
-                            throw new Exception(string.Format("{0}, {1} : syntax error, parameters list expected, but {2} found",
+                            throw new Exception(string.Format(
+                                "{0}, {1} : syntax error, parameters list expected, but {2} found",
                                 PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
                         }
-                        
+
                         CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseBracket},
                             string.Format("{0}, {1} : syntax error, ')' expected, but {2} found",
                                 PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
-                        
+
                         left = new FunctionCall(left, paramList);
                         break;
                     }
@@ -247,9 +251,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     {
                         if (left.Type == AstNodeType.DereferenceOperator)
                         {
-                            throw new Exception(string.Format("{0}, {1} : syntax error, unexpected {2} found",
+                            throw new Exception(string.Format("{0}, {1} : syntax error, double carriage found",
                                 PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
                         }
+
                         var carriageToken = PeekAndNext();
                         left = new DereferenceOperator(carriageToken, left);
                         break;
@@ -261,27 +266,24 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     }
                 }
             }
-            
+
             return left;
         }
 
         private List<AstNode> ParseParamList()
         {
             var token = PeekToken();
-//            if (token == null) TODO: delete this
-//            {
-//                //exception -- 
-//            }
-            
+
             List<AstNode> paramList = new List<AstNode>();
-            
+
             while (true)
             {
                 paramList.Add(ParseExpression());
                 if (paramList[paramList.Count - 1] == null)
                 {
-                    //exception -- invalid expression
-                    return null;
+                    throw new Exception(string.Format(
+                        "{0}, {1} : syntax error, invalid expression",
+                        PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
                 }
 
                 token = PeekToken();
@@ -296,6 +298,4 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return paramList;
         }
     }
-    
-    
 }

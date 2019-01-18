@@ -8,6 +8,6 @@ type rec = record
      RecArr15 = array [0 .. 15] of rec;
 var
     i: int;
-    arr: IntArr15;
+    arr: RecArr15;
 begin
 end.

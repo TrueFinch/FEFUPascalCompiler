@@ -202,39 +202,39 @@
       <None Remove="ParserTests\VariableDeclarationTests.in" />
       <None Remove="ParserTests\1_VariableDeclarationTest.in" />
       <EmbeddedResource Include="ParserTests\01_VariableDeclarationTest.in">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\1_VariableDeclarationTest.out" />
       <EmbeddedResource Include="ParserTests\01_VariableDeclarationTest.out">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\2_VariableDeclarationTest.in" />
       <EmbeddedResource Include="ParserTests\02_VariableDeclarationTest.in">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\2_VariableDeclarationTest.out" />
       <EmbeddedResource Include="ParserTests\02_VariableDeclarationTest.out">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\3_VariableDeclarationTest.in" />
       <EmbeddedResource Include="ParserTests\03_VariableDeclarationTest.in">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\3_VariableDeclarationTest.out" />
       <EmbeddedResource Include="ParserTests\03_VariableDeclarationTest.out">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\5_VariableDeclarationTest.in" />
       <EmbeddedResource Include="ParserTests\05_AssignmentStatementTest.in">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\5_VariableDeclarationTest.out" />
       <EmbeddedResource Include="ParserTests\05_AssignmentStatementTest.out">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\6_IfStatementTest.in" />
       <EmbeddedResource Include="ParserTests\06_IfStatementTest.in">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\6_IfStatementTest.out" />
       <EmbeddedResource Include="ParserTests\06_IfStatementTest.out">
@@ -282,11 +282,11 @@
       </EmbeddedResource>
       <None Remove="ParserTests\04_VariableDeclarationTest.in" />
       <EmbeddedResource Include="ParserTests\04_VariableDeclarationTest.in">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\04_VariableDeclarationTest.out" />
       <EmbeddedResource Include="ParserTests\04_VariableDeclarationTest.out">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\12_ArithmExpressionsTest.out" />
       <EmbeddedResource Include="ParserTests\12_ArithmExpressionsTest.out">
@@ -302,7 +302,7 @@
       </EmbeddedResource>
       <None Remove="ParserTests\13_ArithmExpressionsTest.out" />
       <EmbeddedResource Include="ParserTests\13_ArithmExpressionsTest.out">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\14_FunctionDeclarationTest.in" />
       <EmbeddedResource Include="ParserTests\14_FunctionDeclarationTest.in">
@@ -318,7 +318,7 @@
       </EmbeddedResource>
       <None Remove="ParserTests\15_ProcedureDeclarationTest.out" />
       <EmbeddedResource Include="ParserTests\15_ProcedureDeclarationTest.out">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\16_HelloWorldTest.in" />
       <EmbeddedResource Include="ParserTests\16_HelloWorldTest.in">
@@ -358,6 +358,46 @@
       </EmbeddedResource>
       <None Remove="ParserTests\20_PointerTest.out" />
       <EmbeddedResource Include="ParserTests\20_PointerTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\21_DoWhileTest.in" />
+      <EmbeddedResource Include="ParserTests\21_DoWhileTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\21_DoWhileTest.out" />
+      <EmbeddedResource Include="ParserTests\21_DoWhileTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\22_DoWhileTest.in" />
+      <EmbeddedResource Include="ParserTests\22_DoWhileTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\24_RecordAccess.in" />
+      <EmbeddedResource Include="ParserTests\24_RecordAccessTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\24_RecordAccess.out" />
+      <EmbeddedResource Include="ParserTests\24_RecordAccessTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\23_DoWhileTest.out" />
+      <EmbeddedResource Include="ParserTests\23_DoWhileTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\23_DoWhileTest.in" />
+      <EmbeddedResource Include="ParserTests\23_DoWhileTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\22_DoWhileTest.out" />
+      <EmbeddedResource Include="ParserTests\22_DoWhileTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\25_RecordAccess.in" />
+      <EmbeddedResource Include="ParserTests\25_RecordArrayAccessTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\25_RecordAccess.out" />
+      <EmbeddedResource Include="ParserTests\25_RecordArrayAccessTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
     </ItemGroup>

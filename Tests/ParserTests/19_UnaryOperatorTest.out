@@ -1,0 +1,11 @@
+                a                  
+                ┼                  
+            MainBlock              
+       ┌────────┴───────┐          
+      var       CompoundStatement  
+       ┼             ┌──┴          
+ SimpleVarDecl  FunctionCall       
+ ┌─────┴┐          ┌─┴───┐         
+ a  SimpleType  writeln  -         
+       ┌┴                ┼         
+    integer              1         

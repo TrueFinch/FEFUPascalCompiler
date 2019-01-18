@@ -1,6 +1,6 @@
 program a;
 var 
-    a
+    a : integer;
 begin
     writeln(-1);
 end.

@@ -1,0 +1,13 @@
+                   project1                     
+                       ┼                        
+                   MainBlock                    
+       ┌───────────────┴──────┐                 
+      var             CompoundStatement         
+       ┼         ┌────────────┴──┐              
+ SimpleVarDecl   :=       DoWhileStatement      
+ ┌─────┴┐       ┌┴─┐   ┌─────────┴──┐           
+ i  SimpleType  i  0   <    CompoundStatement   
+       ┌┴             ┌┴─┐   ┌──────┴──┐        
+    integer           i  2   +=   FunctionCall  
+                            ┌┴─┐    ┌──┴─┐      
+                            i  1  write  2      

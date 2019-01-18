@@ -1,0 +1,10 @@
+program Project1;
+var i: integer;
+begin
+  i := 0;
+  do begin
+    i += 1;
+    write('2');
+  end
+  while (i < 2);
+end.
