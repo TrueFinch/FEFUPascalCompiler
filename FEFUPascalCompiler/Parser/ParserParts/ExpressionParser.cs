@@ -249,7 +249,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     }
                     case TokenType.Carriage:
                     {
-                        if (left.Type == AstNodeType.DereferenceOperator)
+                        if (left.NodeType == AstNodeType.DereferenceOperator)
                         {
                             throw new Exception(string.Format("{0}, {1} : syntax error, double carriage found",
                                 PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));

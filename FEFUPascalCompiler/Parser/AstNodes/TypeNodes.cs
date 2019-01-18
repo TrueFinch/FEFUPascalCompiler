@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using FEFUPascalCompiler.Parser.AstVisitor;
+using FEFUPascalCompiler.Parser.Visitors;
 using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.AstNodes
@@ -25,7 +25,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             _children.InsertRange(0, indexRanges);
             _children.Add(arrayType);
-            Value = Type.ToString();
+            Value = NodeType.ToString();
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -62,7 +62,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public RecordTypeAstNode(List<AstNode> fieldsList) : base(AstNodeType.RecordType)
         {
             _children.InsertRange(0, fieldsList);
-            Value = Type.ToString();
+            Value = NodeType.ToString();
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)

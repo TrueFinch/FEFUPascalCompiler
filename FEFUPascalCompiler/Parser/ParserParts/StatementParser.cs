@@ -80,8 +80,8 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             {
                 return null; //this is not simple statement
             }
-            if (stmt.Type == AstNodeType.AssignmentStatement
-                || stmt.Type != AstNodeType.AssignmentStatement && stmt.Type == AstNodeType.FunctionCall)
+            if (stmt.NodeType == AstNodeType.AssignmentStatement
+                || stmt.NodeType != AstNodeType.AssignmentStatement && stmt.NodeType == AstNodeType.FunctionCall)
             {
                 return stmt;
             }
