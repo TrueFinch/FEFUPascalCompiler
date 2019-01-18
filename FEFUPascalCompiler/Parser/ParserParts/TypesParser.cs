@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.Sematics;
 using FEFUPascalCompiler.Tokens;
+using Type = FEFUPascalCompiler.Parser.Sematics.Type;
 
 namespace FEFUPascalCompiler.Parser.ParserParts
 {
     internal partial class PascalParser
     {
-        private AstNode ParseType()
+        private (Type, AstNode) ParseType()
         {
             switch (PeekToken().Type)
             {
@@ -27,40 +30,32 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 {
                     return ParsePointerType();
                 }
-                case TokenType.Procedure:
-                {
-                    return ParseProcSignature();
-                }
-                case TokenType.Function:
-                {
-                    return ParseFuncSignature();
-                }
+//                case TokenType.Procedure:
+//                {
+//                    return ParseProcSignature();
+//                }
+//                case TokenType.Function:
+//                {
+//                    return ParseFuncSignature();
+//                }
             }
 
             throw new Exception(string.Format("{0}, {1} : syntax error, variable type expected, but {2} found",
                 PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
         }
 
-        private AstNode ParseSimpleType()
+        private (Type, AstNode) ParseSimpleType()
         {
-            var ident = ParseIdent();
-            if (ident == null)
-            {
-                return null; // this is not simple type
-            }
+            var typeIdent = ParseIdent();
 
-            return ident;
+            CheckTypeDeclared(typeIdent.Token);
+
+            return (_symbolTableStack.Peek()[typeIdent.Token.Value] as Type, new SimpleType(typeIdent));
         }
 
-        private AstNode ParseArrayType()
+        private (Type, AstNode) ParseArrayType()
         {
-            var token = PeekToken();
-            if (token.Type != TokenType.Array)
-            {
-                return null; // this is not array type
-            }
-
-            NextToken();
+            var token = PeekAndNext();
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.OpenSquareBracket},
                 string.Format("{0} {1} : syntax error, '[' expected, but {2} found",
@@ -77,46 +72,47 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var type = ParseType();
-            if (type == null)
-                throw new Exception(string.Format("{0} {1} : syntax error, type expected, but {2} found",
-                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            return new ArrayType(indexRanges, type);
+            return (new ArrayTypeSymbol(indexRanges.Item1, type.Item1), new ArrayTypeAstNode(indexRanges.Item2, type.Item2));
         }
 
-        private List<AstNode> ParseIndexRanges()
+        private (List<IndexRange<int, int>>, List<AstNode>) ParseIndexRanges()
         {
-            var indexRanges = new List<AstNode> {ParseIndexRange()};
+            var indexRange = ParseIndexRange();
+            var astNodesIndexRanges = new List<AstNode>();
+            var symbolIndexRanges = new List<IndexRange<int, int>>();
 
-            if (indexRanges[0] == null)
+            if (indexRange.Item1 == null || indexRange.Item2 == null)
             {
-                //some parser exception -- need at list one list range here
-                return null;
+                throw new Exception(string.Format("{0} {1} : syntax error, index range expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
+
 
             while (PeekToken().Type == TokenType.Comma)
             {
                 NextToken();
-                var indexRange = ParseIndexRange();
-                if (indexRange == null)
+                indexRange = ParseIndexRange();
+                if (indexRange.Item1 == null || indexRange.Item2 == null)
                 {
                     throw new Exception(string.Format("{0} {1} : syntax error, index range expected, but {2} found",
                         PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
                 }
 
-                indexRanges.Add(indexRange);
+                symbolIndexRanges.Add(indexRange.Item1);
+                astNodesIndexRanges.Add(indexRange.Item2);
             }
 
-            return indexRanges;
+            return (symbolIndexRanges, astNodesIndexRanges);
         }
 
-        private AstNode ParseIndexRange()
+        private (IndexRange<int, int>, AstNode) ParseIndexRange()
         {
             var leftBound = ParseConstIntegerLiteral();
             if (leftBound == null)
             {
-                //exception -- wrong range bounds 
-                return null;
+                throw new Exception(string.Format("{0} {1} : syntax error, index range expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
 
             var token = PeekToken();
@@ -128,31 +124,28 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var rightBound = ParseConstIntegerLiteral();
             if (rightBound == null)
             {
-                //exception -- wrong range bounds 
-                return null;
+                throw new Exception(string.Format("{0} {1} : syntax error, index range expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
 
-            return new IndexRange(token, leftBound, rightBound);
+            return (
+                new IndexRange<int, int>((leftBound.Token as IntegerNumberToken).NumberValue,
+                    (rightBound.Token as IntegerNumberToken).NumberValue),
+                new IndexRangeAstNode(token, leftBound, rightBound));
         }
 
-        private AstNode ParseRecordType()
+        private (Type, AstNode) ParseRecordType()
         {
-            var token = PeekToken();
-            if (token.Type != TokenType.Record)
-            {
-                return null; //this is not record type
-            }
-
-            NextToken();
+            var token = PeekAndNext();
+            _symbolTableStack.Push(new OrderedDictionary());
             var fieldList = ParseFieldsList();
             token = PeekToken();
-            if (token.Type != TokenType.End)
-            {
-                return null; //this is not record type
-            }
-
-            NextToken();
-            return new RecordType(fieldList);
+            
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.End},
+                string.Format("{0} {1} : syntax error, 'end' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+            
+            return (new RecordType(_symbolTableStack.Pop()), new RecordTypeAstNode(fieldList));
         }
 
         private List<AstNode> ParseFieldsList()
@@ -162,6 +155,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             if (fieldSection == null)
             {
+                //this is means that record does not have any fields
                 return fieldsList;
             }
 
@@ -187,95 +181,94 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var identList = ParseIdentList();
             if (identList == null)
             {
-                //exception -- empty ident list
+                //this is empty ident list
                 return null;
             }
 
             var token = PeekToken();
-            if (token.Type != TokenType.Colon)
-            {
-                //exception -- no double dot
-                return null;
-            }
-
-            NextToken();
-            var fieldsType = ParseType();
-            if (fieldsType == null)
-            {
-                //exception -- wrong range bounds 
-                return null;
-            }
-
-            return new FieldSection(token, identList, fieldsType);
-        }
-
-        private AstNode ParsePointerType()
-        {
-            var token = PeekToken();
-            if (token.Type != TokenType.Carriage)
-            {
-                return null; //this is not pointer type
-            }
-
-            NextToken();
-            var simpleType = ParseSimpleType();
-            if (simpleType == null)
-            {
-                //exception -- pointer must be on a simple type
-                return null;
-            }
-
-            return new PointerType(token, simpleType);
-        }
-
-        private AstNode ParseProcedureType()
-        {
-            var funcSignature = ParseFuncSignature();
-            if (funcSignature != null)
-            {
-                return funcSignature;
-            }
-
-            var procSignature = ParseProcSignature();
-            if (procSignature != null)
-            {
-                return procSignature;
-            }
-
-            return null; // this is not func or proc signature
-        }
-
-        private AstNode ParseFuncSignature()
-        {
-            var token = PeekToken();
-            if (token.Type != TokenType.Function)
-            {
-                return null; // this is not func signature
-            }
-
-            NextToken();
-            var formalParamList = ParseFormalParamList();
-
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Colon},
                 string.Format("{0} {1} : syntax error, ':' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
-
-            var returnType = ParseSimpleType();
-            return new FuncSignature(token, formalParamList, returnType);
-        }
-
-        private AstNode ParseProcSignature()
-        {
-            var token = PeekToken();
-            if (token == null || token.Type != TokenType.Procedure)
+            
+            var fieldsType = ParseType();
+            if (fieldsType.Item1 == null && fieldsType.Item2 == null)
             {
-                return null; // this is not func signature
+                throw new Exception(string.Format("{0} {1} : syntax error, field's type expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
 
-            NextToken();
-            var formalParamList = ParseFormalParamList();
-
-            return new ProcSignature(token, formalParamList);
+            foreach (var ident in identList)
+            {
+                CheckDuplicateIdentifier(ident.Token);
+                _symbolTableStack.Peek().Add(ident.ToString(), new Local(fieldsType.Item1));
+            }
+            
+            return new FieldSection(token, identList, fieldsType.Item2);
         }
+
+        private (Type, AstNode) ParsePointerType()
+        {
+            var token = PeekAndNext();
+            
+            var simpleType = ParseSimpleType();
+            if (simpleType.Item1 == null && simpleType.Item2 == null)
+            {
+                //exception -- pointer must be on a simple type
+                throw new Exception(string.Format("{0} {1} : syntax error, simple type expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+            }
+
+            return (new PointerTypeSumbol(simpleType.Item1), new PointerType(token, simpleType.Item2));
+        }
+
+//        private AstNode ParseProcedureType()
+//        {
+//            var funcSignature = ParseFuncSignature();
+//            if (funcSignature != null)
+//            {
+//                return funcSignature;
+//            }
+//
+//            var procSignature = ParseProcSignature();
+//            if (procSignature != null)
+//            {
+//                return procSignature;
+//            }
+//
+//            return null; // this is not func or proc signature
+//        }
+
+//        private AstNode ParseFuncSignature()
+//        {
+//            var token = PeekToken();
+//            if (token.Type != TokenType.Function)
+//            {
+//                return null; // this is not func signature
+//            }
+//
+//            NextToken();
+//            var formalParamList = ParseFormalParamList();
+//
+//            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Colon},
+//                string.Format("{0} {1} : syntax error, ':' expected, but {2} found",
+//                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+//
+//            var returnType = ParseSimpleType();
+//            return new FuncSignature(token, formalParamList, returnType);
+//        }
+
+//        private AstNode ParseProcSignature()
+//        {
+//            var token = PeekToken();
+//            if (token == null || token.Type != TokenType.Procedure)
+//            {
+//                return null; // this is not func signature
+//            }
+//
+//            NextToken();
+//            var formalParamList = ParseFormalParamList();
+//
+//            return new ProcSignature(token, formalParamList);
+//        }
     }
 }

@@ -19,9 +19,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode TypeIdent => _children[0];
     }
 
-    public class ArrayType : AstNode
+    public class ArrayTypeAstNode : AstNode
     {
-        public ArrayType(List<AstNode> indexRanges, AstNode arrayType) : base(AstNodeType.ArrayType)
+        public ArrayTypeAstNode(List<AstNode> indexRanges, AstNode arrayType) : base(AstNodeType.ArrayType)
         {
             _children.InsertRange(0, indexRanges);
             _children.Add(arrayType);
@@ -37,9 +37,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode TypeOfArray => _children[_children.Count - 1];
     }
 
-    public class IndexRange : AstNode
+    public class IndexRangeAstNode : AstNode
     {
-        public IndexRange(Token doubleDot, AstNode leftBound, AstNode rightBound) : base(AstNodeType.IndexRange)
+        public IndexRangeAstNode(Token doubleDot, AstNode leftBound, AstNode rightBound) : base(AstNodeType.IndexRange)
         {
             DoubleDot = doubleDot;
             _children.Add(leftBound);
@@ -57,9 +57,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode RightBound => _children[1];
     }
 
-    public class RecordType : AstNode
+    public class RecordTypeAstNode : AstNode
     {
-        public RecordType(List<AstNode> fieldsList) : base(AstNodeType.RecordType)
+        public RecordTypeAstNode(List<AstNode> fieldsList) : base(AstNodeType.RecordType)
         {
             _children.InsertRange(0, fieldsList);
             Value = Type.ToString();

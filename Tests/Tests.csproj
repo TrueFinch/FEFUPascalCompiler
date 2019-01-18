@@ -352,6 +352,14 @@
       <EmbeddedResource Include="ParserTests\19_UnaryOperatorTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="ParserTests\20_PointerTest.in" />
+      <EmbeddedResource Include="ParserTests\20_PointerTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\20_PointerTest.out" />
+      <EmbeddedResource Include="ParserTests\20_PointerTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

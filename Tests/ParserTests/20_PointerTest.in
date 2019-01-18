@@ -1,0 +1,8 @@
+program p;
+var
+    a: integer = 5;
+    b:^integer = nil;
+begin
+    b := @a;
+    write(b^);
+end.

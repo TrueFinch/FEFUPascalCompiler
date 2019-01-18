@@ -42,7 +42,7 @@ namespace FEFUPascalCompiler.Tokens
 
         //data types
         IntegerNumber,
-        DoubleNumber,
+        FloatNumber,
         StringConst,
         CharConst,
 

@@ -40,14 +40,15 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
         T Visit(WhileStatement node);
         T Visit(ForStatement node);
         T Visit(SimpleType node);
-        T Visit(ArrayType node);
-        T Visit(IndexRange node);
-        T Visit(RecordType node);
+        T Visit(ArrayTypeAstNode node);
+        T Visit(IndexRangeAstNode node);
+        T Visit(RecordTypeAstNode node);
         T Visit(FieldSection node);
         T Visit(PointerType node);
         T Visit(ProcSignature node);
         T Visit(FuncSignature node);
         T Visit(ConformantArray node);
         T Visit(ForRange node);
+        T Visit(DereferenceOperator node);
     }
 }

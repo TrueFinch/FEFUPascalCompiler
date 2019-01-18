@@ -38,7 +38,8 @@ namespace FEFUPascalCompiler
             
             compiler.Input = new StreamReader(inputFilePath);
             compiler.Parse();
-            compiler.PrintAst(output);
+            if (compiler.LastException == null)
+                compiler.PrintAst(output);
             
             output.Close();
             compiler.Input.Close();

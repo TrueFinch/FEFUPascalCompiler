@@ -37,7 +37,7 @@ namespace FEFUPascalCompiler.Tokens
             new Dictionary<TokenType, Func<int, int, string, Token>>
             {
                 {TokenType.IntegerNumber, (line, column, lexeme) => new IntegerNumberToken(line, column, lexeme)},
-                {TokenType.DoubleNumber, (line, column, lexeme) => new DoubleNumberToken(line, column, lexeme)},
+                {TokenType.FloatNumber, (line, column, lexeme) => new DoubleNumberToken(line, column, lexeme)},
                 {TokenType.StringConst, (line, column, lexeme) => new StringConstToken(line, column, lexeme)},
                 {TokenType.BinOperator, (line, column, lexeme) => new BinOperatorToken(line, column, lexeme)},
                 {TokenType.AssignOperator, (line, column, lexeme) => new AssignToken(line, column, lexeme)},
@@ -61,17 +61,17 @@ namespace FEFUPascalCompiler.Tokens
             NumberValue = ConvertToInteger(lexeme);
         }
 
-        private long ConvertToInteger(string lexeme)
+        private int ConvertToInteger(string lexeme)
         {
             try
             {
                 //if number not in decimal basis then lexeme[0] == % or $ or &
                 if (basis[lexeme[0]] != 10)
                 {
-                    return Convert.ToInt64(lexeme.Substring(1), basis[lexeme[0]]);
+                    return Convert.ToInt32(lexeme.Substring(1), basis[lexeme[0]]);
                 }
 
-                return Convert.ToInt64(lexeme, basis[lexeme[0]]);
+                return Convert.ToInt32(lexeme, basis[lexeme[0]]);
             }
             catch (FormatException exception)
             {
@@ -88,7 +88,7 @@ namespace FEFUPascalCompiler.Tokens
             return base.ToString() + $"{NumberValue,-30}" + '|';
         }
 
-        public long NumberValue { get; }
+        public int NumberValue { get; }
 
         //base of the number system
         private static Dictionary<char, int> basis = new Dictionary<char, int>
@@ -103,7 +103,7 @@ namespace FEFUPascalCompiler.Tokens
     public class DoubleNumberToken : Token
     {
         public DoubleNumberToken(int line, int column, string lexeme)
-            : base(line, column, TokenType.DoubleNumber, lexeme)
+            : base(line, column, TokenType.FloatNumber, lexeme)
         {
             NumberValue = LexemeToDouble(lexeme);
         }

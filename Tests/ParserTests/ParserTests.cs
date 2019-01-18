@@ -36,7 +36,7 @@ namespace Tests.ParserTests
             {16, @"ParserTests/17_TypeDeclarationTest"},
             {17, @"ParserTests/18_ConstDeclarationTest"},
             {18, @"ParserTests/19_UnaryOperatorTest"},
-            {19, @"ParserTests/20_NilTest"},
+            {19, @"ParserTests/20_PointerTest"},
         };
         
         private void Prepare(string inputPath, out StreamWriter output, string outputPath)
@@ -188,6 +188,12 @@ namespace Tests.ParserTests
         public void UnaryOperatorTest()
         {
             Test(19);
+        }
+        
+        [Test]
+        public void PointerTest()
+        {
+            Test(20);
         }
         // CorrectProgramsTest test
     } // ParserTestFixture class
