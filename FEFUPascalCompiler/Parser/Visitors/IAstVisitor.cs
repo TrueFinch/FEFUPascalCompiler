@@ -1,6 +1,6 @@
 using FEFUPascalCompiler.Parser.AstNodes;
 
-namespace FEFUPascalCompiler.Parser.AstVisitor
+namespace FEFUPascalCompiler.Parser.Visitors
 {
     public interface IAstVisitor <T>
     {
