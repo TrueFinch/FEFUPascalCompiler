@@ -372,6 +372,34 @@
       <EmbeddedResource Include="ParserTests\22_DoWhileTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="ParserTests\24_RecordAccess.in" />
+      <EmbeddedResource Include="ParserTests\24_RecordAccessTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\24_RecordAccess.out" />
+      <EmbeddedResource Include="ParserTests\24_RecordAccessTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\23_DoWhileTest.out" />
+      <EmbeddedResource Include="ParserTests\23_DoWhileTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\23_DoWhileTest.in" />
+      <EmbeddedResource Include="ParserTests\23_DoWhileTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\22_DoWhileTest.out" />
+      <EmbeddedResource Include="ParserTests\22_DoWhileTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\25_RecordAccess.in" />
+      <EmbeddedResource Include="ParserTests\25_RecordArrayAccessTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\25_RecordAccess.out" />
+      <EmbeddedResource Include="ParserTests\25_RecordArrayAccessTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

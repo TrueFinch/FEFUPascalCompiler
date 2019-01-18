@@ -1,0 +1,17 @@
+program Project1;
+
+type 
+    a = record
+        k: array [0..5] of integer;
+        l: integer;
+    end;
+  
+var 
+    i: a;
+
+begin
+    i.k[0] := 0;
+    i.l := 4;
+    write(i.k[2]);
+    write(i.l);
+end.

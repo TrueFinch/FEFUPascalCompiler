@@ -38,7 +38,10 @@ namespace Tests.ParserTests
             {18, @"ParserTests/19_UnaryOperatorTest"},
             {19, @"ParserTests/20_PointerTest"},
             {20, @"ParserTests/21_DoWhileTest"},
-            {21, @"ParserTests/21_DoWhileTest"},
+            {21, @"ParserTests/22_DoWhileTest"},
+            {22, @"ParserTests/23_DoWhileTest"},
+            {23, @"ParserTests/24_RecordAccessTest"},
+            {24, @"ParserTests/25_RecordArrayAccessTest"},
         };
         
         private void Prepare(string inputPath, out StreamWriter output, string outputPath)
@@ -198,11 +201,35 @@ namespace Tests.ParserTests
             Test(20);
         }
         
-//        [Test]
-//        public void DoWhileTest()
-//        {
-//            Test(21);
-//        }
+        [Test]
+        public void DoWhileTest1()
+        {
+            Test(21);
+        }
+        
+        [Test]
+        public void DoWhileTest2()
+        {
+            Test(22);
+        }
+        
+        [Test]
+        public void DoWhileTest3()
+        {
+            Test(23);
+        }
+        
+        [Test]
+        public void RecordAccess()
+        {
+            Test(24);
+        }
+        
+        [Test]
+        public void RecordArrayAccessTest()
+        {
+            Test(25);
+        }
         // CorrectProgramsTest test
     } // ParserTestFixture class
 } // Tests.ParserTests namespace
