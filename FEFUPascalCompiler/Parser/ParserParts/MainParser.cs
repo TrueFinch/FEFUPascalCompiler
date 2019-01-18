@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.Sematics;
 using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.ParserParts
@@ -21,13 +23,15 @@ namespace FEFUPascalCompiler.Parser.ParserParts
     {
         public bool IsReady()
         {
-            return true;
+            bool res = _isReady;
+            _isReady = false;
+            return res;
         }
 
         public AstNode ParseSingleExpression()
         {
             NextToken(); // skipping null token so next call will return not null token if it's exist
-            return ParseAssingStatement();
+            return ParseExpression();
         }
 
         public AstNode Parse()
@@ -37,7 +41,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 //throw exception wrong init of lexer
                 return null;
             }
-
+            _symbolTableStack.Push(new OrderedDictionary());
             NextToken();
             return ParseProgram();
         }
@@ -50,11 +54,24 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             NextAndPeek = nextAndPeek;
         }
 
+        private bool _isReady = true;
+        
         private PeekToken PeekToken { get; }
         private NextToken NextToken { get; }
         private PeekAndNext PeekAndNext { get; }
         private NextAndPeek NextAndPeek { get; }
 
+        private Stack<OrderedDictionary> _symbolTableStack = new Stack<OrderedDictionary>();
+
+        private void InitSymbolTableStack()
+        {
+            var mainTable = new OrderedDictionary();
+            mainTable.Add("Integer".ToLower(), new IntegerType());
+            mainTable.Add("Float".ToLower(), new FloatType());
+            mainTable.Add("String".ToLower(), new StringType());
+            mainTable.Add("Char".ToLower(), new CharType());
+        }
+        
         private void CheckToken(TokenType actual, List<TokenType> expected, string errMessage)
         {
             if (!expected.Contains(actual))
@@ -64,6 +81,29 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private bool CheckToken(TokenType actual, List<TokenType> expected)
         {
             return expected.Contains(actual);
+        }
+
+        private void CheckDuplicateIdentifier(Token ident)
+        {
+            if (_symbolTableStack.Peek().Contains(ident.Value))
+            {
+                throw new Exception(string.Format("{0}, {1} : Duplicate identifier {3}", 
+                    ident.Line, ident.Column, ident.Lexeme));
+            }
+        }
+
+        private void CheckTypeDeclared(Token type)
+        {
+            if (!_symbolTableStack.Peek().Contains(type.Value))
+            {
+                throw new Exception(string.Format("{0}, {1} : Undeclared type identifier {3}",
+                    type.Line, type.Column, type.Lexeme));
+            }
+        }
+
+        private bool CheckTypeDeclared(string typeIdent)
+        {
+            return _symbolTableStack.Peek().Contains(typeIdent);
         }
     }
 }

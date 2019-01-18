@@ -68,10 +68,10 @@ namespace FEFUPascalCompiler.Tokens
                 //if number not in decimal basis then lexeme[0] == % or $ or &
                 if (basis[lexeme[0]] != 10)
                 {
-                    return Convert.ToInt64(lexeme.Substring(1), basis[lexeme[0]]);
+                    return Convert.ToInt32(lexeme.Substring(1), basis[lexeme[0]]);
                 }
 
-                return Convert.ToInt64(lexeme, basis[lexeme[0]]);
+                return Convert.ToInt32(lexeme, basis[lexeme[0]]);
             }
             catch (FormatException exception)
             {
@@ -88,7 +88,7 @@ namespace FEFUPascalCompiler.Tokens
             return base.ToString() + $"{NumberValue,-30}" + '|';
         }
 
-        public long NumberValue { get; }
+        public int NumberValue { get; }
 
         //base of the number system
         private static Dictionary<char, int> basis = new Dictionary<char, int>

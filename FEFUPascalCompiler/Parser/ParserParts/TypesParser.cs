@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.Sematics;
 using FEFUPascalCompiler.Tokens;
+using Type = FEFUPascalCompiler.Parser.Sematics.Type;
 
 namespace FEFUPascalCompiler.Parser.ParserParts
 {
     internal partial class PascalParser
     {
-        private AstNode ParseType()
+        private (Type, AstNode) ParseType()
         {
             switch (PeekToken().Type)
             {
@@ -41,26 +43,18 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
         }
 
-        private AstNode ParseSimpleType()
+        private (Type, AstNode) ParseSimpleType()
         {
-            var ident = ParseIdent();
-            if (ident == null)
-            {
-                return null; // this is not simple type
-            }
+            var typeIdent = ParseIdent();
 
-            return ident;
+            CheckTypeDeclared(typeIdent.Token);
+
+            return (_symbolTableStack.Peek()[typeIdent.Token.Value] as Type, typeIdent);
         }
 
-        private AstNode ParseArrayType()
+        private (Type, AstNode) ParseArrayType()
         {
-            var token = PeekToken();
-            if (token.Type != TokenType.Array)
-            {
-                return null; // this is not array type
-            }
-
-            NextToken();
+            var token = PeekAndNext();
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.OpenSquareBracket},
                 string.Format("{0} {1} : syntax error, '[' expected, but {2} found",
@@ -76,47 +70,49 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 string.Format("{0} {1} : syntax error, '[' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            var type = ParseType();
-            if (type == null)
-                throw new Exception(string.Format("{0} {1} : syntax error, type expected, but {2} found",
-                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+            (Type, AstNode) type;
+            type = ParseType();
 
-            return new ArrayType(indexRanges, type);
+            return (new ArrayType(indexRanges.Item1, type.Item1), new ArrayTypeAstNode(indexRanges.Item2, type.Item2));
         }
 
-        private List<AstNode> ParseIndexRanges()
+        private (List<IndexRange<int, int>>, List<AstNode>) ParseIndexRanges()
         {
-            var indexRanges = new List<AstNode> {ParseIndexRange()};
+            var indexRange = ParseIndexRange();
+            var astNodesIndexRanges = new List<AstNode>();
+            var symbolIndexRanges = new List<IndexRange<int, int>>();
 
-            if (indexRanges[0] == null)
+            if (indexRange.Item1 == null || indexRange.Item2 == null)
             {
-                //some parser exception -- need at list one list range here
-                return null;
+                throw new Exception(string.Format("{0} {1} : syntax error, index range expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
+
 
             while (PeekToken().Type == TokenType.Comma)
             {
                 NextToken();
-                var indexRange = ParseIndexRange();
-                if (indexRange == null)
+                indexRange = ParseIndexRange();
+                if (indexRange.Item1 == null || indexRange.Item2 == null)
                 {
                     throw new Exception(string.Format("{0} {1} : syntax error, index range expected, but {2} found",
                         PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
                 }
 
-                indexRanges.Add(indexRange);
+                symbolIndexRanges.Add(indexRange.Item1);
+                astNodesIndexRanges.Add(indexRange.Item2);
             }
 
-            return indexRanges;
+            return (symbolIndexRanges, astNodesIndexRanges);
         }
 
-        private AstNode ParseIndexRange()
+        private (IndexRange<int, int>, AstNode) ParseIndexRange()
         {
             var leftBound = ParseConstIntegerLiteral();
             if (leftBound == null)
             {
-                //exception -- wrong range bounds 
-                return null;
+                throw new Exception(string.Format("{0} {1} : syntax error, index range expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
 
             var token = PeekToken();
@@ -128,11 +124,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var rightBound = ParseConstIntegerLiteral();
             if (rightBound == null)
             {
-                //exception -- wrong range bounds 
-                return null;
+                throw new Exception(string.Format("{0} {1} : syntax error, index range expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
 
-            return new IndexRange(token, leftBound, rightBound);
+            return (
+                new IndexRange<int, int>((leftBound.Token as IntegerNumberToken).NumberValue,
+                    (rightBound.Token as IntegerNumberToken).NumberValue),
+                new IndexRangeAstNode(token, leftBound, rightBound));
         }
 
         private AstNode ParseRecordType()
@@ -152,7 +151,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
             NextToken();
-            return new RecordType(fieldList);
+            return new RecordTypeAstNode(fieldList);
         }
 
         private List<AstNode> ParseFieldsList()

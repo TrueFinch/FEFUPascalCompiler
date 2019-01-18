@@ -326,7 +326,7 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
             return printer;
         }
 
-        public AstPrinterNode Visit(ArrayType node)
+        public AstPrinterNode Visit(ArrayTypeAstNode node)
         {
             var printer = new AstPrinterNode(node.ToString());
             foreach (var range in node.IndexRanges)
@@ -337,7 +337,7 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
             return printer;
         }
 
-        public AstPrinterNode Visit(IndexRange node)
+        public AstPrinterNode Visit(IndexRangeAstNode node)
         {
             var printer = new AstPrinterNode(node.ToString());
             printer.AddChild(node.LeftBound.Accept(this));
@@ -345,7 +345,7 @@ namespace FEFUPascalCompiler.Parser.AstVisitor
             return printer;
         }
 
-        public AstPrinterNode Visit(RecordType node)
+        public AstPrinterNode Visit(RecordTypeAstNode node)
         {
             var printer = new AstPrinterNode(node.ToString());
             foreach (var field in node.FieldsList)
