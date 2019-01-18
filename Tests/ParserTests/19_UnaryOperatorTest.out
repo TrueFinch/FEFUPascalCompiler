@@ -7,5 +7,5 @@
  SimpleVarDecl  FunctionCall       
  ┌─────┴┐          ┌─┴───┐         
  a  SimpleType  writeln  -         
-      ┌─┴                ┼         
-    float                1         
+       ┌┴                ┼         
+    integer              1         

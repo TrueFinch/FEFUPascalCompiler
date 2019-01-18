@@ -37,6 +37,8 @@ namespace Tests.ParserTests
             {17, @"ParserTests/18_ConstDeclarationTest"},
             {18, @"ParserTests/19_UnaryOperatorTest"},
             {19, @"ParserTests/20_PointerTest"},
+            {20, @"ParserTests/21_DoWhileTest"},
+            {21, @"ParserTests/21_DoWhileTest"},
         };
         
         private void Prepare(string inputPath, out StreamWriter output, string outputPath)
@@ -195,6 +197,12 @@ namespace Tests.ParserTests
         {
             Test(20);
         }
+        
+//        [Test]
+//        public void DoWhileTest()
+//        {
+//            Test(21);
+//        }
         // CorrectProgramsTest test
     } // ParserTestFixture class
 } // Tests.ParserTests namespace

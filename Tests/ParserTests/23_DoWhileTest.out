@@ -1,0 +1,11 @@
+        project1          
+            ┼             
+        MainBlock         
+            ┼             
+    CompoundStatement     
+            ┼             
+    DoWhileStatement      
+  ┌─────────┴──┐          
+  <    CompoundStatement  
+ ┌┴─┐   ┌──────┴          
+ i  2  pass               

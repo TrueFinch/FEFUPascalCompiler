@@ -302,7 +302,7 @@
       </EmbeddedResource>
       <None Remove="ParserTests\13_ArithmExpressionsTest.out" />
       <EmbeddedResource Include="ParserTests\13_ArithmExpressionsTest.out">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\14_FunctionDeclarationTest.in" />
       <EmbeddedResource Include="ParserTests\14_FunctionDeclarationTest.in">
@@ -358,6 +358,18 @@
       </EmbeddedResource>
       <None Remove="ParserTests\20_PointerTest.out" />
       <EmbeddedResource Include="ParserTests\20_PointerTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\21_DoWhileTest.in" />
+      <EmbeddedResource Include="ParserTests\21_DoWhileTest.in">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\21_DoWhileTest.out" />
+      <EmbeddedResource Include="ParserTests\21_DoWhileTest.out">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="ParserTests\22_DoWhileTest.in" />
+      <EmbeddedResource Include="ParserTests\22_DoWhileTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
     </ItemGroup>

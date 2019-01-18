@@ -1,0 +1,8 @@
+program Project1;
+var i: integer;
+begin
+  i := 0;
+  do
+    i += 1
+  while (i < 2);
+end.
