@@ -137,6 +137,7 @@ namespace FEFUPascalCompiler
             {
                 _input = value;
                 _lexer.InitLexer(value);
+                _pascalParser.InitParser();
             }
         }
 
