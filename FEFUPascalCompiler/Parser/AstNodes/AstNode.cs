@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
-using FEFUPascalCompiler.Parser.AstVisitor;
+using FEFUPascalCompiler.Parser.Visitors;
 using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.AstNodes
@@ -68,10 +68,10 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
     public abstract class AstNode
     {
-        protected AstNode(AstNodeType type, Token token = null)
+        protected AstNode(AstNodeType nodeType, Token token = null)
         {
             Token = token;
-            Type = type;
+            NodeType = nodeType;
             if (token != null)
             {
                 if (token.Type == TokenType.FloatNumber)
@@ -86,7 +86,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             }
             else
             {
-                Value = type.ToString();
+                Value = nodeType.ToString();
             }
         }
 
@@ -95,7 +95,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public abstract T Accept<T>(IAstVisitor<T> visitor);
 
         public Token Token { get; protected set; }
-        public AstNodeType Type { get; }
+        public AstNodeType NodeType { get; }
         protected string Value { get; set; }
         protected List<AstNode> _children = new List<AstNode>();
     }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
-using FEFUPascalCompiler.Parser.AstVisitor;
+using FEFUPascalCompiler.Parser.Visitors;
 using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.AstNodes
@@ -51,80 +51,4 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 //
 //        public List<AstNode> Idents => _children;
 //    }
-
-    public class Ident : AstNode
-    {
-        public Ident(Token token) : this(token, AstNodeType.Ident)
-        {
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        protected Ident(Token token, AstNodeType type) : base(type, token)
-        {
-        }
-    }
-
-    public class ConstIntegerLiteral : AstNode
-    {
-        public ConstIntegerLiteral(Token token) : base(AstNodeType.ConstIntegerLiteral, token)
-        {
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
-
-    public class ConstDoubleLiteral : AstNode
-    {
-        public ConstDoubleLiteral(Token token) : base(AstNodeType.ConstDoubleLiteral, token)
-        {
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
-
-    public class ConstCharLiteral : AstNode
-    {
-        public ConstCharLiteral(Token token) : base(AstNodeType.ConstCharLiteral, token)
-        {
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
-
-    public class ConstStringLiteral : AstNode
-    {
-        public ConstStringLiteral(Token token) : base(AstNodeType.ConstStringLiteral, token)
-        {
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
-
-    public class Nil : AstNode
-    {
-        public Nil(Token token) : base(AstNodeType.Nil, token)
-        {
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
 }

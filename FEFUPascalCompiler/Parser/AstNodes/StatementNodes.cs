@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using FEFUPascalCompiler.Parser.AstVisitor;
+using FEFUPascalCompiler.Parser.Visitors;
 using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.AstNodes
@@ -89,8 +89,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         protected WhileStatement(Token whileToken, AstNode expression, Token doToken, AstNode statement,
-            AstNodeType type)
-            : base(type)
+            AstNodeType nodeType)
+            : base(nodeType)
         {
             WhileToken = whileToken;
             DoToken = doToken;

@@ -125,12 +125,6 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             var token = PeekToken();
 
-//            if (token == null)
-//            { TODO: delete this
-//                //exception -- unexpected end of file
-//                return null;
-//            }
-
             switch (token.Type)
             {
                 case TokenType.IntegerNumber:
@@ -249,7 +243,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     }
                     case TokenType.Carriage:
                     {
-                        if (left.Type == AstNodeType.DereferenceOperator)
+                        if (left.NodeType == AstNodeType.DereferenceOperator)
                         {
                             throw new Exception(string.Format("{0}, {1} : syntax error, double carriage found",
                                 PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));

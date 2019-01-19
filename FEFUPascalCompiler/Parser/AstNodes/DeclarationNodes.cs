@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using FEFUPascalCompiler.Parser.AstVisitor;
+using FEFUPascalCompiler.Parser.Visitors;
 using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.AstNodes
 {
     public abstract class DeclsPart : AstNode
     {
-        protected DeclsPart(List<AstNode> decls, AstNodeType type, Token token = null) : base(type, token)
+        protected DeclsPart(List<AstNode> decls, AstNodeType nodeType, Token token = null) : base(nodeType, token)
         {
             _children.InsertRange(0, decls);
         }

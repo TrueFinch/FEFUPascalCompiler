@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using FEFUPascalCompiler.Parser.AstNodes;
 
-namespace FEFUPascalCompiler.Parser.AstVisitor
+namespace FEFUPascalCompiler.Parser.Visitors
 {
     internal class AstPrintVisitor : IAstVisitor<AstPrinterNode>
     {
