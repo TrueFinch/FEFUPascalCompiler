@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.Sematics;
 using FEFUPascalCompiler.Tokens;
-using Type = FEFUPascalCompiler.Parser.Sematics.Type;
 
 namespace FEFUPascalCompiler.Parser.ParserParts
 {
@@ -77,7 +76,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new FormalParamSection(identsList, paramType.Item2, modifier);
         }
 
-        private (Type, AstNode) ParseParamType()
+        private (SymbolType, AstNode) ParseParamType()
         {
             NextToken();
             switch (PeekToken().Type)
@@ -96,81 +95,6 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                         PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
                 }
             }
-        }
-
-        private (Type, AstNode) ParseConformatArray()
-        {
-            var arrayToken = PeekAndNext();
-            var ofToken = PeekAndNext();
-            if (arrayToken.Type == TokenType.Array && ofToken.Type == TokenType.Of)
-            {
-                var simpleType = ParseSimpleType();
-                return (new ConformatArrayType(simpleType.Item1),
-                    new ConformantArray(arrayToken, ofToken, simpleType.Item2));
-            }
-
-            throw new Exception(string.Format("{0}, {1} : syntax error, conformat array type expected, but {2} found",
-                PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
-        }
-
-        public List<AstNode> ParseIdentList()
-        {
-            var identList = new List<AstNode>();
-            var ident = ParseIdent();
-            if (ident == null)
-            {
-                //exception -- this is not ident list
-                return identList;
-            }
-
-            identList.Add(ident);
-            while (true)
-            {
-                if (PeekToken().Type != TokenType.Comma)
-                {
-                    break;
-                }
-
-                NextToken();
-                ident = ParseIdent();
-                if (ident == null)
-                {
-                    //exception unexpected lexeme
-                    return null;
-                }
-
-                identList.Add(ident);
-            }
-
-            return identList;
-        }
-
-        private AstNode ParseIdent()
-        {
-            var token = PeekToken();
-            if (token.Type != TokenType.Ident)
-            {
-                //this is not ident, may be this is key word? Think about it
-                return null;
-            }
-
-            return new Ident(PeekAndNext());
-        }
-
-        private AstNode ParseConstIntegerLiteral()
-        {
-            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.IntegerNumber},
-                string.Format("{0} {1} : syntax error, integer expected, but {2} found",
-                    PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
-            return new ConstIntegerLiteral(PeekAndNext());
-        }
-
-        private AstNode ParseConstFloatLiteral()
-        {
-            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.FloatNumber},
-                string.Format("{0} {1} : syntax error, float expected, but {2} found",
-                    PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
-            return new ConstIntegerLiteral(PeekAndNext());
         }
     }
 }
