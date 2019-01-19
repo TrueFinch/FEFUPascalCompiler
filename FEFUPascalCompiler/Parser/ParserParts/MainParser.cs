@@ -15,10 +15,6 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
     internal delegate bool NextToken();
 
-    internal delegate AstNode DeclPartParser();
-
-    internal delegate AstNode TypesParser();
-
     internal partial class PascalParser
     {
         public bool IsReady()
@@ -69,10 +65,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private void InitSymbolTableStack()
         {
             var mainTable = new OrderedDictionary();
-            mainTable.Add("Integer".ToLower(), new IntegerType());
-            mainTable.Add("Float".ToLower(), new FloatType());
-            mainTable.Add("String".ToLower(), new StringType());
-            mainTable.Add("Char".ToLower(), new CharType());
+            mainTable.Add("Integer".ToLower(), new IntegerSymbolType());
+            mainTable.Add("Float".ToLower(), new FloatSymbolType());
+            mainTable.Add("String".ToLower(), new StringSymbolType());
+            mainTable.Add("Char".ToLower(), new CharSymbolType());
             _symbolTableStack.Push(mainTable);
         }
 

@@ -26,7 +26,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
         
         public OrderedDictionary Parameters { get; set; }
         public OrderedDictionary Local { get; set; }
-        public Type ReturnType { get; set; }
+        public SymbolType ReturnSymbolType { get; set; }
         public AstNode Body { get; set; }
     }
     
