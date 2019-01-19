@@ -95,7 +95,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public abstract T Accept<T>(IAstVisitor<T> visitor);
 
         public Token Token { get; protected set; }
-        public AstNodeType NodeType { get; }
+        public AstNodeType NodeType { get; set;  }
         protected string Value { get; set; }
         protected List<AstNode> _children = new List<AstNode>();
     }
