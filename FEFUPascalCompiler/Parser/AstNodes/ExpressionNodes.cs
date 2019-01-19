@@ -12,6 +12,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
         
         public Type SymType { get; set; }
+        
+        public abstract T Accept<T>(ISymVisitor<T> visitor);
     }
     
     public abstract class BinOperator : Expression
@@ -34,6 +36,11 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
         
         public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public override T Accept<T>(ISymVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
@@ -62,6 +69,11 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             return visitor.Visit(this);
         }
+
+        public override T Accept<T>(ISymVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
     }
     
 //    public class Term: Operand
@@ -86,6 +98,11 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             return visitor.Visit(this);
         }
+
+        public override T Accept<T>(ISymVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
     }
     
     public class UnaryOperator : Expression {
@@ -96,6 +113,12 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+        
+        
+        public override T Accept<T>(ISymVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
@@ -115,6 +138,11 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             return visitor.Visit(this);
         }
+        
+        public override T Accept<T>(ISymVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
 
         public AstNode Array => _children[0];
         public List<AstNode> AccessExpr => _children.GetRange(1, _children.Count - 1);
@@ -128,6 +156,11 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+        
+        public override T Accept<T>(ISymVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
@@ -148,6 +181,11 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
+        public override T Accept<T>(ISymVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+        
         public AstNode FuncIdent => _children[0];
         public List<AstNode> ParamList => _children.GetRange(1, _children.Count - 1);
     }
@@ -160,6 +198,11 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+        
+        public override T Accept<T>(ISymVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
@@ -178,8 +221,98 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
+        public override T Accept<T>(ISymVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+        
         protected Ident(Token token, AstNodeType nodeType) : base(nodeType, token)
         {
+        }
+    }
+    
+    public class ConstIntegerLiteral : Expression
+    {
+        public ConstIntegerLiteral(Token token) : base(AstNodeType.ConstIntegerLiteral, token)
+        {
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public override T Accept<T>(ISymVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+    }
+
+    public class ConstDoubleLiteral : Expression
+    {
+        public ConstDoubleLiteral(Token token) : base(AstNodeType.ConstDoubleLiteral, token)
+        {
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public override T Accept<T>(ISymVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+    }
+
+    public class ConstCharLiteral : Expression
+    {
+        public ConstCharLiteral(Token token) : base(AstNodeType.ConstCharLiteral, token)
+        {
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public override T Accept<T>(ISymVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+    }
+
+    public class ConstStringLiteral : Expression
+    {
+        public ConstStringLiteral(Token token) : base(AstNodeType.ConstStringLiteral, token)
+        {
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public override T Accept<T>(ISymVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+    }
+
+    public class Nil : Expression
+    {
+        public Nil(Token token) : base(AstNodeType.Nil, token)
+        {
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public override T Accept<T>(ISymVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
         }
     }
 }
