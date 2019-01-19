@@ -11,7 +11,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
         }
         
-        public Type SymType { get; set; }
+        public SymbolType SymbolType { get; set; }
+        public bool IsRValue = false;
+        public bool IsLValue = false;
         
         public abstract T Accept<T>(ISymVisitor<T> visitor);
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.Sematics;
 using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.Visitors
@@ -14,6 +15,34 @@ namespace FEFUPascalCompiler.Parser.Visitors
         }
         
         public Stack<OrderedDictionary> SymbolTableStack { get; }
+        
+        public bool Visit(ConstIntegerLiteral node)
+        {
+            if (node.SymbolType != null) return true;
+
+            node.SymbolType = new IntegerSymbolType();
+            return true;
+        }
+
+        public bool Visit(ConstDoubleLiteral node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Visit(ConstCharLiteral node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Visit(ConstStringLiteral node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Visit(Nil node)
+        {
+            throw new NotImplementedException();
+        }
 
         public bool Visit(Ident node)
         {
@@ -56,31 +85,6 @@ namespace FEFUPascalCompiler.Parser.Visitors
         }
 
         public bool Visit(ComparingOperator node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit(ConstIntegerLiteral node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit(ConstDoubleLiteral node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit(ConstCharLiteral node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit(ConstStringLiteral node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit(Nil node)
         {
             throw new NotImplementedException();
         }

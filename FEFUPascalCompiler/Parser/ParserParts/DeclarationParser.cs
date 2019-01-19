@@ -136,7 +136,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             if (typeIdent == null)
             {
-                // this meants that we get to another part of declaration or compound statement and met key word
+                // this meants that we get to another part of declaration or compound statement and key word was met
                 return null; 
             }
             
@@ -156,8 +156,8 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             if (type.Item1.Ident.Length != 0 && CheckTypeDeclared(type.Item1.Ident))
             {
-                AliasType alias = new AliasType(typeIdent.ToString(), type.Item1);
-                _symbolTableStack.Peek().Add(typeIdent.ToString(), alias);
+                AliasSymbolType aliasSymbol = new AliasSymbolType(typeIdent.ToString(), type.Item1);
+                _symbolTableStack.Peek().Add(typeIdent.ToString(), aliasSymbol);
             }
             else
             {
@@ -272,9 +272,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
-
+            
+            _symbolTableStack.Peek().Add(functionSymbol.Ident, functionSymbol); // Add function to handle recursion 
+            
             _symbolTableStack.Push(new OrderedDictionary()); // this will be local table
             var funcSubroutineBlock = ParseSubroutineBlock();
+            
             functionSymbol.Local = _symbolTableStack.Peek();
             functionSymbol.Body = funcSubroutineBlock;
             
@@ -285,7 +288,8 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             _symbolTableStack.Pop(); // pop local table
             _symbolTableStack.Pop(); // pop parameters table
             
-            _symbolTableStack.Peek().Add(functionSymbol.Ident, functionSymbol); // add function symbol to main table
+            _symbolTableStack.Peek().Remove(functionSymbol.Ident);             // Remove old not full function from table and
+            _symbolTableStack.Peek().Add(functionSymbol.Ident, functionSymbol); // add full function symbol to main table
             
             _symbolTableStack.Push(functionSymbol.Parameters); // push parameters table
             _symbolTableStack.Push(functionSymbol.Local); // push local table
@@ -318,7 +322,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var returnType = ParseSimpleType();
-            funcSymbol.ReturnType = returnType.Item1;
+            funcSymbol.ReturnSymbolType = returnType.Item1;
             
             return (funcSymbol, new FuncHeader(funcName, paramList, returnType.Item2));
         }
@@ -389,7 +393,9 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             _symbolTableStack.Pop();  // pop local table
             _symbolTableStack.Pop(); // pop parameters table
             
-            _symbolTableStack.Peek().Add(procedureSymbol.Ident, procedureSymbol);
+            
+            _symbolTableStack.Peek().Remove(procedureSymbol.Ident);             // Remove old not full procedure from table and
+            _symbolTableStack.Peek().Add(procedureSymbol.Ident, procedureSymbol); // add full procedure symbol to main table
             
             _symbolTableStack.Push(procedureSymbol.Parameters); // push parameters table
             _symbolTableStack.Push(procedureSymbol.Local);  // push local table

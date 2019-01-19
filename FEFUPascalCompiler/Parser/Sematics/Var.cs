@@ -2,30 +2,30 @@ namespace FEFUPascalCompiler.Parser.Sematics
 {
     public abstract class Var : Symbol
     {
-        protected Var(string ident, Type varType) : base(ident)
+        protected Var(string ident, SymbolType varSymbolType) : base(ident)
         {
-            VarType = varType;
+            VarSymbolType = varSymbolType;
         }
-        public Type VarType { get; }
+        public SymbolType VarSymbolType { get; }
     }
 
     public class Local : Var
     {
-        public Local(Type varType) : base("Local", varType)
+        public Local(SymbolType varSymbolType) : base("Local", varSymbolType)
         {
         }
     }
     
     public class Global : Var
     {
-        public Global(Type varType) : base("Global", varType)
+        public Global(SymbolType varSymbolType) : base("Global", varSymbolType)
         {
         }
     }
     
     public class Parameter : Var
     {
-        public Parameter(Type varType, string modifier = "") : base("Parameter", varType)
+        public Parameter(SymbolType varSymbolType, string modifier = "") : base("Parameter", varSymbolType)
         {
             Modifier = modifier;
         }
