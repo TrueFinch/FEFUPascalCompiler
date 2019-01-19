@@ -125,12 +125,6 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             var token = PeekToken();
 
-//            if (token == null)
-//            { TODO: delete this
-//                //exception -- unexpected end of file
-//                return null;
-//            }
-
             switch (token.Type)
             {
                 case TokenType.IntegerNumber:
