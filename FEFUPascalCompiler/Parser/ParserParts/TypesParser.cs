@@ -47,9 +47,9 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             var typeIdent = ParseIdent();
 
-            CheckTypeDeclared(typeIdent.Token);
+            var symType = CheckTypeDeclared(typeIdent.Token);
 
-            return (_symbolTableStack.Peek()[typeIdent.Token.Value] as SymbolType, new SimpleType(typeIdent));
+            return (symType, new SimpleType(typeIdent));
         }
 
         private (SymbolType, AstNode) ParseArrayType()
@@ -138,7 +138,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private (SymbolType, AstNode) ParseRecordType()
         {
             var token = PeekAndNext();
-            _symbolTableStack.Push(new OrderedDictionary());
+            _symbolTableStack.Push();
             var fieldList = ParseFieldsList();
             token = PeekToken();
             
@@ -201,7 +201,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             foreach (var ident in identList)
             {
                 CheckDuplicateIdentifier(ident.Token);
-                _symbolTableStack.Peek().Add(ident.ToString(), new Local(fieldsType.Item1));
+                _symbolTableStack.AddIdent(ident.ToString(), new Local(fieldsType.Item1));
             }
             
             return new FieldSection(token, identList, fieldsType.Item2);

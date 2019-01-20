@@ -250,9 +250,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
     }
 
-    public class ConstDoubleLiteral : Expression
+    public class ConstFloatLiteral : Expression
     {
-        public ConstDoubleLiteral(Token token) : base(AstNodeType.ConstDoubleLiteral, token)
+        public ConstFloatLiteral(Token token) : base(AstNodeType.ConstDoubleLiteral, token)
         {
         }
 

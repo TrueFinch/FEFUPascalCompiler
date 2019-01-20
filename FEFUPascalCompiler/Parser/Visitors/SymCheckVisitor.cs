@@ -3,50 +3,64 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.Sematics;
-using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.Visitors
 {
     public class SymCheckVisitor : ISymVisitor<bool>
     {
-        public SymCheckVisitor (Stack<OrderedDictionary> symbolTableStack)
+        public SymCheckVisitor (SymbolStack symbolTableStack)
         {
             SymbolTableStack = symbolTableStack;
         }
         
-        public Stack<OrderedDictionary> SymbolTableStack { get; }
+        public SymbolStack SymbolTableStack { get; }
         
         public bool Visit(ConstIntegerLiteral node)
         {
             if (node.SymbolType != null) return true;
 
-            node.SymbolType = new IntegerSymbolType();
+            node.SymbolType = SymbolTableStack.SymInteger;
             return true;
         }
 
-        public bool Visit(ConstDoubleLiteral node)
+        public bool Visit(ConstFloatLiteral node)
         {
-            throw new NotImplementedException();
+            if (node.SymbolType != null) return true;
+
+            node.SymbolType = SymbolTableStack.SymFloat;
+            return true;
         }
 
         public bool Visit(ConstCharLiteral node)
         {
-            throw new NotImplementedException();
+            if (node.SymbolType != null) return true;
+
+            node.SymbolType = SymbolTableStack.SymChar;
+            return true;
         }
 
         public bool Visit(ConstStringLiteral node)
         {
-            throw new NotImplementedException();
+            if (node.SymbolType != null) return true;
+
+            node.SymbolType = SymbolTableStack.SymString;
+            return true;
         }
 
         public bool Visit(Nil node)
         {
-            throw new NotImplementedException();
+            if (node.SymbolType != null) return true;
+
+            node.SymbolType = SymbolTableStack.SymNil;
+            return true;
         }
 
         public bool Visit(Ident node)
         {
-            throw new NotImplementedException();
+            return true;
+//            if (node.SymbolType != null) return true;
+
+//            var sym = SymbolTableStack.FindIdent();
         }
         
         public bool Visit(ArrayAccess node)

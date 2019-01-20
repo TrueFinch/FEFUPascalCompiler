@@ -50,7 +50,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             PeekAndNext = peekAndNext;
             NextAndPeek = nextAndPeek;
 
-            InitSymbolTableStack();
+//            InitSymbolTableStack();
         }
 
         private bool _isReady = true;
@@ -60,17 +60,17 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private PeekAndNext PeekAndNext { get; }
         private NextAndPeek NextAndPeek { get; }
 
-        private Stack<OrderedDictionary> _symbolTableStack = new Stack<OrderedDictionary>();
-
-        private void InitSymbolTableStack()
-        {
-            var mainTable = new OrderedDictionary();
-            mainTable.Add("Integer".ToLower(), new IntegerSymbolType());
-            mainTable.Add("Float".ToLower(), new FloatSymbolType());
-            mainTable.Add("String".ToLower(), new StringSymbolType());
-            mainTable.Add("Char".ToLower(), new CharSymbolType());
-            _symbolTableStack.Push(mainTable);
-        }
+//        private Stack<OrderedDictionary> _symbolTableStack = new Stack<OrderedDictionary>();
+        private SymbolStack _symbolTableStack = new SymbolStack();
+//        private void InitSymbolTableStack()
+//        {
+//            var mainTable = new OrderedDictionary();
+//            mainTable.Add("Integer".ToLower(), new IntegerSymbolType());
+//            mainTable.Add("Float".ToLower(), new FloatSymbolType());
+//            mainTable.Add("String".ToLower(), new StringSymbolType());
+//            mainTable.Add("Char".ToLower(), new CharSymbolType());
+//            _symbolTableStack.Push(mainTable);
+//        }
 
         private void CheckToken(TokenType actual, List<TokenType> expected, string errMessage)
         {
@@ -78,64 +78,58 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 throw new Exception(errMessage);
         }
 
-        private bool CheckToken(TokenType actual, List<TokenType> expected)
-        {
-            return expected.Contains(actual);
-        }
-
         private void CheckDuplicateIdentifier(Token ident)
         {
-            if (_symbolTableStack.Peek().Contains(ident.Value))
+            if (_symbolTableStack.Find(ident.Value) != null)
             {
                 throw new Exception(string.Format("{0}, {1} : Duplicate identifier '{2}'",
                     ident.Line, ident.Column, ident.Lexeme));
             }
         }
 
-        private void CheckTypeDeclared(Token type)
+        private void CheckDuplicateIdentifierInScope(Token ident)
         {
-            var iterator = _symbolTableStack.GetEnumerator();
-            bool declarationFound = false;
-            while (iterator.MoveNext())
+            if (_symbolTableStack.FindInScope(ident.Value) != null)
             {
-                if (iterator.Current.Contains(type.Value))
-                {
-                    declarationFound = true;
-                    break;
-                }
+                throw new Exception(string.Format("{0}, {1} : Duplicate identifier '{2}'",
+                    ident.Line, ident.Column, ident.Lexeme));
             }
+        }
+        
+        private SymbolType CheckTypeDeclared(Token type)
+        {
+            var symType = _symbolTableStack.FindType(type.Value);
 
-            if (!declarationFound)
+            if (_symbolTableStack.FindType(type.Value) == null)
             {
                 throw new Exception(string.Format("{0}, {1} : Undeclared type identifier '{2}'",
                     type.Line, type.Column, type.Lexeme));
             }
+
+            return symType;
         }
 
-        private bool CheckTypeDeclared(string typeIdent)
-        {
-            return _symbolTableStack.Peek().Contains(typeIdent);
-        }
+//        private bool CheckTypeDeclared(string typeIdent)
+//        {
+//            return _symbolTableStack.fin.Contains(typeIdent);
+//        }
 
-        private Symbol FindIdent(Token ident)
+        private Var FindIdent(Token identToken)
         {
-            var iterator = _symbolTableStack.GetEnumerator();
-            while (iterator.MoveNext())
+            var ident = _symbolTableStack.FindIdent(identToken.Value);
+            if (ident != null)
             {
-                if (iterator.Current.Contains(ident.Value))
-                {
-                    return iterator.Current[ident.Value] as Symbol;
-                }
+                return ident;
             }
 
             throw new Exception(string.Format("{0}, {1} : Undeclared variable identifier '{2}'",
-                ident.Line, ident.Column, ident.Lexeme));
+                identToken.Line, identToken.Column, identToken.Lexeme));
         }
 
         public void InitParser()
         {
-            _symbolTableStack = new Stack<OrderedDictionary>();
-            InitSymbolTableStack();
+            _symbolTableStack = new SymbolStack();
+//            InitSymbolTableStack();
             _isReady = true;
         }
     }
