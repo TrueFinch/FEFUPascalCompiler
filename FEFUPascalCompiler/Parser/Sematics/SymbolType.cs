@@ -15,6 +15,13 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return false;
         }
     }
+
+    public abstract class Constant : SymbolType
+    {
+        protected Constant(string ident) : base(ident)
+        {
+        }
+    }
     
     public class IntegerSymbolType : SymbolType
     {
@@ -26,11 +33,16 @@ namespace FEFUPascalCompiler.Parser.Sematics
         {
             return true;
         }
+        
+        public bool Equals(ref IntegerSymbolConst symbolType)
+        {
+            return true;
+        }
     }
 
-    public class IntegerSymbolConst : IntegerSymbolType
+    public class IntegerSymbolConst : Constant
     {
-        public IntegerSymbolConst(int value) : base()
+        public IntegerSymbolConst(int value) : base("integer_const")
         {
             Value = value;
         }
@@ -117,14 +129,16 @@ namespace FEFUPascalCompiler.Parser.Sematics
         }
     }
 
-    public class BoolSymbolConst : BoolSymbolType
+    public class NilSymbolConst : SymbolType
     {
-        public BoolSymbolConst(bool value) : base()
+        public NilSymbolConst() : base("nil")
         {
-            Value = value;
         }
         
-        public bool Value { get; }
+        public bool Equals(ref Symbol symbolType)
+        {
+            return false;
+        }
     }
     
     public class AliasSymbolType : SymbolType

@@ -161,6 +161,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
         public SymbolType SymFloat = new FloatSymbolType();
         public SymbolType SymChar = new CharSymbolType();
         public SymbolType SymBool = new BoolSymbolType();
+        public SymbolType SymNil = new NilSymbolConst();
     }
 
     public class SymbolTable: IEnumerable 

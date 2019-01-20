@@ -398,7 +398,7 @@
       </EmbeddedResource>
       <None Remove="ParserTests\25_RecordAccess.out" />
       <EmbeddedResource Include="ParserTests\25_RecordArrayAccessTest.out">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
     </ItemGroup>
 

@@ -137,7 +137,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 case TokenType.FloatNumber:
                 {
                     NextToken();
-                    return new ConstDoubleLiteral(token);
+                    return new ConstFloatLiteral(token);
                 }
                 case TokenType.Char:
                 {

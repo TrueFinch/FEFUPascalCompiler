@@ -17,7 +17,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return new AstPrinterNode(node.ToString());
         }
 
-        public AstPrinterNode Visit(ConstDoubleLiteral node)
+        public AstPrinterNode Visit(ConstFloatLiteral node)
         {
             return new AstPrinterNode(node.ToString());
         }
