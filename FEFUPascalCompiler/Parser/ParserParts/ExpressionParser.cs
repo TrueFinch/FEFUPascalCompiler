@@ -272,23 +272,31 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             List<AstNode> paramList = new List<AstNode>();
 
+            var expr = ParseExpression();
+            if (expr == null)
+            {
+                return paramList; // list is empty - no parameters given
+            }
+
+            paramList.Add(expr);
             while (true)
             {
-                paramList.Add(ParseExpression());
-                if (paramList[paramList.Count - 1] == null)
-                {
-                    throw new Exception(string.Format(
-                        "{0}, {1} : syntax error, invalid expression",
-                        PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
-                }
-
                 token = PeekToken();
-                if (token == null || token.Type != TokenType.Comma)
+                if (token.Type != TokenType.Comma)
                 {
                     break;
                 }
 
                 NextToken();
+                
+                expr = ParseExpression();
+                if (expr == null)
+                {
+                    break; //
+                }
+                paramList.Add(expr);
+
+                
             }
 
             return paramList;

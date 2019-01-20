@@ -150,7 +150,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
 
     public class RecordSymbolType : SymbolType
     {
-        public RecordSymbolType(OrderedDictionary table, string ident = "") : base(ident)
+        public RecordSymbolType(SymbolTable table, string ident = "") : base(ident)
         {
             Table = table;
         }
@@ -160,7 +160,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return string.Equals(Ident, symbolType.Ident) && (Equals(symbolType) || Ident.Length != 0);
         }
 
-        public OrderedDictionary Table { get; }
+        public SymbolTable Table { get; }
     }
 
     public class ArraySymbolTypeSymbol : SymbolType

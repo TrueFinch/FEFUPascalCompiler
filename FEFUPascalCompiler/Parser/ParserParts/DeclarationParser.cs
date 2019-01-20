@@ -137,9 +137,9 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             if (typeIdent == null)
             {
                 // this meants that we get to another part of declaration or compound statement and key word was met
-                return null; 
+                return null;
             }
-            
+
             CheckDuplicateIdentifier(typeIdent.Token);
 
             var token = PeekToken();
@@ -154,15 +154,13 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            if (type.Item1.Ident.Length != 0 && CheckTypeDeclared(type.Item1.Ident))
+            if (type.Item1.Ident.Length != 0 && _symbolTableStack.FindType(type.Item1.Ident) != null)
             {
-                AliasSymbolType aliasSymbol = new AliasSymbolType(typeIdent.ToString(), type.Item1);
-                _symbolTableStack.Peek().Add(typeIdent.ToString(), aliasSymbol);
+                _symbolTableStack.AddAlias(typeIdent.ToString(), type.Item1);
             }
             else
             {
-                type.Item1.Ident = typeIdent.ToString();
-                _symbolTableStack.Peek().Add(typeIdent.ToString(), type.Item1);
+                _symbolTableStack.AddType(typeIdent.ToString(), type.Item1);
             }
 
 
@@ -195,11 +193,6 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 return null;
             var varIdents = ParseIdentList();
 
-            foreach (var varIdent in varIdents)
-            {
-                CheckDuplicateIdentifier(varIdent.Token);
-            }
-
             var token = PeekToken();
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Colon},
                 string.Format("{0} {1} : syntax error, ':' expected, but {2} found",
@@ -209,8 +202,8 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             foreach (var varIdent in varIdents)
             {
-                _symbolTableStack.Peek().Add(varIdent.ToString(),
-                    local ? new Local(type.Item1) as object : new Global(type.Item1));
+                CheckDuplicateIdentifier(varIdent.Token);
+                _symbolTableStack.Peek().AddVariable(local, varIdent.ToString(), type.Item1);
             }
 
             if (varIdents.Count == 1)
@@ -272,33 +265,29 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
-            
-            _symbolTableStack.Peek().Add(functionSymbol.Ident, functionSymbol); // Add function to handle recursion 
-            
-            _symbolTableStack.Push(new OrderedDictionary()); // this will be local table
+
+            _symbolTableStack.PrepareFunction(functionSymbol.Ident, functionSymbol); // Add function to handle recursion 
+
+            _symbolTableStack.Push(); // this will be local table
             var funcSubroutineBlock = ParseSubroutineBlock();
-            
-            functionSymbol.Local = _symbolTableStack.Peek();
+
             functionSymbol.Body = funcSubroutineBlock;
-            
+
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             
-            _symbolTableStack.Pop(); // pop local table
-            _symbolTableStack.Pop(); // pop parameters table
-            
-            _symbolTableStack.Peek().Remove(functionSymbol.Ident);             // Remove old not full function from table and
-            _symbolTableStack.Peek().Add(functionSymbol.Ident, functionSymbol); // add full function symbol to main table
-            
-            _symbolTableStack.Push(functionSymbol.Parameters); // push parameters table
-            _symbolTableStack.Push(functionSymbol.Local); // push local table
-            
-            // TODO: add type checking of block here
-            
-            _symbolTableStack.Pop(); // pop local table
-            _symbolTableStack.Pop(); // pop parameters table
-            
+            _symbolTableStack.AddFunction(functionSymbol.Ident, functionSymbol);
+
+            //TODO: remove this to typeChecker visitor
+//            _symbolTableStack.Push(functionSymbol.Parameters); // push parameters table
+//            _symbolTableStack.Push(functionSymbol.Local); // push local table
+//
+//            // TODO: add type checking of block here
+//
+//            _symbolTableStack.Pop(); // pop local table
+//            _symbolTableStack.Pop(); // pop parameters table
+
             return new FuncDecl(funcHeader, funcSubroutineBlock);
         }
 
@@ -310,12 +299,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             var funcName = ParseIdent();
             CheckDuplicateIdentifier(funcName.Token);
-            var funcSymbol =  new FunctionSymbol(funcName.ToString());
-            
-            _symbolTableStack.Push(new OrderedDictionary()); //this will be Parameters table
+            var funcSymbol = new FunctionSymbol(funcName.ToString());
+
+            _symbolTableStack.Push(); //this will be Parameters table
             var paramList = ParseFormalParamList();
 
-            funcSymbol.Parameters = _symbolTableStack.Peek();
+//            funcSymbol.Parameters = _symbolTableStack.Peek();
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Colon},
                 string.Format("{0} {1} : syntax error, ':' expected, but {2} found",
@@ -323,10 +312,63 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             var returnType = ParseSimpleType();
             funcSymbol.ReturnSymbolType = returnType.Item1;
-            
+
             return (funcSymbol, new FuncHeader(funcName, paramList, returnType.Item2));
         }
 
+        //TODO: add declaration correctness 
+        private AstNode ParseProcDecl()
+        {
+            ProcedureSymbol procedureSymbol;
+            ProcHeader procHeader;
+            (procedureSymbol, procHeader) = ParseProcHeader();
+
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
+                string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+
+            _symbolTableStack.PrepareProcedure(procedureSymbol.Ident, procedureSymbol); // Add function to handle recursion 
+            
+            _symbolTableStack.Push(); // this will be local table
+            var procSubroutineBlock = ParseSubroutineBlock();
+            procedureSymbol.Body = procSubroutineBlock;
+
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
+                string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+
+            _symbolTableStack.AddProcedure(procedureSymbol.Ident, procedureSymbol);
+
+            //TODO: move to type checker
+//            _symbolTableStack.Push(procedureSymbol.Parameters); // push parameters table
+//            _symbolTableStack.Push(procedureSymbol.Local); // push local table
+//
+//            //TODO: add type checking here
+//
+//            _symbolTableStack.Pop(); // pop local table
+//            _symbolTableStack.Pop(); // pop parameters table
+
+            return new ProcDecl(procHeader, procSubroutineBlock);
+        }
+
+        private (ProcedureSymbol, ProcHeader) ParseProcHeader()
+        {
+            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Procedure},
+                string.Format("{0} {1} : syntax error, 'procedure' expected, but {2} found",
+                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+
+            var procName = ParseIdent();
+            CheckDuplicateIdentifier(procName.Token);
+            var procSymbol = new ProcedureSymbol(procName.ToString());
+
+            _symbolTableStack.Push(); //this will be Parameters table
+            var paramList = ParseFormalParamList();
+
+//            procSymbol.Parameters = _symbolTableStack.Peek();
+
+            return (procSymbol, new ProcHeader(procName, paramList));
+        }
+        
         private AstNode ParseSubroutineBlock()
         {
             if (PeekToken().Type == TokenType.Forward)
@@ -368,62 +410,6 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var compound = ParseCompoundStatement();
 
             return new SubroutineBlock(declsParts, compound);
-        }
-        
-        //TODO: add declaration correctness 
-        private AstNode ParseProcDecl()
-        {
-            ProcedureSymbol procedureSymbol;
-            ProcHeader procHeader;
-            (procedureSymbol, procHeader) = ParseProcHeader();
-
-            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
-                string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
-                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
-
-            _symbolTableStack.Push(new OrderedDictionary()); // this will be local table
-            var procSubroutineBlock = ParseSubroutineBlock();
-            procedureSymbol.Local = _symbolTableStack.Peek();
-            procedureSymbol.Body = procSubroutineBlock;
-            
-            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
-                string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
-                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
-
-            _symbolTableStack.Pop();  // pop local table
-            _symbolTableStack.Pop(); // pop parameters table
-            
-            
-            _symbolTableStack.Peek().Remove(procedureSymbol.Ident);             // Remove old not full procedure from table and
-            _symbolTableStack.Peek().Add(procedureSymbol.Ident, procedureSymbol); // add full procedure symbol to main table
-            
-            _symbolTableStack.Push(procedureSymbol.Parameters); // push parameters table
-            _symbolTableStack.Push(procedureSymbol.Local);  // push local table
-            
-            //TODO: add type checking here
-            
-            _symbolTableStack.Pop();  // pop local table
-            _symbolTableStack.Pop(); // pop parameters table
-            
-            return new ProcDecl(procHeader, procSubroutineBlock);
-        }
-
-        private (ProcedureSymbol, ProcHeader) ParseProcHeader()
-        {
-            CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Procedure},
-                string.Format("{0} {1} : syntax error, 'procedure' expected, but {2} found",
-                    PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
-
-            var procName = ParseIdent();
-            CheckDuplicateIdentifier(procName.Token);
-            var procSymbol = new ProcedureSymbol(procName.ToString());
-            
-            _symbolTableStack.Push(new OrderedDictionary()); //this will be Parameters table
-            var paramList = ParseFormalParamList();
-
-            procSymbol.Parameters = _symbolTableStack.Peek();
-            
-            return (procSymbol, new ProcHeader(procName, paramList));
         }
     }
 }

@@ -1,28 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using FEFUPascalCompiler.Parser.ParserParts;
 
 namespace FEFUPascalCompiler.Parser.Sematics
 {
-    public class SymbolStack : IEnumerable<SymbolTable<string, Symbol>>
+    public class SymbolStack : IEnumerable<SymbolTable>
     {
         public SymbolStack()
         {
-            _stack.Push(new SymbolTable<string, Symbol>());
+            _stack.Push(new SymbolTable());
+            AddType(SymInteger);
+            AddType(SymString);
+            AddType(SymFloat);
+            AddType(SymChar);
+            AddType(SymBool);
         }
 
         public void Push()
         {
-            _stack.Push(new SymbolTable<string, Symbol>());
+            _stack.Push(new SymbolTable());
         }
 
-        public SymbolTable<string, Symbol> Peek()
+        public SymbolTable Peek()
         {
             return _stack.Peek();
         }
 
-        public SymbolTable<string, Symbol> Pop()
+        public SymbolTable Pop()
         {
             return _stack.Pop();
         }
@@ -33,12 +37,15 @@ namespace FEFUPascalCompiler.Parser.Sematics
             {
                 var symbol = symbolTable.Find(symbolIdentifier);
                 if (symbol != null)
-                {
                     return symbol;
-                }
             }
 
             return null;
+        }
+
+        public Symbol FindInScope(string identifier)
+        {
+            return _stack.Peek().Find(identifier);
         }
 
         public SymbolType FindType(string symbolIdentifier)
@@ -84,8 +91,59 @@ namespace FEFUPascalCompiler.Parser.Sematics
 
             return null;
         }
+
+        public void AddType(SymbolType type)
+        {
+            _stack.Peek().AddType(type);
+        }
+
+        public void AddType(string identifier, SymbolType type)
+        {
+            _stack.Peek().AddType(identifier, type);
+        }
+
+        public void AddIdent(bool local, string identifier, SymbolType type)
+        {
+            _stack.Peek().AddVariable(local, identifier, type);
+        }
+
+        public void AddIdent(string identifier, Var ident)
+        {
+            _stack.Peek().AddVariable(identifier, ident);
+        }
+
+        public void AddAlias(string aliasIdentifier, SymbolType typeToAias)
+        {
+            _stack.Peek().AddAlias(aliasIdentifier, new AliasSymbolType(aliasIdentifier, typeToAias));
+        }
+
+        public void PrepareFunction(string identifier, FunctionSymbol funcSym)
+        {
+            _stack.Peek().AddFunction(identifier, funcSym);
+        }
         
-        public IEnumerator<SymbolTable<string, Symbol>> GetEnumerator()
+        public void AddFunction(string identifier, FunctionSymbol funcSym)
+        {
+            funcSym.Local = Pop();
+            funcSym.Parameters = Pop();
+            _stack.Peek().Remove(identifier);
+            _stack.Peek().AddFunction(identifier, funcSym);
+        }
+        
+        public void PrepareProcedure(string identifier, ProcedureSymbol procSym)
+        {
+            _stack.Peek().AddProcedure(identifier, procSym);
+        }
+        
+        public void AddProcedure(string identifier, ProcedureSymbol procSym)
+        {
+            procSym.Local = Pop();
+            procSym.Parameters = Pop();
+            _stack.Peek().Remove(identifier);
+            _stack.Peek().AddProcedure(identifier, procSym);
+        }
+        
+        public IEnumerator<SymbolTable> GetEnumerator()
         {
             return _stack.GetEnumerator();
         }
@@ -95,25 +153,68 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return GetEnumerator();
         }
 
-        private Stack<SymbolTable<string, Symbol>> _stack = new Stack<SymbolTable<string, Symbol>>();
+        private Stack<SymbolTable> _stack = new Stack<SymbolTable>();
 
         // default types
-        public Symbol SymInteger = new IntegerSymbolType();
-        public Symbol SymString = new StringSymbolType();
-        public Symbol SymFloat = new FloatSymbolType();
-        public Symbol SymChar = new CharSymbolType();
-        public Symbol SymBool = new BoolSymbolType();
+        public SymbolType SymInteger = new IntegerSymbolType();
+        public SymbolType SymString = new StringSymbolType();
+        public SymbolType SymFloat = new FloatSymbolType();
+        public SymbolType SymChar = new CharSymbolType();
+        public SymbolType SymBool = new BoolSymbolType();
     }
 
-    public class SymbolTable<TKey, TValue> : IEnumerable where TValue : Symbol
+    public class SymbolTable: IEnumerable 
     {
         private OrderedDictionary _table = new OrderedDictionary();
 
-        public TValue Find(TKey symbolIdentifier)
+        public Symbol Find(string symbolIdentifier)
         {
-            return _table.Contains(symbolIdentifier) ? _table[symbolIdentifier] as TValue : null;
+            return _table.Contains(symbolIdentifier) ? _table[symbolIdentifier] as Symbol : null;
         }
 
+        public void AddVariable(bool local, string identifier, SymbolType type)
+        {
+            if (local)
+                _table.Add(identifier.ToLower(), new Local(type));
+            else
+                _table.Add(identifier.ToLower(), new Global(type));
+        }
+        
+        public void AddVariable(string identifier, Var ident)
+        {
+            _table.Add(identifier.ToLower(), ident);
+        }
+
+        public void AddType(SymbolType symbol)
+        {
+            _table.Add(symbol.Ident.ToLower(), symbol);
+        }
+
+        public void AddType(string identifier, SymbolType symbol)
+        {
+            _table.Add(identifier.ToLower(), symbol);
+        }
+
+        public void AddAlias(string identifier, AliasSymbolType symbol)
+        {
+            _table.Add(identifier.ToLower(), symbol);
+        }
+
+        public void AddFunction(string identifier, FunctionSymbol funcSym)
+        {
+            _table.Add(identifier.ToLower(), funcSym);
+        }
+
+        public void AddProcedure(string identifier, ProcedureSymbol funcSym)
+        {
+            _table.Add(identifier.ToLower(), funcSym);
+        }
+        
+        public void Remove(string identifier)
+        {
+            _table.Remove(identifier.ToLower());
+        }
+        
         public IDictionaryEnumerator GetEnumerator()
         {
             return _table.GetEnumerator();

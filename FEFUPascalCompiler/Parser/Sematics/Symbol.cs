@@ -14,7 +14,18 @@ namespace FEFUPascalCompiler.Parser.Sematics
         public string Ident { get; set; }
     }
 
-    public class FunctionSymbol : Symbol
+    public abstract class CallableSymbol : Symbol
+    {
+        protected CallableSymbol(string ident) : base(ident)
+        {
+        }
+        
+        public SymbolTable Parameters { get; set; }
+        public SymbolTable Local { get; set; }
+        public AstNode Body { get; set; }
+    } 
+    
+    public class FunctionSymbol : CallableSymbol
     {
         public FunctionSymbol(/*Type returnType, OrderedDictionary parameters, OrderedDictionary local, AstNode body,*/ string ident = "") : base(ident)
         {
@@ -24,13 +35,11 @@ namespace FEFUPascalCompiler.Parser.Sematics
 //            Body = body;
         }
         
-        public OrderedDictionary Parameters { get; set; }
-        public OrderedDictionary Local { get; set; }
+
         public SymbolType ReturnSymbolType { get; set; }
-        public AstNode Body { get; set; }
     }
     
-    public class ProcedureSymbol : Symbol
+    public class ProcedureSymbol : CallableSymbol
     {
         public ProcedureSymbol(/*Type returnType, OrderedDictionary parameters, OrderedDictionary local, AstNode body,*/ string ident = "") : base(ident)
         {
@@ -39,9 +48,5 @@ namespace FEFUPascalCompiler.Parser.Sematics
 //            ReturnType = returnType;
 //            Body = body;
         }
-        
-        public OrderedDictionary Parameters { get; set; }
-        public OrderedDictionary Local { get; set; }
-        public AstNode Body { get; set; }
     }
 }
