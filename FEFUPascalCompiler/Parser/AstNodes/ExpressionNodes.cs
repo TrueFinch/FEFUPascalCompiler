@@ -14,8 +14,21 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         
         public SymType SymType { get; set; }
         public bool IsLValue { get; set; }= false;
-        
-        public abstract T Accept<T>(ISymVisitor<T> visitor);
+    }
+
+    public class Cast : Expression
+    {
+        public Cast(AstNode expressionToCast) : base(AstNodeType.Cast)
+        {
+            _children.Add(expressionToCast);
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+
+        public AstNode ExprToCast => _children[0];
     }
     
     public abstract class BinOperator : Expression
@@ -41,11 +54,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             return visitor.Visit(this);
         }
-
-        public override T Accept<T>(ISymVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
     }
     
     public class AdditiveOperator : BinOperator
@@ -56,11 +64,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public override T Accept<T>(ISymVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
@@ -76,11 +79,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             return visitor.Visit(this);
         }
-
-        public override T Accept<T>(ISymVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
     }
     
     public class UnaryOperator : Expression {
@@ -91,12 +89,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-        
-        
-        public override T Accept<T>(ISymVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
@@ -116,11 +108,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             return visitor.Visit(this);
         }
-        
-        public override T Accept<T>(ISymVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
 
         public AstNode Array => _children[0];
         public List<AstNode> AccessExpr => _children.GetRange(1, _children.Count - 1);
@@ -137,11 +124,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             return visitor.Visit(this);
         }
-        
-        public override T Accept<T>(ISymVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
 
         public AstNode RecordIdent => _children[0];
         public AstNode Field => _children[1];
@@ -155,11 +137,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public override T Accept<T>(ISymVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
@@ -180,11 +157,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
         
-        public override T Accept<T>(ISymVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-        
         public AstNode Expr => _children[0];
     }
     
@@ -195,11 +167,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public override T Accept<T>(ISymVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
@@ -221,11 +188,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             return visitor.Visit(this);
         }
-
-        public override T Accept<T>(ISymVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
     }
 
     public class ConstFloatLiteral : Expression
@@ -235,11 +197,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public override T Accept<T>(ISymVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
@@ -255,11 +212,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             return visitor.Visit(this);
         }
-
-        public override T Accept<T>(ISymVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
     }
 
     public class ConstStringLiteral : Expression
@@ -272,11 +224,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             return visitor.Visit(this);
         }
-
-        public override T Accept<T>(ISymVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
     }
 
     public class Nil : Expression
@@ -286,11 +233,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public override T Accept<T>(ISymVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
