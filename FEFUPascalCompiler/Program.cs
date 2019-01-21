@@ -30,7 +30,7 @@ namespace FEFUPascalCompiler
 
             if (compiler.LastException != null)
             {
-                Console.WriteLine(compiler.LastException.Message);
+                return 0;
             }
             
             compiler.Input.Close();

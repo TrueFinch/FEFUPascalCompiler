@@ -36,6 +36,7 @@ namespace FEFUPascalCompiler
             catch (Exception e)
             {
                 LastException = e;
+                Console.Out.WriteLine(e.Message);
                 return null;
             }
         }
@@ -109,7 +110,16 @@ namespace FEFUPascalCompiler
 
         public bool Next()
         {
-            return _lexer.NextToken();
+            try
+            {
+                return _lexer.NextToken();
+            }
+            catch (Exception e)
+            {
+                LastException = e;
+                Console.Out.WriteLine(e.Message);
+                return false;
+            }
         }
 
         public Token Peek()

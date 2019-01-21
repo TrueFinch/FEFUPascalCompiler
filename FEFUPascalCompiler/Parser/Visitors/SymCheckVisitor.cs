@@ -17,50 +17,54 @@ namespace FEFUPascalCompiler.Parser.Visitors
         
         public bool Visit(ConstIntegerLiteral node)
         {
-            if (node.SymbolType != null) return true;
+            if (node.SymType != null) return true;
 
-            node.SymbolType = SymbolTableStack.SymInteger;
+            node.SymType = SymbolTableStack.SymInteger;
             return true;
         }
 
         public bool Visit(ConstFloatLiteral node)
         {
-            if (node.SymbolType != null) return true;
+            if (node.SymType != null) return true;
 
-            node.SymbolType = SymbolTableStack.SymFloat;
+            node.SymType = SymbolTableStack.SymFloat;
             return true;
         }
-
+        
         public bool Visit(ConstCharLiteral node)
         {
-            if (node.SymbolType != null) return true;
+            if (node.SymType != null) return true;
 
-            node.SymbolType = SymbolTableStack.SymChar;
+            node.SymType = SymbolTableStack.SymChar;
             return true;
         }
 
         public bool Visit(ConstStringLiteral node)
         {
-            if (node.SymbolType != null) return true;
+            if (node.SymType != null) return true;
 
-            node.SymbolType = SymbolTableStack.SymString;
+            node.SymType = SymbolTableStack.SymString;
             return true;
         }
 
         public bool Visit(Nil node)
         {
-            if (node.SymbolType != null) return true;
+            if (node.SymType != null) return true;
 
-            node.SymbolType = SymbolTableStack.SymNil;
+            node.SymType = SymbolTableStack.SymNil;
             return true;
         }
 
         public bool Visit(Ident node)
         {
-            return true;
-//            if (node.SymbolType != null) return true;
+            if (node.SymType != null) return true;
 
-//            var sym = SymbolTableStack.FindIdent();
+            var sym = SymbolTableStack.FindIdent(node.ToString());
+            if (sym == null)
+                throw new Exception(string.Format(
+                    "{0}, {1} : syntax error, identifier {2} is not defined",
+                    node.Token.Line, node.Token.Column, node.Token.Lexeme));
+            node.SymType = sym;
         }
         
         public bool Visit(ArrayAccess node)

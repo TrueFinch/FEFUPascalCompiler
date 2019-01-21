@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Sematics;
 using FEFUPascalCompiler.Tokens;
 using Type = System.Type;
@@ -159,13 +160,11 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     NextToken();
                     var expression = ParseExpression();
                     token = PeekToken();
-                    if (token.Type != TokenType.CloseBracket)
-                    {
-                        //some parser exception
-                        return null;
-                    }
-
-                    NextToken();
+                    
+                    CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseBracket},
+                        string.Format("{0}, {1} : syntax error, ')' expected, but {2} found",
+                            PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+                    
                     return expression;
                 }
                 default:
@@ -302,14 +301,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return paramList;
         }
 
-        private (Sematics.SymbolType, AstNode) ParseConformatArray()
+        private (SymType, AstNode) ParseConformatArray()
         {
             var arrayToken = PeekAndNext();
             var ofToken = PeekAndNext();
             if (arrayToken.Type == TokenType.Array && ofToken.Type == TokenType.Of)
             {
                 var simpleType = ParseSimpleType();
-                return (new ConformatArraySymbolType(simpleType.Item1),
+                return (new SymConformatArrayType(simpleType.Item1),
                     new ConformantArray(arrayToken, ofToken, simpleType.Item2));
             }
 

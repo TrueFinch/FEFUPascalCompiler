@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Sematics;
 using FEFUPascalCompiler.Tokens;
 
@@ -9,7 +10,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 {
     internal partial class PascalParser
     {
-        private (SymbolType, AstNode) ParseType()
+        private (SymType, AstNode) ParseType()
         {
             switch (PeekToken().Type)
             {
@@ -43,7 +44,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
         }
 
-        private (SymbolType, AstNode) ParseSimpleType()
+        private (SymType, AstNode) ParseSimpleType()
         {
             var typeIdent = ParseIdent();
 
@@ -52,7 +53,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return (symType, new SimpleType(typeIdent));
         }
 
-        private (SymbolType, AstNode) ParseArrayType()
+        private (SymType, AstNode) ParseArrayType()
         {
             var token = PeekAndNext();
 
@@ -72,7 +73,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             var type = ParseType();
 
-            return (new ArraySymbolTypeSymbol(indexRanges.Item1, type.Item1), new ArrayTypeAstNode(indexRanges.Item2, type.Item2));
+            return (new SymArrayType(indexRanges.Item1, type.Item1), new ArrayTypeAstNode(indexRanges.Item2, type.Item2));
         }
 
         private (List<IndexRange<int, int>>, List<AstNode>) ParseIndexRanges()
@@ -135,7 +136,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 new IndexRangeAstNode(token, leftBound, rightBound));
         }
 
-        private (SymbolType, AstNode) ParseRecordType()
+        private (SymType, AstNode) ParseRecordType()
         {
             var token = PeekAndNext();
             _symbolTableStack.Push();
@@ -146,7 +147,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 string.Format("{0} {1} : syntax error, 'end' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             
-            return (new RecordSymbolType(_symbolTableStack.Pop()), new RecordTypeAstNode(fieldList));
+            return (new SymRecordType(_symbolTableStack.Pop()), new RecordTypeAstNode(fieldList));
         }
 
         private List<AstNode> ParseFieldsList()
@@ -201,13 +202,13 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             foreach (var ident in identList)
             {
                 CheckDuplicateIdentifier(ident.Token);
-                _symbolTableStack.AddIdent(ident.ToString(), new Local(fieldsType.Item1));
+                _symbolTableStack.AddIdent(ident.ToString(), new SymLocal(fieldsType.Item1));
             }
             
             return new FieldSection(token, identList, fieldsType.Item2);
         }
 
-        private (SymbolType, AstNode) ParsePointerType()
+        private (SymType, AstNode) ParsePointerType()
         {
             var token = PeekAndNext();
             
@@ -219,7 +220,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
 
-            return (new PointerSymbolTypeSumbol(simpleType.Item1), new PointerType(token, simpleType.Item2));
+            return (new SymPointerType(simpleType.Item1), new PointerType(token, simpleType.Item2));
         }
 
 //        private AstNode ParseProcedureType()

@@ -1,1 +1,1 @@
-Error on (1,1) in $AB89F1234DCEF128391273AB182C: Value was either too large or too small for a UInt64.
+Error on (1,1) in $AB89F1234DCEF128391273AB182C: Value was either too large or too small for a UInt32.

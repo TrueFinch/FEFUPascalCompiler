@@ -48,7 +48,8 @@ namespace FEFUPascalCompiler.Tokens
                     TokenType.SingleLineComment,
                     (line, column, lexeme) => new SingleLineCommentToken(line, column, lexeme)
                 },
-                {TokenType.Bracket, (line, column, lexeme) => new BracketToken(line, column, lexeme)}
+                {TokenType.Bracket, (line, column, lexeme) => new BracketToken(line, column, lexeme)},
+                {TokenType.CharConst, (line, column, lexeme) => new CharConstToken(line, column, lexeme)},
             };
     }
 
@@ -195,6 +196,10 @@ namespace FEFUPascalCompiler.Tokens
             lexeme = lexeme[0] == '\'' ? lexeme.Substring(1) : lexeme;
             lexeme = lexeme[lexeme.Length - 1] == '\'' ? lexeme.Substring(0, lexeme.Length - 1) : lexeme;
 
+            lexeme = lexeme.Replace("\'", "");
+            lexeme = lexeme.Replace("''", "'");
+            
+            
             for (int nextSharpIndex = lexeme.IndexOf("#", StringComparison.Ordinal);
                 nextSharpIndex >= 0;
                 nextSharpIndex = lexeme.IndexOf("#", StringComparison.Ordinal))
@@ -237,7 +242,7 @@ namespace FEFUPascalCompiler.Tokens
         {
             if (lexeme[0] == '\'')
             {
-                return lexeme;
+                return lexeme.Substring(1, 1);
             }
 
             return ((char) Convert.ToUInt32(lexeme.Substring(1))).ToString();

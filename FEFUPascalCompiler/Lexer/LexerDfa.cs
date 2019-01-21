@@ -29,14 +29,14 @@ namespace FEFUPascalCompiler.Lexer
             DivArithmOperator,
             PowArithmOperator,
             DoubleDotOperator,
-            
+
             NotEqualOperator,
             EqualOperator,
             LessOperator,
             LessOrEqualOperator,
             GreaterOperator,
             GreaterOrEqualOperator,
-            
+
 //            DoubleNumberStart,
             DoubleNumber,
             ExpDoubleStart,
@@ -44,8 +44,6 @@ namespace FEFUPascalCompiler.Lexer
             ExpDouble,
             LexemeEnd,
             Assign,
-            StringConstStart,
-            StringConstFinish,
             OpenBracket,
             CloseBracket,
             OpenSquareBracket,
@@ -54,9 +52,17 @@ namespace FEFUPascalCompiler.Lexer
             MultiLineCommentFinish,
             SingleLineComment,
             InvalidSign,
+
             SignCodeStart,
             SignCodeFinish,
-            
+            CharStringStart,
+            CharStringFinish,
+            CharStart,
+            CharChar,
+            CharFinish,
+            ControlStringStart,
+            ControlStringFinish,
+
             Carriage,
             AtSign,
         }
@@ -91,7 +97,6 @@ namespace FEFUPascalCompiler.Lexer
                 {LexerState.LessOrEqualOperator   , TokenType.BinOperator       },
                 {LexerState.GreaterOperator       , TokenType.BinOperator       },
                 {LexerState.GreaterOrEqualOperator, TokenType.BinOperator       },
-                {LexerState.StringConstFinish     , TokenType.StringConst       },
                 {LexerState.OpenSquareBracket     , TokenType.Separator },         
 //                {LexerState.SignCodeFinish        , TokenType.StringConst       },
                 {LexerState.DoubleNumber          , TokenType.FloatNumber      },
@@ -109,8 +114,12 @@ namespace FEFUPascalCompiler.Lexer
                 {LexerState.Comma                 , TokenType.Separator         },
                 {LexerState.Dot                   , TokenType.Separator         },
                 {LexerState.SignCodeFinish        , TokenType.CharConst         },
+                {LexerState.CharFinish            , TokenType.CharConst         },
+                {LexerState.ControlStringFinish   , TokenType.StringConst         },
+                {LexerState.CharStringFinish      , TokenType.StringConst         },
                 {LexerState.Carriage              , TokenType.Separator         },
                 {LexerState.AtSign                , TokenType.Separator         },
+//                {LexerState.                , TokenType.Separator         },
                 // @formatter:on
             };
 
@@ -142,10 +151,29 @@ namespace FEFUPascalCompiler.Lexer
                 if (!currState.Transitions.ContainsKey(_inputStream.Peek()))
                 {
                     if ((_inputStream.Peek() != '\uffff')
-                        && (((currState.Type == LexerState.StringConstStart) && (_inputStream.Peek() != '\n'))
+                        && (((currState.Type == LexerState.CharStringStart) && (_inputStream.Peek() != '\n'))
+                            || (currState.Type == LexerState.CharStart) && (_inputStream.Peek() != '\n')
+                            || (currState.Type == LexerState.CharChar) && (_inputStream.Peek() != '\n')
                             || (currState.Type == LexerState.MultiLineCommentStart)
                             || ((currState.Type == LexerState.SingleLineComment) && (_inputStream.Peek() != '\n'))))
                     {
+
+                        if ((currState.Type == LexerState.CharChar) && (_inputStream.Peek() != '\n'))
+                        {
+                            lastState = currState;
+                            currState = new Node(LexerState.CharStringStart, TerminalStates[LexerState.CharStringStart],
+                                new Dictionary<char, Pair<LexerState, int>>());
+                            currState.Transitions.TryAdd('\'', new Pair<LexerState, int>(LexerState.CharStringFinish, 1));
+                        }
+                        
+                        if ((currState.Type == LexerState.CharStart) && (_inputStream.Peek() != '\n'))
+                        {
+                            lastState = currState;
+                            currState = new Node(LexerState.CharChar, TerminalStates[LexerState.CharChar],
+                                new Dictionary<char, Pair<LexerState, int>>());
+                            currState.Transitions['\''] = new Pair<LexerState, int>(LexerState.CharFinish, 1);
+                        }
+
                         _line += _inputStream.Peek() == 10 ? 1 : 0;
                         _column = _inputStream.Peek() == 10 ? 1 : _column + 1;
                         var ch = _inputStream.Read();
@@ -199,7 +227,8 @@ namespace FEFUPascalCompiler.Lexer
                 }
             }
 
-            if ((lastState.Type == LexerState.StringConstStart) && currState.Type == LexerState.LexemeEnd)
+            if ((lastState.Type == LexerState.CharStringStart || lastState.Type == LexerState.CharStart ||
+                 lastState.Type == LexerState.CharChar) && currState.Type == LexerState.LexemeEnd)
             {
                 _tokenizeFinished = _gotError = true;
                 throw new UnclosedStringConstException(
@@ -208,6 +237,7 @@ namespace FEFUPascalCompiler.Lexer
 
             if ((lastState.Type == LexerState.MultiLineCommentStart) && currState.Type == LexerState.LexemeEnd)
             {
+                _tokenizeFinished = _gotError = true;
                 throw new UnclosedMultilineCommentException(
                     $"({line},{column}) Unclosed multiline comment lexeme {lexeme}");
             }
@@ -218,10 +248,11 @@ namespace FEFUPascalCompiler.Lexer
                 throw new UnexpectedSymbolException($"({_line},{_column - 1}) Unexpected symbol in lexeme {lexeme}");
             }
 
-            
-            
+
             var nextToken = (currState.Type == LexerState.SingleLineComment)
                             || (currState.Type == LexerState.MultiLineCommentFinish)
+                            || (currState.Type == LexerState.ControlStringFinish)
+                            || (currState.Type == LexerState.CharStringFinish)
                 ? GetToken(line, column, lexeme.ToString(), currState.Type)
                 : GetToken(line, column, lexeme.ToString(), lastState.Type);
 

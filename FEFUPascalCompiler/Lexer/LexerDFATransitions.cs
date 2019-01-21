@@ -30,11 +30,9 @@ namespace FEFUPascalCompiler.Lexer
 //            {LexerState.DoubleNumberStart     , false},
             {LexerState.ExpDoubleStart        , false},
             {LexerState.ExpDoubleMinus        , false},
-            {LexerState.StringConstStart      , false},
             {LexerState.BinNumberStart        , false},
             {LexerState.OctNumberStart        , false},
             {LexerState.HexNumberStart        , false},
-            {LexerState.SignCodeStart         , false},
             {LexerState.InvalidSign           , false},
             {LexerState.MultiLineCommentFinish, true },
             {LexerState.CloseSquareBracket    , true },
@@ -45,9 +43,7 @@ namespace FEFUPascalCompiler.Lexer
             {LexerState.MulArithmOperator     , true },
             {LexerState.DivArithmOperator     , true },
             {LexerState.PowArithmOperator     , true },
-            {LexerState.StringConstFinish     , true },
             {LexerState.SingleLineComment     , true },
-            {LexerState.SignCodeFinish        , true },
             {LexerState.DoubleNumber          , true },
             {LexerState.ExpDouble             , true },
             {LexerState.CloseBracket          , true },
@@ -72,6 +68,16 @@ namespace FEFUPascalCompiler.Lexer
             {LexerState.GreaterOrEqualOperator, true },
             {LexerState.Carriage              , true },
             {LexerState.AtSign                , true },
+            
+            {LexerState.SignCodeStart         , false},
+            {LexerState.SignCodeFinish        , true },
+            {LexerState.ControlStringStart    , false},
+            {LexerState.ControlStringFinish   , true},
+            {LexerState.CharStringStart       , false},
+            {LexerState.CharStringFinish      , true },
+            {LexerState.CharStart             , false},
+            {LexerState.CharChar              , false},
+            {LexerState.CharFinish            , true },
             // @formatter:on
         };
 
@@ -109,7 +115,6 @@ namespace FEFUPascalCompiler.Lexer
                     {LexerState.CloseSquareBracket         , InitCloseSquareBracketStateNode         },
                     {LexerState.OpenSquareBracket          , InitOpenSquareBracketStateNode          },
 //                    {LexerState.DoubleNumberStart          , InitDoubleNumberStartStateNode          },
-                    {LexerState.StringConstFinish          , InitStringConstFinishStateNode          },
                     {LexerState.SingleLineComment          , InitSingleLineCommentStateNode          },
                     {LexerState.DoubleDotOperator          , InitDoubleDotOperatorStateNode          },
                     {LexerState.SumArithmOperator          , InitSumArithOperatorStateNode           },
@@ -117,17 +122,14 @@ namespace FEFUPascalCompiler.Lexer
                     {LexerState.MulArithmOperator          , InitMulArithOperatorStateNode           },
                     {LexerState.DivArithmOperator          , InitDivArithOperatorStateNode           },
                     {LexerState.PowArithmOperator          , InitPowArithOperatorStateNode           },
-                    {LexerState.StringConstStart           , InitStringConstStartStateNode           },
                     {LexerState.NotEqualOperator           , InitNotEqualOperatorStateNode           },
                     {LexerState.GreaterOperator            , InitGreaterOperatorStateNode            },
                     {LexerState.BinNumberStart             , InitBinNumberStartStateNode             },
                     {LexerState.OctNumberStart             , InitOctNumberStartStateNode             },
                     {LexerState.HexNumberStart             , InitHexNumberStartStateNode             },
-                    {LexerState.SignCodeFinish             , InitSignCodeFinishStateNode             },
                     {LexerState.ExpDoubleStart             , InitExpDoubleStartStateNode             },
                     {LexerState.ExpDoubleMinus             , InitExpDoubleMinusStateNode             },
                     {LexerState.EqualOperator              , InitEqualOperatorStateNode              },
-                    {LexerState.SignCodeStart              , InitSignCodeStartStateNode              },
                     {LexerState.LessOperator               , InitLessOperatorStateNode               },
                     {LexerState.DoubleNumber               , InitDoubleNumberStateNode               },
                     {LexerState.CloseBracket               , InitCloseBracketStateNode               },
@@ -148,8 +150,81 @@ namespace FEFUPascalCompiler.Lexer
                     {LexerState.Dot                        , InitDotStateNode                        },
                     {LexerState.Carriage                   , InitCarriageStateNode                   },
                     {LexerState.AtSign                     , InitAtSignStateNode                     },
+                    
+                    
+                    {LexerState.CharStringStart            , InitCharStringStartStateNode            },
+                    {LexerState.CharStringFinish           , InitCharStringFinishStateNode           },
+                    {LexerState.SignCodeStart              , InitSignCodeStartStateNode              },
+                    {LexerState.SignCodeFinish             , InitSignCodeFinishStateNode             },
+                    {LexerState.ControlStringStart         , InitControlStringStartStateNode         },
+                    {LexerState.ControlStringFinish        , InitControlStringFinishStateNode        },
+                    {LexerState.CharStart                  , InitCharStartStateNode                  },
+                    {LexerState.CharChar                   , InitCharCharStateNode                   },
+                    {LexerState.CharFinish                 , InitCharFinishStateNode                 },
                     // @formatter:on
                 };
+
+            private static Node? InitControlStringStartStateNode(Node node)
+            {
+                if (node.Type != LexerState.ControlStringStart)
+                {
+                    return null;
+                }
+
+                string decDigits = "0123456789";
+                foreach (char digit in decDigits)
+                {
+                    node.Transitions.TryAdd(digit, new Pair<LexerState, int>(LexerState.ControlStringFinish, 1));
+                }
+
+                return node;
+            }
+
+            private static Node? InitControlStringFinishStateNode(Node node)
+            {
+                if (node.Type != LexerState.ControlStringFinish)
+                {
+                    return null;
+                }
+
+                string decDigits = "0123456789";
+                foreach (char digit in decDigits)
+                {
+                    node.Transitions.TryAdd(digit, new Pair<LexerState, int>(LexerState.ControlStringFinish, 1));
+                }
+                node.Transitions['#'] = new Pair<LexerState, int>(LexerState.ControlStringStart, 1);
+                node.Transitions['\''] = new Pair<LexerState, int>(LexerState.CharStringStart, 1);
+                return node;
+            }
+
+            private static Node? InitCharStartStateNode(Node node)
+            {
+                return node.Type != LexerState.CharStart ? (Node?) null : node;
+            }
+
+            private static Node? InitCharCharStateNode(Node node)
+            {
+                if (node.Type != LexerState.CharChar)
+                {
+                    return null;
+                }
+
+                node.Transitions['\''] = new Pair<LexerState, int>(LexerState.CharFinish, 1);
+
+                return node;
+            }
+
+            private static Node? InitCharFinishStateNode(Node node)
+            {
+                if (node.Type != LexerState.CharChar)
+                {
+                    return null;
+                }
+
+                node.Transitions['#'] = new Pair<LexerState, int>(LexerState.ControlStringStart, 1);
+
+                return node;
+            }
 
             private static Node? InitAtSignStateNode(Node node)
             {
@@ -165,45 +240,45 @@ namespace FEFUPascalCompiler.Lexer
             {
                 return node.Type != LexerState.NotEqualOperator ? (Node?) null : node;
             }
-            
+
             private static Node? InitEqualOperatorStateNode(Node node)
             {
                 return node.Type != LexerState.EqualOperator ? (Node?) null : node;
-            } 
-            
+            }
+
             private static Node? InitLessOrEqualOperatorStateNode(Node node)
             {
                 return node.Type != LexerState.LessOrEqualOperator ? (Node?) null : node;
             }
-            
+
             private static Node? InitGreaterOrEqualOperatorStateNode(Node node)
             {
                 return node.Type != LexerState.GreaterOrEqualOperator ? (Node?) null : node;
             }
-            
+
             private static Node? InitLessOperatorStateNode(Node node)
             {
                 if (node.Type != LexerState.LessOperator)
                 {
                     return null;
                 }
-                
+
                 node.Transitions['>'] = new Pair<LexerState, int>(LexerState.NotEqualOperator, 1);
                 node.Transitions['='] = new Pair<LexerState, int>(LexerState.LessOrEqualOperator, 1);
                 return node;
             }
-            
+
             private static Node? InitGreaterOperatorStateNode(Node node)
             {
                 if (node.Type != LexerState.GreaterOperator)
                 {
                     return null;
                 }
-                
+
                 node.Transitions['='] = new Pair<LexerState, int>(LexerState.GreaterOrEqualOperator, 1);
                 return node;
             }
-            
+
             private static readonly string IdentCharacters = "_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
             private static readonly string DecDigits = "0123456789";
@@ -238,7 +313,7 @@ namespace FEFUPascalCompiler.Lexer
                 node.Transitions.TryAdd('-',  new Pair<LexerState, int>(LexerState.DifArithmOperator     , 1));
                 node.Transitions.TryAdd('*',  new Pair<LexerState, int>(LexerState.MulArithmOperator     , 1));
                 node.Transitions.TryAdd('/',  new Pair<LexerState, int>(LexerState.DivArithmOperator     , 1));
-                node.Transitions.TryAdd('\'', new Pair<LexerState, int>(LexerState.StringConstStart      , 1));
+                node.Transitions.TryAdd('\'', new Pair<LexerState, int>(LexerState.CharStart             , 1));
                 node.Transitions.TryAdd('>',  new Pair<LexerState, int>(LexerState.GreaterOperator       , 1));
                 node.Transitions.TryAdd('%',  new Pair<LexerState, int>(LexerState.BinNumberStart        , 1));
                 node.Transitions.TryAdd('&',  new Pair<LexerState, int>(LexerState.OctNumberStart        , 1));
@@ -284,9 +359,9 @@ namespace FEFUPascalCompiler.Lexer
                 {
                     return null;
                 }
-                
+
                 node.Transitions.TryAdd('=', new Pair<LexerState, int>(LexerState.Assign, 1));
-                
+
                 return node;
             }
 
@@ -397,7 +472,7 @@ namespace FEFUPascalCompiler.Lexer
                 {
                     node.Transitions.TryAdd(digit, new Pair<LexerState, int>(LexerState.DoubleNumber, 1));
                 }
-                
+
                 node.Transitions.TryAdd('.', new Pair<LexerState, int>(LexerState.DecNumber, -1));
                 node.Transitions.TryAdd('e', new Pair<LexerState, int>(LexerState.ExpDoubleStart, 1));
                 node.Transitions.TryAdd('E', new Pair<LexerState, int>(LexerState.ExpDoubleStart, 1));
@@ -415,27 +490,27 @@ namespace FEFUPascalCompiler.Lexer
                 return node.Type != LexerState.Assign ? (Node?) null : node;
             }
 
-            private static Node? InitStringConstStartStateNode(Node node)
+            private static Node? InitCharStringStartStateNode(Node node)
             {
-                if (node.Type != LexerState.StringConstStart)
+                if (node.Type != LexerState.CharStringStart)
                 {
                     return null;
                 }
 
-                node.Transitions.TryAdd('\'', new Pair<LexerState, int>(LexerState.StringConstFinish, 1));
+                node.Transitions.TryAdd('\'', new Pair<LexerState, int>(LexerState.CharStringFinish, 1));
 
                 return node;
             }
 
-            private static Node? InitStringConstFinishStateNode(Node node)
+            private static Node? InitCharStringFinishStateNode(Node node)
             {
-                if (node.Type != LexerState.StringConstFinish)
+                if (node.Type != LexerState.CharStringFinish)
                 {
                     return null;
                 }
 
-                node.Transitions.TryAdd('\'', new Pair<LexerState, int>(LexerState.StringConstStart, 1));
-                node.Transitions.TryAdd('#', new Pair<LexerState, int>(LexerState.SignCodeStart, 1));
+                node.Transitions.TryAdd('\'', new Pair<LexerState, int>(LexerState.CharStringStart, 1));
+                node.Transitions.TryAdd('#', new Pair<LexerState, int>(LexerState.ControlStringStart, 1));
 
                 return node;
             }
@@ -569,7 +644,7 @@ namespace FEFUPascalCompiler.Lexer
                 }
 
                 string decDigits = "0123456789";
-                string notDecDigits = IdentCharacters +'%' + '&' + '$';
+                string notDecDigits = IdentCharacters + '%' + '&' + '$';
 
                 foreach (char digit in decDigits)
                 {
@@ -578,21 +653,21 @@ namespace FEFUPascalCompiler.Lexer
 
                 node.Transitions.TryAdd('e', new Pair<LexerState, int>(LexerState.ExpDoubleStart, 1));
                 node.Transitions.TryAdd('E', new Pair<LexerState, int>(LexerState.ExpDoubleStart, 1));
-                
+
                 foreach (var ch in notDecDigits)
                 {
                     node.Transitions.TryAdd(ch, new Pair<LexerState, int>(LexerState.InvalidSign, 1));
                 }
 
                 node.Transitions.TryAdd('.', new Pair<LexerState, int>(LexerState.DoubleNumber, 1));
-                
+
                 return node;
             }
 
             private static Node InitHexNumber(Node node)
             {
                 string hexDigits = "0123456789ABCDEFabcdef";
-                string notHexDigits =  "_GHIJKLMNOPQRSTUVWXYZghijklmnopqrstuvwxyz" + '%' + '&' + '$';
+                string notHexDigits = "_GHIJKLMNOPQRSTUVWXYZghijklmnopqrstuvwxyz" + '%' + '&' + '$';
 
                 foreach (var ch in hexDigits)
                 {
@@ -606,12 +681,12 @@ namespace FEFUPascalCompiler.Lexer
 
                 return node;
             }
-            
+
             private static Node? InitHexNumberStartStateNode(Node node)
             {
                 return node.Type != LexerState.HexNumberStart ? (Node?) null : InitHexNumber(node);
             }
-            
+
             private static Node? InitHexNumberStateNode(Node node)
             {
                 return node.Type != LexerState.HexNumber ? (Node?) null : InitHexNumber(node);
@@ -627,66 +702,73 @@ namespace FEFUPascalCompiler.Lexer
 
                 return node;
             }
-            
+
             private static Node? InitSignCodeStartStateNode(Node node)
             {
                 return node.Type != LexerState.SignCodeStart ? (Node?) null : InitSignCode(node);
             }
-            
+
             private static Node? InitSignCodeFinishStateNode(Node node)
             {
                 if (node.Type != LexerState.SignCodeFinish)
                 {
                     return null;
                 }
-                node.Transitions.TryAdd('\'', new Pair<LexerState, int>(LexerState.StringConstStart, 1));
-                node.Transitions.TryAdd('#', new Pair<LexerState, int>(LexerState.SignCodeStart, 1));
+
+                node.Transitions.TryAdd('\'', new Pair<LexerState, int>(LexerState.CharStringStart, 1));
+                node.Transitions.TryAdd('#', new Pair<LexerState, int>(LexerState.ControlStringStart, 1));
                 return InitSignCode(node);
             }
-            private static Node? InitExpDoubleStartStateNode(Node node) {
+
+            private static Node? InitExpDoubleStartStateNode(Node node)
+            {
                 if (node.Type != LexerState.ExpDoubleStart)
                 {
                     return null;
                 }
-                
+
                 string decDigits = "0123456789";
                 foreach (char digit in decDigits)
                 {
                     node.Transitions.TryAdd(digit, new Pair<LexerState, int>(LexerState.ExpDouble, 1));
                 }
-                
+
                 node.Transitions.TryAdd('-', new Pair<LexerState, int>(LexerState.ExpDoubleMinus, 1));
 
                 return node;
-            }  
-            private static Node? InitExpDoubleMinusStateNode(Node node) {
+            }
+
+            private static Node? InitExpDoubleMinusStateNode(Node node)
+            {
                 if (node.Type != LexerState.ExpDoubleMinus)
                 {
                     return null;
                 }
-                
+
                 string decDigits = "0123456789";
                 foreach (char digit in decDigits)
                 {
                     node.Transitions.TryAdd(digit, new Pair<LexerState, int>(LexerState.ExpDouble, 1));
                 }
-                
+
                 return node;
-            }  
-            private static Node? InitExpDoubleStateNode(Node node) {
+            }
+
+            private static Node? InitExpDoubleStateNode(Node node)
+            {
                 if (node.Type != LexerState.ExpDouble)
                 {
                     return null;
                 }
-                
+
                 string decDigits = "0123456789";
                 foreach (char digit in decDigits)
                 {
                     node.Transitions.TryAdd(digit, new Pair<LexerState, int>(LexerState.ExpDouble, 1));
                 }
-                
+
                 return node;
-            }       
+            }
         }
     }
 }

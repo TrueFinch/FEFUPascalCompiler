@@ -46,7 +46,7 @@
 (46, 1)   | False               | False                         | false                         |
 (47, 1)   | Get                 | Get                           | get                           |
 (48, 1)   | Input               | Input                         | input                         |
-(49, 1)   | Integer             | Integer                       | integer                       |
+(49, 1)   | Ident               | Integer                       | integer                       |
 (50, 1)   | Ln                  | Ln                            | ln                            |
 (51, 1)   | Maxint              | Maxint                        | maxint                        |
 (52, 1)   | Minint              | Minint                        | minint                        |
@@ -72,5 +72,5 @@
 (72, 1)   | True                | True                          | true                          |
 (73, 1)   | Trunc               | Trunc                         | trunc                         |
 (74, 1)   | Unpack              | Unpack                        | unpack                        |
-(75, 1)   | Write               | Write                         | write                         |
-(76, 1)   | Writeln             | Writeln                       | writeln                       |
+(75, 1)   | Ident               | Write                         | write                         |
+(76, 1)   | Ident               | Writeln                       | writeln                       |

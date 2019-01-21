@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Sematics;
 using FEFUPascalCompiler.Tokens;
 
@@ -96,7 +97,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
         }
         
-        private SymbolType CheckTypeDeclared(Token type)
+        private SymType CheckTypeDeclared(Token type)
         {
             var symType = _symbolTableStack.FindType(type.Value);
 
@@ -114,7 +115,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 //            return _symbolTableStack.fin.Contains(typeIdent);
 //        }
 
-        private Var FindIdent(Token identToken)
+        private SymVar FindIdent(Token identToken)
         {
             var ident = _symbolTableStack.FindIdent(identToken.Value);
             if (ident != null)
