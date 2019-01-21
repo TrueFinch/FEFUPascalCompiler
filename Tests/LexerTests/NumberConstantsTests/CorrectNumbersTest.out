@@ -1,12 +1,12 @@
 (1, 1)    | IntegerNumber       | %101010                       | 42                            |
 (1, 9)    | IntegerNumber       | %10000                        | 16                            |
-(2, 1)    | IntegerNumber       | %1111111111111111111111111111111111111111111111111111111111111110| -2                            |
+(2, 1)    | IntegerNumber       | %1111111111111111111111111111110| 2147483646                    |
 (3, 1)    | IntegerNumber       | 1337                          | 1337                          |
 (4, 5)    | IntegerNumber       | 42                            | 42                            |
 (5, 8)    | IntegerNumber       | 618                           | 618                           |
 (6, 8)    | IntegerNumber       | &1702                         | 962                           |
 (7, 14)   | IntegerNumber       | &001                          | 1                             |
 (8, 20)   | IntegerNumber       | &123123                       | 42579                         |
-(9, 11)   | IntegerNumber       | $FFFFFFFFFFFFFFFE             | -2                            |
+(9, 11)   | IntegerNumber       | $FFFFFFFE                     | -2                            |
 (10, 13)  | IntegerNumber       | $0101                         | 257                           |
-(11, 4)   | IntegerNumber       | $ABCD010101                   | 737878802689                  |
+(11, 4)   | IntegerNumber       | $ABCD001                      | 180146177                     |

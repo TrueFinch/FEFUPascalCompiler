@@ -161,19 +161,19 @@
       </EmbeddedResource>
       <None Remove="LexerTests\BinOperatorsTests\AllBinOperatorsTest.in" />
       <EmbeddedResource Include="LexerTests\OperatorsTests\AllBinOperatorsTest.in">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="LexerTests\BinOperatorsTests\AllBinOperatorsTest.out" />
       <EmbeddedResource Include="LexerTests\OperatorsTests\AllBinOperatorsTest.out">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="LexerTests\OperatorsTests\AllAssignOperatorsTest.in" />
       <EmbeddedResource Include="LexerTests\OperatorsTests\AllAssignOperatorsTest.in">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="LexerTests\OperatorsTests\AllAssignOperatorsTest.out" />
       <EmbeddedResource Include="LexerTests\OperatorsTests\AllAssignOperatorsTest.out">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="LexerTests\CommentTests\UnclosedMultilineCommentTest.in" />
       <EmbeddedResource Include="LexerTests\CommentTests\UnclosedMultilineCommentTest.in">
