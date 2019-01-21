@@ -311,7 +311,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var returnType = ParseSimpleType();
-            funcSymbol.ReturnSymbolType = returnType.Item1;
+            funcSymbol.ReturnSymType = returnType.Item1;
 
             return (funcSymbol, new FuncHeader(funcName, paramList, returnType.Item2));
         }

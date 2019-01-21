@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Sematics;
 using FEFUPascalCompiler.Parser.Visitors;
 using FEFUPascalCompiler.Tokens;
@@ -11,9 +12,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
         }
         
-        public SymbolType SymbolType { get; set; }
-        public bool IsRValue = false;
-        public bool IsLValue = false;
+        public SymType SymType { get; set; }
+        public bool IsLValue { get; set; }= false;
         
         public abstract T Accept<T>(ISymVisitor<T> visitor);
     }
@@ -47,18 +47,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
     }
-
-//    public class SimpleExpretion : Operand
-//    {
-//        public SimpleExpretion(AstNode additiveOp) : base(AstNodeType.SimpleExpression, additiveOp)
-//        {
-//        }
-//
-//        public override T Accept<T>(IAstVisitor<T> visitor)
-//        {
-//            return visitor.Visit(this);
-//        }
-//    }
     
     public class AdditiveOperator : BinOperator
     {
@@ -77,18 +65,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
     }
-    
-//    public class Term: Operand
-//    {
-//        public Term(AstNode multiplyingOperator) : base(AstNodeType.Term, multiplyingOperator)
-//        {
-//        }
-//
-//        public override T Accept<T>(IAstVisitor<T> visitor)
-//        {
-//            return visitor.Visit(this);
-//        }
-//    }
 
     public class MultiplyingOperator : BinOperator{
         public MultiplyingOperator(Token token, AstNode left, AstNode right)
@@ -231,6 +207,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         protected Ident(Token token, AstNodeType nodeType) : base(nodeType, token)
         {
         }
+        
+        public SymVar SymVar { get; set; }
     }
     
     public class ConstIntegerLiteral : Expression

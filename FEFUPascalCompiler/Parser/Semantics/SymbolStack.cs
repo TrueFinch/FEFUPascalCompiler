@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using FEFUPascalCompiler.Parser.Semantics;
 
 namespace FEFUPascalCompiler.Parser.Sematics
 {
@@ -48,23 +49,23 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return _stack.Peek().Find(identifier);
         }
 
-        public SymbolType FindType(string symbolIdentifier)
+        public SymType FindType(string symbolIdentifier)
         {
 //            var symbol = Find(symbolIdentifier);
             switch (Find(symbolIdentifier))
             {
-                case AliasSymbolType alias:
+                case SymAliasType alias:
                     return alias.Alias;
-                case SymbolType symType:
+                case SymType symType:
                     return symType;
                 default:
                     return null;
             }
         }
 
-        public Var FindIdent(string identifier)
+        public SymVar FindIdent(string identifier)
         {
-            if (Find(identifier) is Var variable)
+            if (Find(identifier) is SymVar variable)
             {
                 return variable;
             }
@@ -92,29 +93,29 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return null;
         }
 
-        public void AddType(SymbolType type)
+        public void AddType(SymType type)
         {
             _stack.Peek().AddType(type);
         }
 
-        public void AddType(string identifier, SymbolType type)
+        public void AddType(string identifier, SymType type)
         {
             _stack.Peek().AddType(identifier, type);
         }
 
-        public void AddIdent(bool local, string identifier, SymbolType type)
+        public void AddIdent(bool local, string identifier, SymType type)
         {
             _stack.Peek().AddVariable(local, identifier, type);
         }
 
-        public void AddIdent(string identifier, Var ident)
+        public void AddIdent(string identifier, SymVar ident)
         {
             _stack.Peek().AddVariable(identifier, ident);
         }
 
-        public void AddAlias(string aliasIdentifier, SymbolType typeToAias)
+        public void AddAlias(string aliasIdentifier, SymType typeToAias)
         {
-            _stack.Peek().AddAlias(aliasIdentifier, new AliasSymbolType(aliasIdentifier, typeToAias));
+            _stack.Peek().AddAlias(aliasIdentifier, new SymAliasType(aliasIdentifier, typeToAias));
         }
 
         public void PrepareFunction(string identifier, FunctionSymbol funcSym)
@@ -156,12 +157,12 @@ namespace FEFUPascalCompiler.Parser.Sematics
         private Stack<SymbolTable> _stack = new Stack<SymbolTable>();
 
         // default types
-        public SymbolType SymInteger = new IntegerSymbolType();
-        public SymbolType SymString = new StringSymbolType();
-        public SymbolType SymFloat = new FloatSymbolType();
-        public SymbolType SymChar = new CharSymbolType();
-        public SymbolType SymBool = new BoolSymbolType();
-        public SymbolType SymNil = new NilSymbolConst();
+        public SymType SymInteger = new SymIntegerType();
+        public SymType SymString = new SymStringType();
+        public SymType SymFloat = new SymFloatType();
+        public SymType SymChar = new SymCharType();
+        public SymType SymBool = new SymBoolType();
+        public SymType SymNil = new SymNilConst();
     }
 
     public class SymbolTable: IEnumerable 
@@ -173,30 +174,30 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return _table.Contains(symbolIdentifier) ? _table[symbolIdentifier] as Symbol : null;
         }
 
-        public void AddVariable(bool local, string identifier, SymbolType type)
+        public void AddVariable(bool local, string identifier, SymType type)
         {
             if (local)
-                _table.Add(identifier.ToLower(), new Local(type));
+                _table.Add(identifier.ToLower(), new SymLocal(type));
             else
-                _table.Add(identifier.ToLower(), new Global(type));
+                _table.Add(identifier.ToLower(), new SymGlobal(type));
         }
         
-        public void AddVariable(string identifier, Var ident)
+        public void AddVariable(string identifier, SymVar ident)
         {
             _table.Add(identifier.ToLower(), ident);
         }
 
-        public void AddType(SymbolType symbol)
+        public void AddType(SymType sym)
         {
-            _table.Add(symbol.Ident.ToLower(), symbol);
+            _table.Add(sym.Ident.ToLower(), sym);
         }
 
-        public void AddType(string identifier, SymbolType symbol)
+        public void AddType(string identifier, SymType sym)
         {
-            _table.Add(identifier.ToLower(), symbol);
+            _table.Add(identifier.ToLower(), sym);
         }
 
-        public void AddAlias(string identifier, AliasSymbolType symbol)
+        public void AddAlias(string identifier, SymAliasType symbol)
         {
             _table.Add(identifier.ToLower(), symbol);
         }

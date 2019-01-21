@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Sematics;
 using FEFUPascalCompiler.Tokens;
 
@@ -71,14 +72,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             foreach (var ident in identsList)
             {
                 CheckDuplicateIdentifierInScope(ident.Token);
-                _symbolTableStack.AddIdent(ident.Token.Value, new Parameter(paramType.Item1, modifier?.ToString()));
+                _symbolTableStack.AddIdent(ident.Token.Value, new SymParameter(paramType.Item1, modifier?.ToString()));
 //                _symbolTableStack.Peek().Add(ident.ToString(), ));
             }
 
             return new FormalParamSection(identsList, paramType.Item2, modifier);
         }
 
-        private (SymbolType, AstNode) ParseParamType()
+        private (SymType, AstNode) ParseParamType()
         {
             NextToken();
             switch (PeekToken().Type)

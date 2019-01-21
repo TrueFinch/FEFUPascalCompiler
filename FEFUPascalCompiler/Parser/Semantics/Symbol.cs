@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.Semantics;
 
 namespace FEFUPascalCompiler.Parser.Sematics
 {
@@ -36,7 +37,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
         }
         
 
-        public SymbolType ReturnSymbolType { get; set; }
+        public SymType ReturnSymType { get; set; }
     }
     
     public class ProcedureSymbol : CallableSymbol
