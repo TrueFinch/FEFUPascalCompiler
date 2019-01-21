@@ -107,7 +107,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             NextToken();
             var right = ParseExpression();
-            return new AssignStatement(assignToken as AssignToken, left, right);
+            return new AssignStatement(assignToken as AssignToken, left as Expression, right as Expression);
         }
 
         private AstNode ParseSructuredStatement()
