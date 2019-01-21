@@ -1,3 +1,4 @@
+using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.Semantics;
 
 namespace FEFUPascalCompiler.Parser.Sematics
@@ -35,22 +36,12 @@ namespace FEFUPascalCompiler.Parser.Sematics
         public string Modifier { get; }
     }
 
-    public abstract class SymConst : SymVar
+    public class SymConst : SymVar
     {
         public SymConst(string ident, SymType varSymType = null) : base(ident, varSymType)
         {
         }
 
-        public object Value { get; } = null;
-    }
-
-    public class SymIntegerConst : SymConst
-    {
-        public SymIntegerConst(int value) : base("integer_const")
-        {
-            Value = value;
-        }
-        
-        public int Value { get; }
+        public Expression Value { get; } = null;
     }
 }
