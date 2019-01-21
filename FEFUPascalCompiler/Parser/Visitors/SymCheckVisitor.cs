@@ -2,24 +2,28 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Sematics;
 
 namespace FEFUPascalCompiler.Parser.Visitors
 {
     public class SymCheckVisitor : IAstVisitor<bool>
     {
-        public SymCheckVisitor(SymbolStack symbolTableStack)
+        public SymCheckVisitor(SymbolStack symbolTableStack, TypeChecker typeChecker)
         {
-            SymbolTableStack = symbolTableStack;
+            _symbolTableStack = symbolTableStack;
+            _typeChecker = typeChecker;
         }
 
-        public SymbolStack SymbolTableStack { get; }
+        private readonly SymbolStack _symbolTableStack;
+        private readonly TypeChecker _typeChecker;
+        
 
         public bool Visit(ConstIntegerLiteral node)
         {
             if (node.SymType != null) return true;
 
-            node.SymType = SymbolTableStack.SymInteger;
+            node.SymType = _symbolTableStack.SymInteger;
             return true;
         }
 
@@ -27,7 +31,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         {
             if (node.SymType != null) return true;
 
-            node.SymType = SymbolTableStack.SymFloat;
+            node.SymType = _symbolTableStack.SymFloat;
             return true;
         }
 
@@ -45,7 +49,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         {
             if (node.SymType != null) return true;
 
-            node.SymType = SymbolTableStack.SymChar;
+            node.SymType = _symbolTableStack.SymChar;
             return true;
         }
 
@@ -53,7 +57,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         {
             if (node.SymType != null) return true;
 
-            node.SymType = SymbolTableStack.SymString;
+            node.SymType = _symbolTableStack.SymString;
             return true;
         }
 
@@ -61,7 +65,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         {
             if (node.SymType != null) return true;
 
-            node.SymType = SymbolTableStack.SymNil;
+            node.SymType = _symbolTableStack.SymNil;
             return true;
         }
 
@@ -92,7 +96,11 @@ namespace FEFUPascalCompiler.Parser.Visitors
                     node.Left.Token.Line, node.Left.Token.Column, node.Left.ToString()));
             }
 
-            _typeChecker.Assignment(ref node.Left, ref node.Right, node.NodeType);
+            var nodeLeft = node.Left;
+            
+            _typeChecker.Assignment(ref nodeLeft, ref node.Right, node.NodeType);
+
+            return true;
         }
 
         public bool Visit(Program node)
@@ -249,7 +257,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         {
             if (node.SymType != null) return true;
 
-            var sym = SymbolTableStack.FindIdent(node.ToString());
+            var sym = _symbolTableStack.FindIdent(node.ToString());
             if (sym == null)
                 throw new Exception(string.Format(
                     "{0}, {1} : syntax error, identifier {2} is not defined",
