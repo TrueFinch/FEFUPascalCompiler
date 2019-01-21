@@ -4,7 +4,12 @@ using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.AstNodes
 {
-    public class CompoundStatement : AstNode
+    public abstract class Statement : AstNode{
+        protected Statement(AstNodeType nodeType, Token token = null) : base(nodeType, token)
+        {
+        }
+    }
+    public class CompoundStatement : Statement
     {
         public CompoundStatement(Token beginToken, Token endToken, List<AstNode> statements)
             : base(AstNodeType.CompoundStatement)
@@ -24,7 +29,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public List<AstNode> Statements => _children;
     }
 
-    public class EmptyStatement : AstNode
+    public class EmptyStatement : Statement
     {
         public EmptyStatement(Token token) : base(AstNodeType.EmptyStatement, token)
         {
@@ -36,9 +41,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
     }
 
-    public class AssignStatement : AstNode
+    public class AssignStatement : Statement
     {
-        public AssignStatement(Token assignToken, AstNode left, AstNode right)
+        public AssignStatement(Token assignToken, Expression left, Expression right)
             : base(AstNodeType.AssignmentStatement, assignToken)
         {
             _children.Add(left);
@@ -51,11 +56,11 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public AstNode Left => _children[0];
-        public AstNode Right => _children[1];
+        public Expression Left => _children[0] as Expression;
+        public Expression Right => _children[1] as Expression;
     }
 
-    public class IfStatement : AstNode
+    public class IfStatement : Statement
     {
         public IfStatement(Token ifToken, AstNode expression, Token thenToken, AstNode thenStatement,
             Token elseToken = null, AstNode elseStatement = null) : base(AstNodeType.IfStatement)
@@ -81,7 +86,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode ElseStatement => _children[2];
     }
 
-    public class WhileStatement : AstNode
+    public class WhileStatement : Statement
     {
         public WhileStatement(Token whileToken, AstNode expression, Token doToken, AstNode statement)
             : this(whileToken, expression, doToken, statement, AstNodeType.WhileStatement)
@@ -122,7 +127,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
     }
 
-    public class ForStatement : AstNode
+    public class ForStatement : Statement
     {
         public ForStatement(Token forToken, AstNode iterator, Token assignToken, AstNode range,
             Token doToken, AstNode statement)
@@ -150,7 +155,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode Statement => _children[2];
     }
 
-    public class ForRange : AstNode
+    public class ForRange : Statement
     {
         public ForRange(Token token, AstNode start, AstNode finish) : base(AstNodeType.ForRange, token)
         {
