@@ -26,11 +26,6 @@ namespace FEFUPascalCompiler.Parser.Semantics
         {
             return true;
         }
-        
-        public bool Equals(ref SymIntegerConst type)
-        {
-            return true;
-        }
     }
 
     public class SymFloatType : SymType
@@ -44,16 +39,6 @@ namespace FEFUPascalCompiler.Parser.Semantics
             return true;
         }
     }
-
-    public class SymSymFloatConst : SymFloatType
-    {
-        public SymSymFloatConst(float value) : base()
-        {
-            Value = value;
-        }
-        
-        public float Value { get; }
-    }
     
     public class SymCharType : SymType
     {
@@ -65,16 +50,6 @@ namespace FEFUPascalCompiler.Parser.Semantics
         {
             return true;
         }
-    }
-    
-    public class SymSymCharConst : SymCharType
-    {
-        public SymSymCharConst(char value) : base()
-        {
-            Value = value;
-        }
-        
-        public char Value { get; }
     }
 
     public class SymStringType : SymType
@@ -88,17 +63,6 @@ namespace FEFUPascalCompiler.Parser.Semantics
             return true;
         }
     }
-    
-    public class SymSymStringConst : SymStringType
-    {
-        public SymSymStringConst(string value) : base()
-        {
-            Value = value;
-        }
-        
-        public string Value { get; }
-    }
-
     
     public class SymBoolType : SymType
     {

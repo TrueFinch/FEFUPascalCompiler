@@ -50,5 +50,6 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(ConformantArray node);
         T Visit(ForRange node);
         T Visit(DereferenceOperator node);
+        T Visit(Cast node);
     }
 }

@@ -52,6 +52,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         RecordAccess,
         FunctionCall,
         DereferenceOperator,
+        Cast,
         //Other
         FormalParamSection,
             Modifier,
@@ -97,15 +98,15 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public Token Token { get; protected set; }
         public AstNodeType NodeType { get; set;  }
         protected string Value { get; set; }
-        protected List<AstNode> _children = new List<AstNode>();
+//        protected List<AstNode> _children = new List<AstNode>();
     }
 
     public class Program : AstNode
     {
         public Program(AstNode header, AstNode mainBlock) : base(AstNodeType.Program, header.Token)
         {
-            _children.Add(header);
-            _children.Add(mainBlock);
+            Header = header;
+            MainBlock = mainBlock;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -113,16 +114,16 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public AstNode Header => _children[0];
-        public AstNode MainBlock => _children[1];
+        public AstNode Header { get; set; }
+        public AstNode MainBlock { get; set; }
     }
 
     public class MainBlock : AstNode
     {
         public MainBlock(List<AstNode> declParts, AstNode mainCompound) : base(AstNodeType.MainBlock)
         {
-            _children.InsertRange(0, declParts);
-            _children.Add(mainCompound);
+            DeclsParts = declParts;
+            MainCompound = mainCompound;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -130,7 +131,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public List<AstNode> DeclsParts => _children.GetRange(0, _children.Count - 1);
-        public AstNode MainCompound => _children[_children.Count - 1];
+        public List<AstNode> DeclsParts { get; set; }
+        public AstNode MainCompound { get; set; }
     }
 }
