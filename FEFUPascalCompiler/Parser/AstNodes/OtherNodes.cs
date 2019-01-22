@@ -10,9 +10,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public FormalParamSection(List<AstNode> paramList, AstNode paramType, AstNode modifier = null)
             : base(AstNodeType.FormalParamSection)
         {
-            _children.InsertRange(0, paramList);
-            _children.Add(paramType);
-            _children.Add(modifier);
+            ParamList = paramList;
+            ParamType = paramType;
+            ParamModifier = modifier;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -20,9 +20,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public List<AstNode> ParamList => _children.GetRange(0, _children.Count - 2);
-        public AstNode ParamType => _children[_children.Count - 2];
-        public AstNode ParamModifier => _children[_children.Count - 1];
+        public List<AstNode> ParamList { get; set; }
+        public AstNode ParamType { get; set; }
+        public AstNode ParamModifier { get; set; }
     }
 
     public class Modifier : AstNode

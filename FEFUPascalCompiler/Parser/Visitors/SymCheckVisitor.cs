@@ -98,7 +98,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
             var nodeLeft = node.Left;
             
-            _typeChecker.Assignment(ref nodeLeft, ref node.Right, node.NodeType);
+//            _typeChecker.Assignment(ref nodeLeft, ref node.Right, node.NodeType);
 
             return true;
         }

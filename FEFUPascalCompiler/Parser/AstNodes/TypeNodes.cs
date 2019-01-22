@@ -8,7 +8,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     {
         public SimpleType(AstNode typeIdent) : base(AstNodeType.SimpleType)
         {
-            _children.Add(typeIdent);
+            TypeIdent = typeIdent;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -16,15 +16,15 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public AstNode TypeIdent => _children[0];
+        public AstNode TypeIdent { get; set; }
     }
 
     public class ArrayTypeAstNode : AstNode
     {
         public ArrayTypeAstNode(List<AstNode> indexRanges, AstNode arrayType) : base(AstNodeType.ArrayType)
         {
-            _children.InsertRange(0, indexRanges);
-            _children.Add(arrayType);
+            IndexRanges = indexRanges;
+            TypeOfArray = arrayType;
             Value = NodeType.ToString();
         }
 
@@ -33,8 +33,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public List<AstNode> IndexRanges => _children.GetRange(0, _children.Count - 1);
-        public AstNode TypeOfArray => _children[_children.Count - 1];
+        public List<AstNode> IndexRanges { get; set; }
+        public AstNode TypeOfArray { get; set; }
     }
 
     public class IndexRangeAstNode : AstNode
@@ -42,8 +42,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public IndexRangeAstNode(Token doubleDot, AstNode leftBound, AstNode rightBound) : base(AstNodeType.IndexRange)
         {
             DoubleDot = doubleDot;
-            _children.Add(leftBound);
-            _children.Add(rightBound);
+            LeftBound = leftBound;
+            RightBound = rightBound;
             Value = doubleDot.Value;
         }
 
@@ -53,15 +53,15 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public Token DoubleDot { get; }
-        public AstNode LeftBound => _children[0];
-        public AstNode RightBound => _children[1];
+        public AstNode LeftBound { get; set; }
+        public AstNode RightBound { get; set; }
     }
 
     public class RecordTypeAstNode : AstNode
     {
         public RecordTypeAstNode(List<AstNode> fieldsList) : base(AstNodeType.RecordType)
         {
-            _children.InsertRange(0, fieldsList);
+            FieldsList = fieldsList;
             Value = NodeType.ToString();
         }
 
@@ -70,18 +70,18 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public List<AstNode> FieldsList => _children;
+        public List<AstNode> FieldsList { get; set; }
     }
 
     public class FieldSection : AstNode
     {
-        public FieldSection(Token colon, List<AstNode> identList, AstNode identsType) : base(AstNodeType.FieldSection, colon)
+        public FieldSection(Token colon, List<AstNode> identList, AstNode identsType) : base(AstNodeType.FieldSection,
+            colon)
         {
             Colon = colon;
 
-            _children.InsertRange(0, identList);
-            _children.Add(identsType);
-            
+            Idents = identList;
+            IdentsType = identsType;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -90,8 +90,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public Token Colon { get; }
-        public List<AstNode> Idents => _children.GetRange(0, _children.Count - 1);
-        public AstNode IdentsType => _children[_children.Count - 1];
+        public List<AstNode> Idents { get; set;}
+        public AstNode IdentsType { get; set;}
     }
 
     public class PointerType : AstNode
@@ -99,7 +99,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public PointerType(Token carriage, AstNode simpleType) : base(AstNodeType.PointerType, carriage)
         {
             Carriage = carriage;
-            _children.Add(simpleType);
+            SimpleType = simpleType;
             Value = Carriage.Value;
         }
 
@@ -109,14 +109,14 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public Token Carriage { get; }
-        public AstNode SimpleType => _children[0];
+        public AstNode SimpleType { get; set;}
     }
 
     public class ProcSignature : AstNode
     {
         public ProcSignature(Token token, List<AstNode> paramSections) : base(AstNodeType.ProcSignature, token)
         {
-            _children.InsertRange(0, paramSections);
+            ParamList = paramSections;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -124,7 +124,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public List<AstNode> ParamList => _children;
+        public List<AstNode> ParamList  { get; set;}
     }
 
     public class FuncSignature : AstNode
@@ -132,8 +132,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public FuncSignature(Token token, List<AstNode> paramSections, AstNode returnType)
             : base(AstNodeType.FuncSignature, token)
         {
-            _children.InsertRange(0, paramSections);
-            _children.Add(returnType);
+            ParamList = paramSections;
+            ReturnType = returnType;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -141,8 +141,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public List<AstNode> ParamList => _children.GetRange(0, _children.Count - 1);
-        public AstNode ReturnType => _children[_children.Count - 1];
+        public List<AstNode> ParamList { get; set;}
+        public AstNode ReturnType { get; set;}
     }
 
     public class ConformantArray : AstNode
@@ -151,7 +151,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             ArrayToken = arrayToken;
             OfToken = ofToken;
-            _children.Add(arrayType);
+            ArrayType = arrayType;
             Value = string.Format("{0} {1}", arrayToken.Value, ofToken.Value);
         }
 
@@ -159,9 +159,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             return visitor.Visit(this);
         }
-        
+
         public Token ArrayToken { get; }
         public Token OfToken { get; }
-        public AstNode ArrayType => _children[0];
+        public AstNode ArrayType { get; set;}
     }
 }

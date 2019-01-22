@@ -20,7 +20,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     {
         public Cast(AstNode expressionToCast) : base(AstNodeType.Cast)
         {
-            _children.Add(expressionToCast);
+            ExprToCast = expressionToCast;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -28,19 +28,19 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public AstNode ExprToCast => _children[0];
+        public AstNode ExprToCast { get; set; }
     }
     
     public abstract class BinOperator : Expression
     {
         public BinOperator(AstNodeType nodeType, Token token, AstNode left, AstNode right) : base(nodeType, token)
         {
-            _children.Add(left);
-            _children.Add(right);
+            Left = left;
+            Right = right;
         }
 
-        public AstNode Left => _children[0];
-        public AstNode Right => _children[1];
+        public AstNode Left { get; set; }
+        public AstNode Right { get; set; }
     }
     
     public class ComparingOperator : BinOperator
@@ -85,7 +85,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public UnaryOperator(Token token, AstNode right)
             : base(AstNodeType.UnaryOperator, token)
         {
-            _children.Add(right);
+            Right = right;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -93,15 +93,15 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public AstNode Right => _children[0];
+        public AstNode Right { get; set; }
     }
     
     public class ArrayAccess : Expression
     {
         public ArrayAccess(AstNode arrayIdent, List<AstNode> accessExpressions) : base(AstNodeType.ArrayAccess)
         {
-            _children.Add(arrayIdent);
-            _children.InsertRange(1, accessExpressions);
+            Array = arrayIdent;
+            AccessExpr = accessExpressions;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -109,15 +109,15 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public AstNode Array => _children[0];
-        public List<AstNode> AccessExpr => _children.GetRange(1, _children.Count - 1);
+        public AstNode Array { get; set; }
+        public List<AstNode> AccessExpr { get; set; }
     }
     
     public class RecordAccess : Expression {
         public RecordAccess(AstNode recordIdent, AstNode field) : base(AstNodeType.RecordAccess)
         {
-            _children.Add(recordIdent);
-            _children.Add(field);
+            RecordIdent = recordIdent;
+            Field = field;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -125,15 +125,15 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public AstNode RecordIdent => _children[0];
-        public AstNode Field => _children[1];
+        public AstNode RecordIdent { get; set; }
+        public AstNode Field { get; set; }
     }
     
     public class FunctionCall : Expression {
         public FunctionCall(AstNode funcIdent, List<AstNode> paramList) : base(AstNodeType.FunctionCall)
         {
-            _children.Add(funcIdent);
-            _children.InsertRange(1, paramList);
+            FuncIdent = funcIdent;
+            ParamList = paramList;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -141,15 +141,15 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
         
-        public AstNode FuncIdent => _children[0];
-        public List<AstNode> ParamList => _children.GetRange(1, _children.Count - 1);
+        public AstNode FuncIdent { get; set; }
+        public List<AstNode> ParamList { get; set; }
     }
     
     public class DereferenceOperator : Expression
     {
         public DereferenceOperator(Token token, AstNode leftExpr) : base(AstNodeType.DereferenceOperator, token)
         {
-            _children.Add(leftExpr);
+            Expr = leftExpr;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -157,7 +157,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
         
-        public AstNode Expr => _children[0];
+        public AstNode Expr { get; set; }
     }
     
     public class Ident : Expression

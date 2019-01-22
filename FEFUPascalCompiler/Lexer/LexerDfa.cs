@@ -157,15 +157,15 @@ namespace FEFUPascalCompiler.Lexer
                             || (currState.Type == LexerState.MultiLineCommentStart)
                             || ((currState.Type == LexerState.SingleLineComment) && (_inputStream.Peek() != '\n'))))
                     {
-
                         if ((currState.Type == LexerState.CharChar) && (_inputStream.Peek() != '\n'))
                         {
                             lastState = currState;
                             currState = new Node(LexerState.CharStringStart, TerminalStates[LexerState.CharStringStart],
                                 new Dictionary<char, Pair<LexerState, int>>());
-                            currState.Transitions.TryAdd('\'', new Pair<LexerState, int>(LexerState.CharStringFinish, 1));
+                            currState.Transitions.TryAdd('\'',
+                                new Pair<LexerState, int>(LexerState.CharStringFinish, 1));
                         }
-                        
+
                         if ((currState.Type == LexerState.CharStart) && (_inputStream.Peek() != '\n'))
                         {
                             lastState = currState;
@@ -276,6 +276,15 @@ namespace FEFUPascalCompiler.Lexer
             try
             {
                 _currentToken = Parse();
+                if (!TokenizeComments)
+                {
+                    while (_currentToken.Type == TokenType.SingleLineComment ||
+                           _currentToken.Type == TokenType.MultiLineComment)
+                    {
+                        _currentToken = Parse();
+                    }
+                }
+
                 if (_currentToken == null)
                 {
                     return false;
@@ -317,6 +326,8 @@ namespace FEFUPascalCompiler.Lexer
         {
             _statesList = TransitionsTable.InitTransitions();
         }
+
+        public bool TokenizeComments = true;
 
         // @formatter:off
         private BufferedStreamReader _inputStream;

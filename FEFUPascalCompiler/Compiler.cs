@@ -94,7 +94,7 @@ namespace FEFUPascalCompiler
             astPrinter.PrintTree(canvas);
 
             astPrinter.AlignBG(in canvas);
-            
+
             foreach (var strBuilder in canvas)
             {
                 if (output == null)
@@ -139,7 +139,7 @@ namespace FEFUPascalCompiler
             Next();
             return Peek();
         }
-        
+
         public StreamReader Input
         {
             get => _input;
@@ -158,6 +158,12 @@ namespace FEFUPascalCompiler
         }
 
         public Exception LastException = null;
+
+        public bool TokenizeComments
+        {
+            get => _lexer.TokenizeComments;
+            set => _lexer.TokenizeComments = value;
+        }
 
         private AstNode _ast;
         private LexerDfa _lexer;

@@ -22,6 +22,8 @@ namespace FEFUPascalCompiler
             var output = new StreamWriter(outputFilePath);
             Compiler compiler = new Compiler();
             compiler.Input = new StreamReader(inputFilePath);
+
+            compiler.TokenizeComments = false;
             
             while (compiler.Next())
             {
