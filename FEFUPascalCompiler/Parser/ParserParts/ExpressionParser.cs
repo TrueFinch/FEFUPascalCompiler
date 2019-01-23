@@ -160,6 +160,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     NextToken();
                     return new Nil(token);
                 }
+                case TokenType.True:
+                case TokenType.False:
+                {
+                    NextToken();
+                    return new BooleanLiteral(token);
+                }
                 case TokenType.OpenBracket:
                 {
                     NextToken();

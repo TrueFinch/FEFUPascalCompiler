@@ -237,4 +237,16 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
     }
+
+    public class BooleanLiteral : Expression
+    {
+        public BooleanLiteral(Token token) : base(AstNodeType.BooleanLiteral, token)
+        {
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+    }
 }

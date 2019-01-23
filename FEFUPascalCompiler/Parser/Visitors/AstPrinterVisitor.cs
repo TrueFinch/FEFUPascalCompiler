@@ -416,6 +416,11 @@ namespace FEFUPascalCompiler.Parser.Visitors
             printer.AddChild(node.ExprToCast.Accept(this));
             return printer;
         }
+
+        public AstPrinterNode Visit(BooleanLiteral node)
+        {
+            return new AstPrinterNode(node.ToString());
+        }
     }
 
     public class AstPrinterNode

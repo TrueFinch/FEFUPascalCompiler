@@ -252,6 +252,16 @@ namespace FEFUPascalCompiler.Parser.Visitors
             throw new NotImplementedException();
         }
 
+        public bool Visit(BooleanLiteral node)
+        {
+            
+            if (node.SymType != null) return true;
+
+            node.IsLValue = false;
+            node.SymType = _symbolTableStack.SymBool;
+            return true;
+        }
+
         public bool Visit(Ident node)
         {
             if (node.SymType != null) return true;
