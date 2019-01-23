@@ -369,20 +369,23 @@ namespace FEFUPascalCompiler.Parser.Visitors
             node.Left.Accept(this);
             node.Right.Accept(this);
 
-            // we can use multiplication operators only with integer, float and boolean
+            // we can use multiplication operators only with integer ('div', 'mod', 'shr', 'shl') and float ('*', '/')
+            // and boolean ('and')
             if (!(node.Left.SymType.Equals(_symStack.SymBool) && node.Right.SymType.Equals(_symStack.SymBool)
                   || (node.Left.SymType.Equals(_symStack.SymInt) || node.Left.SymType.Equals(_symStack.SymFloat))
                   && (node.Right.SymType.Equals(_symStack.SymInt) || node.Right.SymType.Equals(_symStack.SymFloat))))
             {
-                throw new Exception(string.Format("{0}, {1} : syntax error, incompatible types: '{2}' '{3}' '{4}'",
+                throw new Exception(string.Format("{0}, {1} : syntax error, incompatible types: '{2}' {3} '{4}'",
                     node.Token.Line, node.Token.Column, node.Left.SymType, node.Token.Value, node.Right.SymType));
             }
 
+            //check if operator - and and operands are boolean type
+            //give us ability to avoid this check in every case of switch
             if (node.Left.SymType.Equals(_symStack.SymBool) && node.Right.SymType.Equals(_symStack.SymBool) &&
                 node.Token.Type != TokenType.And)
             {
                 throw new Exception(string.Format(
-                    "{0}, {1} : syntax error, incompatible types: '{2}' '{3}' '{4}'",
+                    "{0}, {1} : syntax error, incompatible types: '{2}' {3} '{4}'",
                     node.Token.Line, node.Token.Column, node.Left.SymType, node.Token.Value,
                     node.Right.SymType));
             }
@@ -410,17 +413,32 @@ namespace FEFUPascalCompiler.Parser.Visitors
                     if (!node.Left.SymType.Equals(_symStack.SymInt) || !node.Right.SymType.Equals(_symStack.SymInt))
                     {
                         throw new Exception(string.Format(
-                            "{0}, {1} : syntax error, incompatible types: '{2}' '{3}' '{4}'",
+                            "{0}, {1} : syntax error, incompatible types: '{2}' {3} '{4}'",
                             node.Token.Line, node.Token.Column, node.Left.SymType, node.Token.Value,
                             node.Right.SymType));
                     }
+
                     node.SymType = _symStack.SymInt;
                     break;
                 }
                 case TokenType.And:
                 {
+                    if (!node.Left.SymType.Equals(_symStack.SymBool) || !node.Right.SymType.Equals(_symStack.SymBool))
+                    {
+                        throw new Exception(string.Format(
+                            "{0}, {1} : syntax error, incompatible types: '{2}' {3} '{4}'",
+                            node.Token.Line, node.Token.Column, node.Left.SymType, node.Token.Value,
+                            node.Right.SymType));
+                    }
+                    
                     node.SymType = _symStack.SymBool;
                     break;
+                }
+                default:
+                {
+                    throw new Exception(string.Format(
+                        "{0}, {1} : syntax error, unhandled multiplying operator '{2}'",
+                        node.Token.Line, node.Token.Column, node.Token.Value));
                 }
             }
 
@@ -430,7 +448,61 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(AdditiveOperator node)
         {
-            throw new NotImplementedException();
+            node.Left.Accept(this);
+            node.Right.Accept(this);
+
+            // we can use additive operators only with integer and float ('+', '-') and boolean ('or', 'xor')
+            if (!(node.Left.SymType.Equals(_symStack.SymBool) && node.Right.SymType.Equals(_symStack.SymBool)
+                  || (node.Left.SymType.Equals(_symStack.SymInt) || node.Left.SymType.Equals(_symStack.SymFloat))
+                  && (node.Right.SymType.Equals(_symStack.SymInt) || node.Right.SymType.Equals(_symStack.SymFloat))))
+            {
+                throw new Exception(string.Format("{0}, {1} : syntax error, incompatible types: '{2}' {3} '{4}'",
+                    node.Token.Line, node.Token.Column, node.Left.SymType, node.Token.Value, node.Right.SymType));
+            }
+
+            switch (node.Token.Type)
+            {
+                case TokenType.SumOperator:
+                case TokenType.DifOperator:
+                {
+                    if (node.Left.SymType.Equals(_symStack.SymBool) || node.Right.SymType.Equals(_symStack.SymBool))
+                    {
+                        throw new Exception(string.Format(
+                            "{0}, {1} : syntax error, incompatible types: '{2}' {3} '{4}'",
+                            node.Token.Line, node.Token.Column, node.Left.SymType, node.Token.Value,
+                            node.Right.SymType));
+                    }
+                    
+                    node.SymType = node.Left.SymType.Equals(_symStack.SymInt) &&
+                                   node.Right.SymType.Equals(_symStack.SymInt)
+                        ? _symStack.SymInt
+                        : _symStack.SymFloat;
+                    break;
+                }
+                case TokenType.Or:
+                case TokenType.Xor:
+                {
+                    if (!node.Left.SymType.Equals(_symStack.SymBool) || !node.Right.SymType.Equals(_symStack.SymBool))
+                    {
+                        throw new Exception(string.Format(
+                            "{0}, {1} : syntax error, incompatible types: '{2}' {3} '{4}'",
+                            node.Token.Line, node.Token.Column, node.Left.SymType, node.Token.Value,
+                            node.Right.SymType));
+                    }
+
+                    node.SymType = _symStack.SymBool;
+                    break;
+                }
+                default:
+                {
+                    throw new Exception(string.Format(
+                        "{0}, {1} : syntax error, unhandled additive operator '{2}'",
+                        node.Token.Line, node.Token.Column, node.Token.Value));
+                }
+            }
+
+            node.IsLValue = false;
+            return true;
         }
 
         public bool Visit(ComparingOperator node)

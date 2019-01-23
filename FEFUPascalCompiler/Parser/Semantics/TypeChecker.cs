@@ -47,8 +47,8 @@ namespace FEFUPascalCompiler.Parser.Semantics
                     }
                     
                     throw new Exception(string.Format(
-                        "{0}, {1} : syntax error, Incompatible types: got '{2}' expected '{3}'",
-                        oper.Line, oper.Column, right.SymType.ToString(), left.SymType.ToString()));
+                        "{0}, {1} : syntax error, incompatible types to assign: got '{2}' expected '{3}'",
+                        oper.Line, oper.Column, right.SymType, left.SymType));
                 }
                 default:
                 {
