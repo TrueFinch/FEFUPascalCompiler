@@ -32,7 +32,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             TokenType.SumOperator, TokenType.DifOperator, TokenType.Not, TokenType.AtSign,
         };
 
-        private AstNode ParseExpression()
+        private Expression ParseExpression()
         {
             var left = ParseSimpleExpression();
 
@@ -58,7 +58,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return left;
         }
 
-        private AstNode ParseSimpleExpression()
+        private Expression ParseSimpleExpression()
         {
             var left = ParseTerm();
 
@@ -84,7 +84,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return left;
         }
 
-        private AstNode ParseTerm()
+        private Expression ParseTerm()
         {
             var left = ParseSimpleTerm();
 
@@ -110,7 +110,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return left;
         }
 
-        private AstNode ParseSimpleTerm()
+        private Expression ParseSimpleTerm()
         {
             var operatorToken = PeekToken();
 
@@ -118,13 +118,18 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             {
                 NextToken();
                 var factor = ParseFactor();
+                if (operatorToken.Type == TokenType.AtSign &&
+                    !(factor is Ident || factor is ArrayAccess || factor is RecordAccess))
+                {
+                    
+                }
                 return new UnaryOperator(operatorToken, factor);
             }
 
             return ParseFactor();
         }
 
-        private AstNode ParseFactor()
+        private Expression ParseFactor()
         {
             var token = PeekToken();
 
@@ -174,7 +179,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
         }
 
-        private AstNode ParseVariableReference()
+        private Expression ParseVariableReference()
         {
             var token = PeekToken();
 
@@ -265,11 +270,11 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return left;
         }
 
-        private List<AstNode> ParseParamList()
+        private List<Expression> ParseParamList()
         {
             var token = PeekToken();
 
-            List<AstNode> paramList = new List<AstNode>();
+            List<Expression> paramList = new List<Expression>();
 
             var expr = ParseExpression();
             if (expr == null)
@@ -348,7 +353,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return identList;
         }
 
-        private AstNode ParseIdent()
+        private Expression ParseIdent()
         {
             var token = PeekToken();
             if (token.Type != TokenType.Ident)
@@ -360,7 +365,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new Ident(PeekAndNext());
         }
 
-        private AstNode ParseConstIntegerLiteral()
+        private Expression ParseConstIntegerLiteral()
         {
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.IntegerNumber},
                 string.Format("{0} {1} : syntax error, integer expected, but {2} found",
@@ -368,7 +373,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new ConstIntegerLiteral(PeekAndNext());
         }
 
-        private AstNode ParseConstFloatLiteral()
+        private Expression ParseConstFloatLiteral()
         {
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.FloatNumber},
                 string.Format("{0} {1} : syntax error, float expected, but {2} found",
