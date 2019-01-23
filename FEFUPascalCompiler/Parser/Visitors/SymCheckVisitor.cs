@@ -293,7 +293,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(DereferenceOperator node)
         {
-            throw new NotImplementedException();
+            node.Expr.Accept()
         }
 
         public bool Visit(FunctionCall node)
@@ -313,6 +313,8 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(UnaryOperator node)
         {
+            if (node.SymType != null) return true;
+            
             node.Expr.Accept(this);
 
             switch (node.Token.Type)
@@ -366,6 +368,8 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(MultiplyingOperator node)
         {
+            if (node.SymType != null) return true;
+            
             node.Left.Accept(this);
             node.Right.Accept(this);
 
@@ -448,6 +452,8 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(AdditiveOperator node)
         {
+            if (node.SymType != null) return true;
+            
             node.Left.Accept(this);
             node.Right.Accept(this);
 
@@ -507,6 +513,8 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(ComparingOperator node)
         {
+            if (node.SymType != null) return true;
+            
             node.Left.Accept(this);
             node.Right.Accept(this);
     
@@ -526,10 +534,5 @@ namespace FEFUPascalCompiler.Parser.Visitors
             node.IsLValue = false;
             return true;
         }
-
-//        private bool IsLvalue(Expression expr)
-//        {
-//            exprexpr is Ident || expr is ArrayAccess || expr is RecordAccess;
-//        }
     }
 }
