@@ -13,6 +13,10 @@ namespace FEFUPascalCompiler.Parser.Sematics
         }
         
         public string Ident { get; set; }
+        public override string ToString()
+        {
+            return Ident.ToString();
+        }
     }
 
     public abstract class CallableSymbol : Symbol
