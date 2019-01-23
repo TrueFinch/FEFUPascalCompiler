@@ -500,7 +500,6 @@ namespace FEFUPascalCompiler.Parser.Visitors
                         node.Token.Line, node.Token.Column, node.Token.Value));
                 }
             }
-
             node.IsLValue = false;
             return true;
         }
