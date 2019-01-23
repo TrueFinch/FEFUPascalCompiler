@@ -40,8 +40,8 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 //                }
             }
 
-            throw new Exception(string.Format("{0}, {1} : syntax error, variable type expected, but {2} found",
-                PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
+            throw new Exception(string.Format("{0}, {1} : syntax error, variable type expected, but '{2}' found",
+                PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
         }
 
         private (SymType, AstNode) ParseSimpleType()
