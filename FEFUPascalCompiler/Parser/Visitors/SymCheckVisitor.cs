@@ -430,7 +430,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
                             node.Token.Line, node.Token.Column, node.Left.SymType, node.Token.Value,
                             node.Right.SymType));
                     }
-                    
+
                     node.SymType = _symStack.SymBool;
                     break;
                 }
@@ -472,7 +472,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
                             node.Token.Line, node.Token.Column, node.Left.SymType, node.Token.Value,
                             node.Right.SymType));
                     }
-                    
+
                     node.SymType = node.Left.SymType.Equals(_symStack.SymInt) &&
                                    node.Right.SymType.Equals(_symStack.SymInt)
                         ? _symStack.SymInt
@@ -500,13 +500,31 @@ namespace FEFUPascalCompiler.Parser.Visitors
                         node.Token.Line, node.Token.Column, node.Token.Value));
                 }
             }
+
             node.IsLValue = false;
             return true;
         }
 
         public bool Visit(ComparingOperator node)
         {
-            throw new NotImplementedException();
+            node.Left.Accept(this);
+            node.Right.Accept(this);
+    
+            // we can use additive operators only with integer and float (all operators) and char and boolean ('=', '<>')
+            if (!(node.Left.SymType.Equals(_symStack.SymBool) && node.Token.Type == TokenType.EqualOperator
+                  || node.Left.SymType.Equals(_symStack.SymBool) && node.Token.Type == TokenType.NotEqualOperator
+                  || node.Left.SymType.Equals(_symStack.SymChar) && node.Token.Type == TokenType.EqualOperator
+                  || node.Left.SymType.Equals(_symStack.SymChar) && node.Token.Type == TokenType.NotEqualOperator
+                  || (node.Left.SymType.Equals(_symStack.SymInt) || node.Left.SymType.Equals(_symStack.SymFloat))
+                  && (node.Right.SymType.Equals(_symStack.SymInt) || node.Right.SymType.Equals(_symStack.SymFloat))))
+            {
+                throw new Exception(string.Format("{0}, {1} : syntax error, incompatible types: '{2}' {3} '{4}'",
+                    node.Token.Line, node.Token.Column, node.Left.SymType, node.Token.Value, node.Right.SymType));
+            }
+
+            node.SymType = _symStack.SymBool;
+            node.IsLValue = false;
+            return true;
         }
 
 //        private bool IsLvalue(Expression expr)
