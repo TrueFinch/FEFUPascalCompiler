@@ -66,7 +66,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
     
     public class SymBoolType : SymType
     {
-        public SymBoolType() : base("Bool")
+        public SymBoolType() : base("Boolean")
         {
         }
 

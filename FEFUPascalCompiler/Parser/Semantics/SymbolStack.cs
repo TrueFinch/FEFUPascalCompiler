@@ -11,7 +11,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
         public SymbolStack()
         {
             _stack.Push(new SymbolTable());
-            AddType(SymInteger);
+            AddType(SymInt);
             AddType(SymString);
             AddType(SymFloat);
             AddType(SymChar);
@@ -163,7 +163,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
         private Stack<SymbolTable> _stack = new Stack<SymbolTable>();
 
         // default types
-        public SymType SymInteger = new SymIntegerType();
+        public SymType SymInt = new SymIntegerType();
         public SymType SymString = new SymStringType();
         public SymType SymFloat = new SymFloatType();
         public SymType SymChar = new SymCharType();
