@@ -33,19 +33,19 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     
     public abstract class BinOperator : Expression
     {
-        public BinOperator(AstNodeType nodeType, Token token, AstNode left, AstNode right) : base(nodeType, token)
+        public BinOperator(AstNodeType nodeType, Token token, Expression left, Expression right) : base(nodeType, token)
         {
             Left = left;
             Right = right;
         }
 
-        public AstNode Left { get; set; }
-        public AstNode Right { get; set; }
+        public Expression Left { get; set; }
+        public Expression Right { get; set; }
     }
     
     public class ComparingOperator : BinOperator
     {
-        public ComparingOperator(Token token, AstNode left, AstNode right) 
+        public ComparingOperator(Token token, Expression left, Expression right) 
             : base(AstNodeType.ComparingOperator, token, left, right)
         {
         }
@@ -58,7 +58,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     
     public class AdditiveOperator : BinOperator
     {
-        public AdditiveOperator(Token token, AstNode left, AstNode right)
+        public AdditiveOperator(Token token, Expression left, Expression right)
             : base(AstNodeType.AdditiveOperator, token, left, right)
         {
         }
@@ -70,7 +70,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     }
 
     public class MultiplyingOperator : BinOperator{
-        public MultiplyingOperator(Token token, AstNode left, AstNode right)
+        public MultiplyingOperator(Token token, Expression left, Expression right)
             : base(AstNodeType.MultiplyingOperator, token, left, right)
         {
         }
@@ -82,10 +82,10 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     }
     
     public class UnaryOperator : Expression {
-        public UnaryOperator(Token token, AstNode right)
+        public UnaryOperator(Token token, Expression expr)
             : base(AstNodeType.UnaryOperator, token)
         {
-            Right = right;
+            Expr = expr;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -93,12 +93,12 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public AstNode Right { get; set; }
+        public Expression Expr { get; set; }
     }
     
     public class ArrayAccess : Expression
     {
-        public ArrayAccess(AstNode arrayIdent, List<AstNode> accessExpressions) : base(AstNodeType.ArrayAccess)
+        public ArrayAccess(Expression arrayIdent, List<Expression> accessExpressions) : base(AstNodeType.ArrayAccess)
         {
             Array = arrayIdent;
             AccessExpr = accessExpressions;
@@ -109,8 +109,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public AstNode Array { get; set; }
-        public List<AstNode> AccessExpr { get; set; }
+        public Expression Array { get; set; }
+        public List<Expression> AccessExpr { get; set; }
     }
     
     public class RecordAccess : Expression {
@@ -130,7 +130,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     }
     
     public class FunctionCall : Expression {
-        public FunctionCall(AstNode funcIdent, List<AstNode> paramList) : base(AstNodeType.FunctionCall)
+        public FunctionCall(Expression funcIdent, List<Expression> paramList) : base(AstNodeType.FunctionCall)
         {
             FuncIdent = funcIdent;
             ParamList = paramList;
@@ -141,13 +141,13 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
         
-        public AstNode FuncIdent { get; set; }
-        public List<AstNode> ParamList { get; set; }
+        public Expression FuncIdent { get; set; }
+        public List<Expression> ParamList { get; set; }
     }
     
     public class DereferenceOperator : Expression
     {
-        public DereferenceOperator(Token token, AstNode leftExpr) : base(AstNodeType.DereferenceOperator, token)
+        public DereferenceOperator(Token token, Expression leftExpr) : base(AstNodeType.DereferenceOperator, token)
         {
             Expr = leftExpr;
         }
@@ -157,7 +157,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
         
-        public AstNode Expr { get; set; }
+        public Expression Expr { get; set; }
     }
     
     public class Ident : Expression
@@ -229,6 +229,18 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     public class Nil : Expression
     {
         public Nil(Token token) : base(AstNodeType.Nil, token)
+        {
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+    }
+
+    public class BooleanLiteral : Expression
+    {
+        public BooleanLiteral(Token token) : base(AstNodeType.BooleanLiteral, token)
         {
         }
 

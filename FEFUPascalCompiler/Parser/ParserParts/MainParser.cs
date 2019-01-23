@@ -126,7 +126,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             throw new Exception(string.Format("{0}, {1} : Undeclared variable identifier '{2}'",
                 identToken.Line, identToken.Column, identToken.Lexeme));
         }
-
+        
         public void InitParser()
         {
             _symbolTableStack = new SymbolStack();

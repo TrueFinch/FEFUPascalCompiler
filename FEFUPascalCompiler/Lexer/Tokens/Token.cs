@@ -198,8 +198,8 @@ namespace FEFUPascalCompiler.Tokens
 
             lexeme = lexeme.Replace("\'", "");
             lexeme = lexeme.Replace("''", "'");
-            
-            
+
+
             for (int nextSharpIndex = lexeme.IndexOf("#", StringComparison.Ordinal);
                 nextSharpIndex >= 0;
                 nextSharpIndex = lexeme.IndexOf("#", StringComparison.Ordinal))
@@ -291,5 +291,16 @@ namespace FEFUPascalCompiler.Tokens
         {
             return base.ToString() + $"{Value,-30}" + '|';
         }
+    }
+
+    public class BooleanToken : Token
+    {
+        public BooleanToken(int line, int column, string lexeme) : base(line, column,
+            Dictionaries.KeyWords[lexeme.ToLower()], lexeme)
+        {
+            Value = lexeme.ToLower() == "true";
+        }
+
+        public new bool Value { get; }
     }
 }

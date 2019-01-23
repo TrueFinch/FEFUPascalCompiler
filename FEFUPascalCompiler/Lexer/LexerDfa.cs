@@ -70,6 +70,11 @@ namespace FEFUPascalCompiler.Lexer
 
         private static Token GetToken(int line, int column, string lexeme, LexerState lexerState)
         {
+            if (lexeme.ToLower() == "true" || lexeme.ToLower() == "false")
+            {
+                return new BooleanToken(line, column, lexeme);
+            }
+
             if (LexerStateTypeToTokenType.ContainsKey(lexerState))
             {
                 return Token.TokenConstructors[LexerStateTypeToTokenType[lexerState]](line, column, lexeme);

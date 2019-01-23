@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.Semantics;
 
 namespace FEFUPascalCompiler.Parser.Sematics
@@ -143,6 +144,11 @@ namespace FEFUPascalCompiler.Parser.Sematics
             _stack.Peek().Remove(identifier);
             _stack.Peek().AddProcedure(identifier, procSym);
         }
+
+//        public bool IsLvalue(Expression expr)
+//        {
+//            return expr is 
+//        }
         
         public IEnumerator<SymbolTable> GetEnumerator()
         {

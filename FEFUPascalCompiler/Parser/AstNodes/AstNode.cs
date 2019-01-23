@@ -63,6 +63,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         ConstDoubleLiteral,
         ConstCharLiteral,
         ConstStringLiteral,
+        BooleanLiteral,
         Nil,
         // @formatter:on
     }

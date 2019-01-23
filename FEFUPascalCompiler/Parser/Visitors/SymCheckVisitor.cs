@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Sematics;
+using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.Visitors
 {
@@ -17,12 +16,13 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         private readonly SymbolStack _symbolTableStack;
         private readonly TypeChecker _typeChecker;
-        
+
 
         public bool Visit(ConstIntegerLiteral node)
         {
             if (node.SymType != null) return true;
 
+            node.IsLValue = false;
             node.SymType = _symbolTableStack.SymInteger;
             return true;
         }
@@ -31,6 +31,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         {
             if (node.SymType != null) return true;
 
+            node.IsLValue = false;
             node.SymType = _symbolTableStack.SymFloat;
             return true;
         }
@@ -40,15 +41,11 @@ namespace FEFUPascalCompiler.Parser.Visitors
             throw new NotImplementedException();
         }
 
-        public bool Visit(Modifier node)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Visit(ConstCharLiteral node)
         {
             if (node.SymType != null) return true;
 
+            node.IsLValue = false;
             node.SymType = _symbolTableStack.SymChar;
             return true;
         }
@@ -57,6 +54,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         {
             if (node.SymType != null) return true;
 
+            node.IsLValue = false;
             node.SymType = _symbolTableStack.SymString;
             return true;
         }
@@ -64,7 +62,8 @@ namespace FEFUPascalCompiler.Parser.Visitors
         public bool Visit(Nil node)
         {
             if (node.SymType != null) return true;
-
+            
+            node.IsLValue = false;
             node.SymType = _symbolTableStack.SymNil;
             return true;
         }
@@ -92,13 +91,13 @@ namespace FEFUPascalCompiler.Parser.Visitors
             if (!node.Left.IsLValue)
             {
                 throw new Exception(string.Format(
-                    "{0}, {1} : syntax error, left part of assignment {2} is not lvalue",
+                    "{0}, {1} : syntax error, left part of assignment '{2}' is not lvalue",
                     node.Left.Token.Line, node.Left.Token.Column, node.Left.ToString()));
             }
 
-            var nodeLeft = node.Left;
-            
-//            _typeChecker.Assignment(ref nodeLeft, ref node.Right, node.NodeType);
+            Expression nodeLeft = node.Left;
+            Expression nodeRight = node.Right;
+            _typeChecker.Assignment(ref nodeLeft, ref nodeRight, node.Token);
 
             return true;
         }
@@ -253,6 +252,16 @@ namespace FEFUPascalCompiler.Parser.Visitors
             throw new NotImplementedException();
         }
 
+        public bool Visit(BooleanLiteral node)
+        {
+            
+            if (node.SymType != null) return true;
+
+            node.IsLValue = false;
+            node.SymType = _symbolTableStack.SymBool;
+            return true;
+        }
+
         public bool Visit(Ident node)
         {
             if (node.SymType != null) return true;
@@ -260,10 +269,11 @@ namespace FEFUPascalCompiler.Parser.Visitors
             var sym = _symbolTableStack.FindIdent(node.ToString());
             if (sym == null)
                 throw new Exception(string.Format(
-                    "{0}, {1} : syntax error, identifier {2} is not defined",
+                    "{0}, {1} : syntax error, identifier '{2}' is not defined",
                     node.Token.Line, node.Token.Column, node.Token.Lexeme));
             node.SymVar = sym;
             node.SymType = sym.VarSymType;
+            node.IsLValue = true;
 
             return true;
         }
@@ -295,7 +305,54 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(UnaryOperator node)
         {
-            throw new NotImplementedException();
+            node.Expr.Accept(this);
+            
+            switch (node.Token.Type)
+            {
+                case TokenType.SumOperator:
+                case TokenType.DifOperator:
+                {
+                    if (!(node.Expr.SymType.Equals(_symbolTableStack.SymInteger)
+                         || node.Expr.SymType.Equals(_symbolTableStack.SymFloat)))
+                    {
+                        throw new Exception(string.Format(
+                            "{0}, {1} : syntax error, integer or float expected, but '{2}' found",
+                            node.Expr.Token.Line, node.Expr.Token.Column, node.Expr.Token.Lexeme));
+                    }
+                    break;
+                }
+
+                case TokenType.AtSign:
+                {
+                    if (!node.Expr.IsLValue)
+                    {
+                        throw new Exception(string.Format(
+                            "{0}, {1} : syntax error, expression '{2}' is not lvalue",
+                            node.Expr.Token.Line, node.Expr.Token.Column, node.Expr.ToString()));
+                    }
+
+                    break;
+                }
+                case TokenType.Not:
+                {
+                    if (!node.SymType.Equals(_symbolTableStack.SymBool))
+                    {
+                        throw new Exception(string.Format(
+                            "{0}, {1} : syntax error, boolean expected, but '{2}' found",
+                            node.Expr.Token.Line, node.Expr.Token.Column, node.Expr.ToString()));
+                    }
+
+                    break;
+                }
+                default:
+                {
+                    throw new Exception(string.Format(
+                        "{0}, {1} : syntax error, unrecognized unary operator '{2}'",
+                        node.Token.Line, node.Token.Column, node.ToString()));
+                }
+            }
+
+            return true;
         }
 
         public bool Visit(MultiplyingOperator node)
@@ -312,5 +369,10 @@ namespace FEFUPascalCompiler.Parser.Visitors
         {
             throw new NotImplementedException();
         }
+
+//        private bool IsLvalue(Expression expr)
+//        {
+//            exprexpr is Ident || expr is ArrayAccess || expr is RecordAccess;
+//        }
     }
 }

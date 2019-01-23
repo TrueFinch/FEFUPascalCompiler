@@ -48,12 +48,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             var token = PeekToken();
 
-            AstNode modifier = null;
+            string modifier = null;
             if ((PeekToken().Type == TokenType.Var
                  || PeekToken().Type == TokenType.Const
                  || PeekToken().Type == TokenType.Out))
             {
-                modifier = new Modifier(PeekAndNext());
+                modifier = PeekAndNext().Value;
             }
 
             var identsList = ParseIdentList();

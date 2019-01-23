@@ -30,7 +30,6 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(RecordAccess node);
         T Visit(FunctionCall node);
         T Visit(FormalParamSection node);
-        T Visit(Modifier node);
         T Visit(ConstCharLiteral node);
         T Visit(ConstStringLiteral node);
         T Visit(Nil node);
@@ -51,5 +50,6 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(ForRange node);
         T Visit(DereferenceOperator node);
         T Visit(Cast node);
+        T Visit(BooleanLiteral node);
     }
 }

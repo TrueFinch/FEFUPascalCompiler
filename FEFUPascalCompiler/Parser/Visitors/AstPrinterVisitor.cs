@@ -201,7 +201,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         public AstPrinterNode Visit(UnaryOperator node)
         {
             var printer = new AstPrinterNode(node.ToString());
-            printer.AddChild(node.Right.Accept(this));
+            printer.AddChild(node.Expr.Accept(this));
             return printer;
         }
 
@@ -241,19 +241,13 @@ namespace FEFUPascalCompiler.Parser.Visitors
         {
             var printer = new AstPrinterNode(node.ToString());
             if (node.ParamModifier != null)
-                printer.AddChild(node.ParamModifier.Accept(this));
+                printer.AddChild(new AstPrinterNode(node.ParamModifier));
             foreach (var param in node.ParamList)
             {
                 printer.AddChild(param.Accept(this));
             }
 
             printer.AddChild(node.ParamType.Accept(this));
-            return printer;
-        }
-
-        public AstPrinterNode Visit(Modifier node)
-        {
-            var printer = new AstPrinterNode(node.ToString());
             return printer;
         }
 
@@ -421,6 +415,11 @@ namespace FEFUPascalCompiler.Parser.Visitors
             var printer = new AstPrinterNode(string.Format("{0} to {1}", node.ToString(), node.SymType.ToString()));
             printer.AddChild(node.ExprToCast.Accept(this));
             return printer;
+        }
+
+        public AstPrinterNode Visit(BooleanLiteral node)
+        {
+            return new AstPrinterNode(node.ToString());
         }
     }
 
