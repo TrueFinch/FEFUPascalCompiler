@@ -33,7 +33,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     
     public abstract class BinOperator : Expression
     {
-        public BinOperator(AstNodeType nodeType, Token token, Expression left, Expression right) : base(nodeType, token)
+        protected BinOperator(AstNodeType nodeType, Token token, Expression left, Expression right) : base(nodeType, token)
         {
             Left = left;
             Right = right;
