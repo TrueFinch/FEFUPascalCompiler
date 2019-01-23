@@ -8,13 +8,13 @@ namespace FEFUPascalCompiler.Parser.Visitors
 {
     public class SymCheckVisitor : IAstVisitor<bool>
     {
-        public SymCheckVisitor(SymbolStack symbolTableStack, TypeChecker typeChecker)
+        public SymCheckVisitor(SymbolStack symStack, TypeChecker typeChecker)
         {
-            _symbolTableStack = symbolTableStack;
+            _symStack = symStack;
             _typeChecker = typeChecker;
         }
 
-        private readonly SymbolStack _symbolTableStack;
+        private readonly SymbolStack _symStack;
         private readonly TypeChecker _typeChecker;
 
 
@@ -23,7 +23,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
             if (node.SymType != null) return true;
 
             node.IsLValue = false;
-            node.SymType = _symbolTableStack.SymInteger;
+            node.SymType = _symStack.SymInt;
             return true;
         }
 
@@ -32,21 +32,30 @@ namespace FEFUPascalCompiler.Parser.Visitors
             if (node.SymType != null) return true;
 
             node.IsLValue = false;
-            node.SymType = _symbolTableStack.SymFloat;
+            node.SymType = _symStack.SymFloat;
             return true;
         }
 
-        public bool Visit(BinOperator node)
-        {
-            throw new NotImplementedException();
-        }
+//        public bool Visit(BinOperator node)
+//        {
+//            node.Left.Accept(this);
+//            node.Right.Accept(this);
+//
+//            switch (node.Token.Type)
+//            {
+//                case TokenType.LessOperator:
+//                    case TokenType.LessOrEqualOperator:
+//            }
+//            
+//            return true;
+//        }
 
         public bool Visit(ConstCharLiteral node)
         {
             if (node.SymType != null) return true;
 
             node.IsLValue = false;
-            node.SymType = _symbolTableStack.SymChar;
+            node.SymType = _symStack.SymChar;
             return true;
         }
 
@@ -55,16 +64,16 @@ namespace FEFUPascalCompiler.Parser.Visitors
             if (node.SymType != null) return true;
 
             node.IsLValue = false;
-            node.SymType = _symbolTableStack.SymString;
+            node.SymType = _symStack.SymString;
             return true;
         }
 
         public bool Visit(Nil node)
         {
             if (node.SymType != null) return true;
-            
+
             node.IsLValue = false;
-            node.SymType = _symbolTableStack.SymNil;
+            node.SymType = _symStack.SymNil;
             return true;
         }
 
@@ -254,11 +263,10 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(BooleanLiteral node)
         {
-            
             if (node.SymType != null) return true;
 
             node.IsLValue = false;
-            node.SymType = _symbolTableStack.SymBool;
+            node.SymType = _symStack.SymBool;
             return true;
         }
 
@@ -266,7 +274,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         {
             if (node.SymType != null) return true;
 
-            var sym = _symbolTableStack.FindIdent(node.ToString());
+            var sym = _symStack.FindIdent(node.ToString());
             if (sym == null)
                 throw new Exception(string.Format(
                     "{0}, {1} : syntax error, identifier '{2}' is not defined",
@@ -306,19 +314,20 @@ namespace FEFUPascalCompiler.Parser.Visitors
         public bool Visit(UnaryOperator node)
         {
             node.Expr.Accept(this);
-            
+
             switch (node.Token.Type)
             {
                 case TokenType.SumOperator:
                 case TokenType.DifOperator:
                 {
-                    if (!(node.Expr.SymType.Equals(_symbolTableStack.SymInteger)
-                         || node.Expr.SymType.Equals(_symbolTableStack.SymFloat)))
+                    if (!(node.Expr.SymType.Equals(_symStack.SymInt)
+                          || node.Expr.SymType.Equals(_symStack.SymFloat)))
                     {
                         throw new Exception(string.Format(
-                            "{0}, {1} : syntax error, integer or float expected, but '{2}' found",
+                            "{0}, {1} : syntax error, 'integer' or 'float' expected, but '{2}' found",
                             node.Expr.Token.Line, node.Expr.Token.Column, node.Expr.Token.Lexeme));
                     }
+
                     break;
                 }
 
@@ -335,7 +344,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
                 }
                 case TokenType.Not:
                 {
-                    if (!node.SymType.Equals(_symbolTableStack.SymBool))
+                    if (!node.SymType.Equals(_symStack.SymBool))
                     {
                         throw new Exception(string.Format(
                             "{0}, {1} : syntax error, boolean expected, but '{2}' found",
@@ -357,7 +366,66 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(MultiplyingOperator node)
         {
-            throw new NotImplementedException();
+            node.Left.Accept(this);
+            node.Right.Accept(this);
+
+            // we can use multiplication operators only with integer, float and boolean
+            if (!(node.Left.SymType.Equals(_symStack.SymBool) && node.Right.SymType.Equals(_symStack.SymBool)
+                  || (node.Left.SymType.Equals(_symStack.SymInt) || node.Left.SymType.Equals(_symStack.SymFloat))
+                  && (node.Right.SymType.Equals(_symStack.SymInt) || node.Right.SymType.Equals(_symStack.SymFloat))))
+            {
+                throw new Exception(string.Format("{0}, {1} : syntax error, incompatible types: '{2}' '{3}' '{4}'",
+                    node.Token.Line, node.Token.Column, node.Left.SymType, node.Token.Value, node.Right.SymType));
+            }
+
+            if (node.Left.SymType.Equals(_symStack.SymBool) && node.Right.SymType.Equals(_symStack.SymBool) &&
+                node.Token.Type != TokenType.And)
+            {
+                throw new Exception(string.Format(
+                    "{0}, {1} : syntax error, incompatible types: '{2}' '{3}' '{4}'",
+                    node.Token.Line, node.Token.Column, node.Left.SymType, node.Token.Value,
+                    node.Right.SymType));
+            }
+
+            switch (node.Token.Type)
+            {
+                case TokenType.MulOperator:
+                {
+                    node.SymType = node.Left.SymType.Equals(_symStack.SymInt) &&
+                                   node.Right.SymType.Equals(_symStack.SymInt)
+                        ? _symStack.SymInt
+                        : _symStack.SymFloat;
+                    break;
+                }
+                case TokenType.DivOperator:
+                {
+                    node.SymType = _symStack.SymFloat;
+                    break;
+                }
+                case TokenType.Div:
+                case TokenType.Mod:
+                case TokenType.Shr:
+                case TokenType.Shl:
+                {
+                    if (!node.Left.SymType.Equals(_symStack.SymInt) || !node.Right.SymType.Equals(_symStack.SymInt))
+                    {
+                        throw new Exception(string.Format(
+                            "{0}, {1} : syntax error, incompatible types: '{2}' '{3}' '{4}'",
+                            node.Token.Line, node.Token.Column, node.Left.SymType, node.Token.Value,
+                            node.Right.SymType));
+                    }
+                    node.SymType = _symStack.SymInt;
+                    break;
+                }
+                case TokenType.And:
+                {
+                    node.SymType = _symStack.SymBool;
+                    break;
+                }
+            }
+
+            node.IsLValue = false;
+            return true;
         }
 
         public bool Visit(AdditiveOperator node)

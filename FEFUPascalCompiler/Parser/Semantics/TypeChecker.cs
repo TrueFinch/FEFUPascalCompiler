@@ -17,9 +17,9 @@ namespace FEFUPascalCompiler.Parser.Semantics
         //check if 
         public void Assignment(ref Expression left, ref Expression right, Token oper)
         {
-            if (left.SymType.Equals(_symStack.SymFloat) && right.SymType.Equals(_symStack.SymInteger))
+            if (left.SymType.Equals(_symStack.SymFloat) && right.SymType.Equals(_symStack.SymInt))
             {
-                right = new Cast(right) {SymType = _symStack.SymFloat};
+                right = new Cast(right) {SymType = _symStack.SymFloat, IsLValue = false};
                 return;
             }
             
@@ -33,7 +33,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
                     }
                     
                     throw new Exception(string.Format(
-                        "{0}, {1} : syntax error, Incompatible types: got '{2}' expected '{3}'",
+                        "{0}, {1} : syntax error, incompatible types: got '{2}' expected '{3}'",
                         oper.Line, oper.Column, right.SymType.ToString(), left.SymType.ToString()));
                 }
                 case TokenType.SumAssignOperator:
@@ -41,7 +41,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
                 case TokenType.MulAssignOperator:
                 case TokenType.DivAssignOperator:
                 {
-                    if (left.SymType.Equals(_symStack.SymInteger) && right.SymType.Equals(_symStack.SymInteger))
+                    if (left.SymType.Equals(_symStack.SymInt) && right.SymType.Equals(_symStack.SymInt))
                     {
                         return;
                     }

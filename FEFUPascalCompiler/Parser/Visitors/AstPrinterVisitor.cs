@@ -22,13 +22,13 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return new AstPrinterNode(node.ToString());
         }
 
-        public AstPrinterNode Visit(BinOperator node)
-        {
-            var printer = new AstPrinterNode(node.ToString());
-            printer.AddChild(node.Left.Accept(this));
-            printer.AddChild(node.Right.Accept(this));
-            return printer;
-        }
+//        public AstPrinterNode Visit(BinOperator node)
+//        {
+//            var printer = new AstPrinterNode(node.ToString());
+//            printer.AddChild(node.Left.Accept(this));
+//            printer.AddChild(node.Right.Accept(this));
+//            return printer;
+//        }
 
         public AstPrinterNode Visit(AssignStatement node)
         {
@@ -420,6 +420,30 @@ namespace FEFUPascalCompiler.Parser.Visitors
         public AstPrinterNode Visit(BooleanLiteral node)
         {
             return new AstPrinterNode(node.ToString());
+        }
+
+        public AstPrinterNode Visit(ComparingOperator node)
+        {
+            var printer = new AstPrinterNode(node.ToString());
+            printer.AddChild(node.Left.Accept(this));
+            printer.AddChild(node.Right.Accept(this));
+            return printer;
+        }
+
+        public AstPrinterNode Visit(AdditiveOperator node)
+        {
+            var printer = new AstPrinterNode(node.ToString());
+            printer.AddChild(node.Left.Accept(this));
+            printer.AddChild(node.Right.Accept(this));
+            return printer;
+        }
+
+        public AstPrinterNode Visit(MultiplyingOperator node)
+        {
+            var printer = new AstPrinterNode(node.ToString());
+            printer.AddChild(node.Left.Accept(this));
+            printer.AddChild(node.Right.Accept(this));
+            return printer;
         }
     }
 
