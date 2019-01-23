@@ -7,7 +7,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(Ident node);
         T Visit(ConstIntegerLiteral node);
         T Visit(ConstFloatLiteral node);
-        T Visit(BinOperator node);
+//        T Visit(BinOperator node);
         T Visit(AssignStatement node);
         T Visit(Program node);
         T Visit(MainBlock node);
@@ -51,5 +51,8 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(DereferenceOperator node);
         T Visit(Cast node);
         T Visit(BooleanLiteral node);
+        T Visit(ComparingOperator node);
+        T Visit(AdditiveOperator node);
+        T Visit(MultiplyingOperator node);
     }
 }
