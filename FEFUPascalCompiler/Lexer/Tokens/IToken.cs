@@ -106,7 +106,6 @@ namespace FEFUPascalCompiler.Tokens
         //standard names
         Abs,
         Arctan,
-        Boolean,
         Char,
         Chr,
         Cos,
@@ -190,7 +189,6 @@ namespace FEFUPascalCompiler.Tokens
             {"with", TokenType.With},
             {"abs", TokenType.Abs},
             {"arctan", TokenType.Arctan},
-            {"boolean", TokenType.Boolean},
             {"char", TokenType.Char},
             {"chr", TokenType.Chr},
             {"cos", TokenType.Cos},

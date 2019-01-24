@@ -16,6 +16,20 @@ namespace FEFUPascalCompiler.Parser.Sematics
             AddType(SymFloat);
             AddType(SymChar);
             AddType(SymBool);
+            AddType(SymNil);
+            
+            SymIntPtr.ReferencedSymType = SymInt;
+            SymIntPtr.Ident = string.Concat(SymInt.Ident, "_ptr");
+            SymFloatPtr.ReferencedSymType = SymFloat;
+            SymFloatPtr.Ident = string.Concat(SymInt.Ident, "_ptr");
+            SymCharPtr.ReferencedSymType = SymChar;
+            SymCharPtr.Ident = string.Concat(SymInt.Ident, "_ptr");
+            SymStringPtr.ReferencedSymType = SymString;
+            SymStringPtr.Ident = string.Concat(SymInt.Ident, "_ptr");
+            SymBoolPtr.ReferencedSymType = SymBool;
+            SymBoolPtr.Ident = string.Concat(SymInt.Ident, "_ptr");
+            SymNilPtr.ReferencedSymType = SymNil;
+            SymNilPtr.Ident = string.Concat(SymInt.Ident, "_ptr");
         }
 
         public void Push()
@@ -23,6 +37,11 @@ namespace FEFUPascalCompiler.Parser.Sematics
             _stack.Push(new SymbolTable());
         }
 
+        public void Push(SymbolTable table)
+        {
+            _stack.Push(table);
+        }
+        
         public SymbolTable Peek()
         {
             return _stack.Peek();
@@ -48,6 +67,11 @@ namespace FEFUPascalCompiler.Parser.Sematics
         public Symbol FindInScope(string identifier)
         {
             return _stack.Peek().Find(identifier);
+        }
+
+        public SymVar FindIdentInScope(string identifier)
+        {
+            return _stack.Peek().Find(identifier) as SymVar;
         }
 
         public SymType FindType(string symbolIdentifier)
@@ -164,11 +188,17 @@ namespace FEFUPascalCompiler.Parser.Sematics
 
         // default types
         public SymType SymInt = new SymIntegerType();
-        public SymType SymString = new SymStringType();
         public SymType SymFloat = new SymFloatType();
         public SymType SymChar = new SymCharType();
+        public SymType SymString = new SymStringType();
         public SymType SymBool = new SymBoolType();
         public SymType SymNil = new SymNilConst();
+        public SymPointerType SymIntPtr = new SymPointerType();
+        public SymPointerType SymFloatPtr = new SymPointerType();
+        public SymPointerType SymCharPtr = new SymPointerType();
+        public SymPointerType SymStringPtr = new SymPointerType();
+        public SymPointerType SymBoolPtr = new SymPointerType();
+        public SymPointerType SymNilPtr = new SymPointerType();
     }
 
     public class SymbolTable: IEnumerable 

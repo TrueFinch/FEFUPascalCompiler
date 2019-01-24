@@ -50,7 +50,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(ForRange node);
         T Visit(DereferenceOperator node);
         T Visit(Cast node);
-        T Visit(BooleanLiteral node);
+        T Visit(ConstBooleanLiteral node);
         T Visit(ComparingOperator node);
         T Visit(AdditiveOperator node);
         T Visit(MultiplyingOperator node);
