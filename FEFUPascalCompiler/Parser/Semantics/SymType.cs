@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using FEFUPascalCompiler.Parser.Sematics;
 
@@ -82,9 +83,9 @@ namespace FEFUPascalCompiler.Parser.Semantics
         {
         }
         
-        public bool Equals(ref Symbol symbolType)
+        public bool Equals(ref SymNilConst symbolType)
         {
-            return false;
+            return true;
         }
     }
     
@@ -158,12 +159,20 @@ namespace FEFUPascalCompiler.Parser.Semantics
 
     public class SymPointerType : SymType
     {
-        public SymPointerType(SymType referencedSymType, string ident = "") : base(ident)
+        public SymPointerType(SymType referencedSymType = null, string ident = "") : base(ident)
         {
             ReferencedSymType = referencedSymType;
         }
         
-        public SymType ReferencedSymType { get; }
+        public SymType ReferencedSymType { get; set; }
+
+//        static string GetPointerType(SymType type)
+//        {
+//            if (type is SymIntegerType || type is SymFloatType || type is SymCharType || type is SymBoolType)
+//            {
+//                return string.Concat(type.Ident, "_ptr");
+//            }
+//        }
     }
     
     public class IndexRange<T1, T2>
