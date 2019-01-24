@@ -287,7 +287,17 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(ArrayAccess node)
         {
-            throw new NotImplementedException();
+            if (node.SymType != null) return true;
+
+            node.ArrayIdent.Accept(this);
+            foreach (var expression in node.AccessExpr)
+            {
+                expression.Accept(this);
+            }
+            
+            node.SymType = (node.ArrayIdent.SymType as SymArrayType).ElementSymType;
+            node.IsLValue = false;
+            return true;
         }
 
         public bool Visit(DereferenceOperator node)
@@ -309,6 +319,20 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(FunctionCall node)
         {
+            //TODO: rewrite FunctionCall and symbol types of function and procedure
+//            if (node.SymType != null) return true;
+//            
+//            node.FuncIdent.Accept(this);
+//            
+//            if (node.FuncIdent.SymType)
+//            _symStack.Push((node.FuncIdent.SymType as FunctionSymbol).Table);
+//            _inLastNamespace = true;
+//            node.FieldToAccess.Accept(this);
+//            _inLastNamespace = false;
+//
+//            node.SymType = node.FieldToAccess.SymType;
+//            node.IsLValue = true;
+//            return true;
             throw new NotImplementedException();
         }
 
@@ -326,9 +350,10 @@ namespace FEFUPascalCompiler.Parser.Visitors
             _inLastNamespace = true;
             node.FieldToAccess.Accept(this);
             _inLastNamespace = false;
-
+            _symStack.Pop();
+            
             node.SymType = node.FieldToAccess.SymType;
-            node.IsLValue = true;
+            node.IsLValue = false;
             return true;
         }
 

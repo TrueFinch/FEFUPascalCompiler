@@ -208,7 +208,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         public AstPrinterNode Visit(ArrayAccess node)
         {
             var printer = new AstPrinterNode(node.ToString());
-            printer.AddChild(node.Array.Accept(this));
+            printer.AddChild(node.ArrayIdent.Accept(this));
             foreach (var expr in node.AccessExpr)
             {
                 printer.AddChild(expr.Accept(this));

@@ -98,9 +98,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     
     public class ArrayAccess : Expression
     {
-        public ArrayAccess(Expression arrayIdent, List<Expression> accessExpressions) : base(AstNodeType.ArrayAccess)
+        public ArrayAccess(Ident arrayIdent, List<Expression> accessExpressions) : base(AstNodeType.ArrayAccess)
         {
-            Array = arrayIdent;
+            ArrayIdent = arrayIdent;
             AccessExpr = accessExpressions;
         }
 
@@ -109,7 +109,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public Expression Array { get; set; }
+        public Ident ArrayIdent { get; set; }
         public List<Expression> AccessExpr { get; set; }
     }
     
@@ -130,7 +130,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     }
     
     public class FunctionCall : Expression {
-        public FunctionCall(Expression funcIdent, List<Expression> paramList) : base(AstNodeType.FunctionCall)
+        public FunctionCall(Ident funcIdent, List<Expression> paramList) : base(AstNodeType.FunctionCall)
         {
             FuncIdent = funcIdent;
             ParamList = paramList;
@@ -141,7 +141,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
         
-        public Expression FuncIdent { get; set; }
+        public Ident FuncIdent { get; set; }
         public List<Expression> ParamList { get; set; }
     }
     
