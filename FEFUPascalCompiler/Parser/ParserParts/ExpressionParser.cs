@@ -164,7 +164,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 case TokenType.False:
                 {
                     NextToken();
-                    return new BooleanLiteral(token);
+                    return new ConstBooleanLiteral(token);
                 }
                 case TokenType.OpenBracket:
                 {
@@ -231,7 +231,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                                 PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
                         }
 
-                        left = new RecordAccess(left, field);
+                        if (!(field is Ident))
+                        {
+                            throw new Exception(string.Format(
+                                "{0}, {1} : syntax error, accessing field must be identifier",
+                                field.Token.Line, field.Token.Column, field.Token.Lexeme));
+                        }
+                        
+                        left = new RecordAccess(left, field as Ident);
                         break;
                     }
                     case TokenType.OpenBracket:

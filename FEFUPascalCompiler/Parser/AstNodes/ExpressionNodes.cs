@@ -114,10 +114,10 @@ namespace FEFUPascalCompiler.Parser.AstNodes
     }
     
     public class RecordAccess : Expression {
-        public RecordAccess(AstNode recordIdent, AstNode field) : base(AstNodeType.RecordAccess)
+        public RecordAccess(Expression recordIdent, Ident fieldToAccess) : base(AstNodeType.RecordAccess)
         {
             RecordIdent = recordIdent;
-            Field = field;
+            FieldToAccess = fieldToAccess;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -125,8 +125,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public AstNode RecordIdent { get; set; }
-        public AstNode Field { get; set; }
+        public Expression RecordIdent { get; set; }
+        public Ident FieldToAccess { get; set; }
     }
     
     public class FunctionCall : Expression {
@@ -238,9 +238,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
     }
 
-    public class BooleanLiteral : Expression
+    public class ConstBooleanLiteral : Expression
     {
-        public BooleanLiteral(Token token) : base(AstNodeType.BooleanLiteral, token)
+        public ConstBooleanLiteral(Token token) : base(AstNodeType.BooleanLiteral, token)
         {
         }
 
