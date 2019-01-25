@@ -19,10 +19,10 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(SimpleVarDecl node);
         T Visit(InitVarDecl node);
         T Visit(ProcFuncDeclsPart node);
-        T Visit(ProcDecl node);
-        T Visit(ProcHeader node);
-        T Visit(FuncDecl node);
-        T Visit(FuncHeader node);
+//        T Visit(ProcDecl node);
+//        T Visit(ProcHeader node);
+//        T Visit(FuncDecl node);
+//        T Visit(FuncHeader node);
         T Visit(SubroutineBlock node);
         T Visit(Forward node);
         T Visit(UnaryOperator node);
@@ -54,5 +54,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(ComparingOperator node);
         T Visit(AdditiveOperator node);
         T Visit(MultiplyingOperator node);
+        T Visit(CallableDeclNode node);
+        T Visit(CallableHeader node);
     }
 }

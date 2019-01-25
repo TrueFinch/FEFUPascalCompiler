@@ -139,46 +139,46 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return printer;
         }
 
-        public AstPrinterNode Visit(ProcDecl node)
-        {
-            var printer = new AstPrinterNode(node.ToString());
-            printer.AddChild(node.ProcHeader.Accept(this));
-            printer.AddChild(node.Block.Accept(this));
-            return printer;
-        }
-
-        public AstPrinterNode Visit(ProcHeader node)
-        {
-            var printer = new AstPrinterNode(node.ToString());
-            printer.AddChild(node.Name.Accept(this));
-            foreach (var param in node.ParamList)
-            {
-                printer.AddChild(param.Accept(this));
-            }
-
-            return printer;
-        }
-
-        public AstPrinterNode Visit(FuncDecl node)
-        {
-            var printer = new AstPrinterNode(node.ToString());
-            printer.AddChild(node.FuncHeader.Accept(this));
-            printer.AddChild(node.Block.Accept(this));
-            return printer;
-        }
-
-        public AstPrinterNode Visit(FuncHeader node)
-        {
-            var printer = new AstPrinterNode(node.ToString());
-            printer.AddChild(node.Name.Accept(this));
-            foreach (var param in node.ParamList)
-            {
-                printer.AddChild(param.Accept(this));
-            }
-
-            printer.AddChild(node.ReturnType.Accept(this));
-            return printer;
-        }
+//        public AstPrinterNode Visit(ProcDecl node)
+//        {
+//            var printer = new AstPrinterNode(node.ToString());
+//            printer.AddChild(node.ProcHeader.Accept(this));
+//            printer.AddChild(node.Block.Accept(this));
+//            return printer;
+//        }
+//
+//        public AstPrinterNode Visit(ProcHeader node)
+//        {
+//            var printer = new AstPrinterNode(node.ToString());
+//            printer.AddChild(node.Name.Accept(this));
+//            foreach (var param in node.ParamList)
+//            {
+//                printer.AddChild(param.Accept(this));
+//            }
+//
+//            return printer;
+//        }
+//
+//        public AstPrinterNode Visit(FuncDecl node)
+//        {
+//            var printer = new AstPrinterNode(node.ToString());
+//            printer.AddChild(node.FuncHeader.Accept(this));
+//            printer.AddChild(node.Block.Accept(this));
+//            return printer;
+//        }
+//
+//        public AstPrinterNode Visit(FuncHeader node)
+//        {
+//            var printer = new AstPrinterNode(node.ToString());
+//            printer.AddChild(node.Name.Accept(this));
+//            foreach (var param in node.ParamList)
+//            {
+//                printer.AddChild(param.Accept(this));
+//            }
+//
+//            printer.AddChild(node.ReturnType.Accept(this));
+//            return printer;
+//        }
 
         public AstPrinterNode Visit(SubroutineBlock node)
         {
@@ -228,7 +228,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         public AstPrinterNode Visit(FunctionCall node)
         {
             var printer = new AstPrinterNode(node.ToString());
-            printer.AddChild(node.FuncIdent.Accept(this));
+//            printer.AddChild(node.FuncIdent.Accept(this));
             foreach (var param in node.ParamList)
             {
                 printer.AddChild(param.Accept(this));
@@ -443,6 +443,29 @@ namespace FEFUPascalCompiler.Parser.Visitors
             var printer = new AstPrinterNode(node.ToString());
             printer.AddChild(node.Left.Accept(this));
             printer.AddChild(node.Right.Accept(this));
+            return printer;
+        }
+
+        public AstPrinterNode Visit(CallableDeclNode node)
+        {
+            var printer = new AstPrinterNode(node.ToString());
+            printer.AddChild(node.Header.Accept(this));
+            printer.AddChild(node.Block.Accept(this));
+            return printer;
+        }
+
+        public AstPrinterNode Visit(CallableHeader node)
+        {
+            var printer = new AstPrinterNode(node.ToString());
+            printer.AddChild(node.Name.Accept(this));
+            foreach (var param in node.ParamList)
+            {
+                printer.AddChild(param.Accept(this));
+            }
+            
+            if (node.ReturnType != null)
+                printer.AddChild(node.ReturnType.Accept(this));
+            
             return printer;
         }
     }

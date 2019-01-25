@@ -138,76 +138,113 @@ public class ProcFuncDeclsPart : DeclsPart
     }
 }
 
-public class ProcDecl : AstNode
+public class CallableDeclNode : AstNode
 {
-    public ProcDecl(AstNode procHeader, AstNode block) : base(AstNodeType.ProcDecl)
+    public CallableDeclNode(CallableHeader header, AstNode block = null) : base(AstNodeType.ProcDecl)
     {
-        ProcHeader = procHeader;
+        Header = header;
         Block = block;
     }
-
+    
     public override T Accept<T>(IAstVisitor<T> visitor)
     {
         return visitor.Visit(this);
     }
-
-    public AstNode ProcHeader { get; set; }
+    
+    public CallableHeader Header { get; set; }
     public AstNode Block { get; set; }
 }
 
-public class ProcHeader : AstNode
+public class CallableHeader : AstNode
 {
-    public ProcHeader(AstNode name, List<AstNode> paramList) : base(AstNodeType.ProcHeader)
-    {
-        Name = name;
-        ParamList = paramList;
-    }
-
-    public override T Accept<T>(IAstVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
-
-    public AstNode Name { get; set; }
-    public List<AstNode> ParamList { get; set; }
-}
-
-public class FuncDecl : AstNode
-{
-    public FuncDecl(AstNode funcHeader, AstNode block) : base(AstNodeType.FuncDecl)
-    {
-        FuncHeader = funcHeader;
-        Block = block;
-    }
-
-    public override T Accept<T>(IAstVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
-
-    public AstNode FuncHeader { get; set; }
-    public AstNode Block { get; set; }
-}
-
-public class FuncHeader : AstNode
-{
-    public FuncHeader(AstNode name, List<AstNode> paramList, AstNode returnType)
+    public CallableHeader(AstNode name, List<AstNode> paramList, AstNode returnType = null)
         : base(AstNodeType.FuncHeader)
     {
         Name = name;
         ParamList = paramList;
         ReturnType = returnType;
     }
-
+    
     public override T Accept<T>(IAstVisitor<T> visitor)
     {
         return visitor.Visit(this);
     }
-
+    
     public AstNode Name {get; set;}
     public List<AstNode> ParamList {get; set;}
     public AstNode ReturnType {get; set;}
 }
+
+//public class ProcDecl : AstNode
+//{
+//    public ProcDecl(AstNode procHeader, AstNode block) : base(AstNodeType.ProcDecl)
+//    {
+//        ProcHeader = procHeader;
+//        Block = block;
+//    }
+//
+//    public override T Accept<T>(IAstVisitor<T> visitor)
+//    {
+//        return visitor.Visit(this);
+//    }
+//
+//    public AstNode ProcHeader { get; set; }
+//    public AstNode Block { get; set; }
+//}
+//
+//public class ProcHeader : AstNode
+//{
+//    public ProcHeader(AstNode name, List<AstNode> paramList) : base(AstNodeType.ProcHeader)
+//    {
+//        Name = name;
+//        ParamList = paramList;
+//    }
+//
+//    public override T Accept<T>(IAstVisitor<T> visitor)
+//    {
+//        return visitor.Visit(this);
+//    }
+//
+//    public AstNode Name { get; set; }
+//    public List<AstNode> ParamList { get; set; }
+//}
+//
+//public class FuncDecl : AstNode
+//{
+//    public FuncDecl(AstNode funcHeader, AstNode block) : base(AstNodeType.FuncDecl)
+//    {
+//        FuncHeader = funcHeader;
+//        Block = block;
+//    }
+//
+//    public override T Accept<T>(IAstVisitor<T> visitor)
+//    {
+//        return visitor.Visit(this);
+//    }
+//
+//    public AstNode FuncHeader { get; set; }
+//    public AstNode Block { get; set; }
+//}
+//
+//public class FuncHeader : AstNode
+//{
+//    public FuncHeader(AstNode name, List<AstNode> paramList, AstNode returnType)
+//        : base(AstNodeType.FuncHeader)
+//    {
+//        Name = name;
+//        ParamList = paramList;
+//        ReturnType = returnType;
+//    }
+//
+//    public override T Accept<T>(IAstVisitor<T> visitor)
+//    {
+//        return visitor.Visit(this);
+//    }
+//
+//    public AstNode Name {get; set;}
+//    public List<AstNode> ParamList {get; set;}
+//    public AstNode ReturnType {get; set;}
+//}
 
 public class SubroutineBlock : AstNode
 {
