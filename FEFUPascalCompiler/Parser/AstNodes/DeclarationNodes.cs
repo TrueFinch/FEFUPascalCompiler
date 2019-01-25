@@ -126,17 +126,17 @@ public class InitVarDecl : AstNode
 }
 
 
-public class ProcFuncDeclsPart : DeclsPart
-{
-    public ProcFuncDeclsPart(List<AstNode> decls) : base(decls, AstNodeType.ProcFuncDeclsPart)
-    {
-    }
-
-    public override T Accept<T>(IAstVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
-}
+//public class ProcFuncDeclsPart : DeclsPart
+//{
+//    public ProcFuncDeclsPart(List<AstNode> decls) : base(decls, AstNodeType.ProcFuncDeclsPart)
+//    {
+//    }
+//
+//    public override T Accept<T>(IAstVisitor<T> visitor)
+//    {
+//        return visitor.Visit(this);
+//    }
+//}
 
 public class CallableDeclNode : AstNode
 {

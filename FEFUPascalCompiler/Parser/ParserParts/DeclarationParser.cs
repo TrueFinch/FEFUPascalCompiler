@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Sematics;
 using FEFUPascalCompiler.Tokens;
 using Type = System.Type;
@@ -227,38 +228,38 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new SimpleVarDecl(varIdents, type.Item2);
         }
 
-        private AstNode ParseProcFuncDeclsPart()
-        {
-            var declarations = new List<AstNode>();
-            bool stopParse = false;
-            while (!stopParse)
-            {
-                stopParse = true;
-                switch (PeekToken().Type)
-                {
-                    case TokenType.Procedure:
-                    {
-                        stopParse = false;
-                        var procDecl = ParseProcDecl();
-                        declarations.Add(procDecl);
-                        break;
-                    }
-                    case TokenType.Function:
-                    {
-                        stopParse = false;
-                        var funcDecl = ParseFuncDecl();
-                        declarations.Add(funcDecl);
-                        break;
-                    }
-                }
-            }
-
-            return new ProcFuncDeclsPart(declarations);
-        }
+//        private AstNode ParseProcFuncDeclsPart()
+//        {
+//            var declarations = new List<AstNode>();
+//            bool stopParse = false;
+//            while (!stopParse)
+//            {
+//                stopParse = true;
+//                switch (PeekToken().Type)
+//                {
+//                    case TokenType.Procedure:
+//                    {
+//                        stopParse = false;
+//                        var procDecl = ParseProcDecl();
+//                        declarations.Add(procDecl);
+//                        break;
+//                    }
+//                    case TokenType.Function:
+//                    {
+//                        stopParse = false;
+//                        var funcDecl = ParseFuncDecl();
+//                        declarations.Add(funcDecl);
+//                        break;
+//                    }
+//                }
+//            }
+//
+//            return new ProcFuncDeclsPart(declarations);
+//        }
 
         private AstNode ParseFuncDecl()
         {
-            FunctionSymbol functionSymbol;
+            CallableSymbol functionSymbol;
             FuncHeader funcHeader;
             (functionSymbol, funcHeader) = ParseFuncHeader();
 
@@ -271,7 +272,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             _symbolTableStack.Push(); // this will be local table
             var funcSubroutineBlock = ParseSubroutineBlock();
 
-            functionSymbol.Body = funcSubroutineBlock;
+            functionSymbol.Body = funcSubroutineBlock as SubroutineBlock;
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
@@ -291,7 +292,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new FuncDecl(funcHeader, funcSubroutineBlock);
         }
 
-        private (FunctionSymbol, FuncHeader) ParseFuncHeader()
+        private (CallableSymbol, FuncHeader) ParseFuncHeader()
         {
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Function},
                 string.Format("{0} {1} : syntax error, 'function' expected, but {2} found",
@@ -299,7 +300,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             var funcName = ParseIdent();
             CheckDuplicateIdentifier(funcName.Token);
-            var funcSymbol = new FunctionSymbol(funcName.ToString());
+            var funcSymbol = new CallableSymbol(funcName.ToString());
 
             _symbolTableStack.Push(); //this will be Parameters table
             var paramList = ParseFormalParamList();
@@ -319,7 +320,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         //TODO: add declaration correctness 
         private AstNode ParseProcDecl()
         {
-            ProcedureSymbol procedureSymbol;
+            CallableSymbol procedureSymbol;
             ProcHeader procHeader;
             (procedureSymbol, procHeader) = ParseProcHeader();
 
@@ -331,7 +332,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             
             _symbolTableStack.Push(); // this will be local table
             var procSubroutineBlock = ParseSubroutineBlock();
-            procedureSymbol.Body = procSubroutineBlock;
+            procedureSymbol.Body = procSubroutineBlock as SubroutineBlock;
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
@@ -351,7 +352,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new ProcDecl(procHeader, procSubroutineBlock);
         }
 
-        private (ProcedureSymbol, ProcHeader) ParseProcHeader()
+        private (CallableSymbol, ProcHeader) ParseProcHeader()
         {
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Procedure},
                 string.Format("{0} {1} : syntax error, 'procedure' expected, but {2} found",
@@ -359,7 +360,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             var procName = ParseIdent();
             CheckDuplicateIdentifier(procName.Token);
-            var procSymbol = new ProcedureSymbol(procName.ToString());
+            var procSymbol = new CallableSymbol(procName.ToString());
 
             _symbolTableStack.Push(); //this will be Parameters table
             var paramList = ParseFormalParamList();
