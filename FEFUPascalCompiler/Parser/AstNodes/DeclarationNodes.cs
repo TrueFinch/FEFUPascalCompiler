@@ -31,7 +31,7 @@ public class ConstDeclsPart : DeclsPart
 
 public class ConstDecl : AstNode
 {
-    public ConstDecl(Token token, AstNode ident, AstNode expression) : base(AstNodeType.ConstDecl, token)
+    public ConstDecl(Token token, AstNode ident, Expression expression, bool isLocal) : base(AstNodeType.ConstDecl, token)
     {
         Ident = ident;
         Expression = expression;
@@ -41,9 +41,10 @@ public class ConstDecl : AstNode
     {
         return visitor.Visit(this);
     }
-
+    
+    public bool IsLocal;
     public AstNode Ident { get; set; }
-    public AstNode Expression { get; set; }
+    public Expression Expression { get; set; }
 }
 
 public class TypeDeclsPart : DeclsPart

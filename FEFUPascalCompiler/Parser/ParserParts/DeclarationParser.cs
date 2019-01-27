@@ -65,7 +65,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return declsParts;
         }
 
-        private AstNode ParseConstDeclsPart()
+        private AstNode ParseConstDeclsPart(bool local = false)
         {
             var token = PeekAndNext();
 
@@ -88,7 +88,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new ConstDeclsPart(token, constDecls);
         }
 
-        private AstNode ParseConstDecl()
+        private AstNode ParseConstDecl(bool local = false)
         {
             var constIdent = ParseIdent();
             var token = PeekToken();
@@ -109,7 +109,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             NextToken();
 
-            return new ConstDecl(token, constIdent, expression);
+            return new ConstDecl(token, constIdent, expression, local);
         }
 
         private AstNode ParseTypeDeclsPart()
@@ -387,7 +387,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     case TokenType.Const:
                     {
                         stopParse = false;
-                        var constDeclsPart = ParseConstDeclsPart();
+                        var constDeclsPart = ParseConstDeclsPart(true);
                         declsParts.Add(constDeclsPart);
                         break;
                     }
@@ -401,7 +401,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     case TokenType.Var:
                     {
                         stopParse = false;
-                        var varDeclsPart = ParseVarDeclsPart();
+                        var varDeclsPart = ParseVarDeclsPart(true);
                         declsParts.Add(varDeclsPart);
                         break;
                     }
