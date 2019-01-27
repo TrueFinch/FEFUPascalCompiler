@@ -182,7 +182,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
                         var fieldType = _symStack.CheckTypeDeclared(field.IdentsType.Token);
                         foreach (var fieldIdent in field.Idents)
                         {
-                            _symStack.CheckIdentifierDuplicate(fieldIdent.Token);
+                            _symStack.CheckIdentifierDuplicateInScope(fieldIdent.Token);
                             _symStack.AddVariable(true, fieldIdent.ToString(), fieldType);
 //                            fieldIdent.SymType = fieldType;
 //                            fieldIdent.SymVar = _symStack.FindIdentInScope(fieldIdent.ToString());
@@ -217,7 +217,13 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(ConstDecl node)
         {
-            throw new NotImplementedException();
+            node.Expression.Accept(this);
+            
+            _symStack.CheckIdentifierDuplicate(node.Ident.Token);
+
+            _symStack.AddConstant(node.IsLocal, node.Ident.ToString(), node.Expression.SymType);
+            
+            return true;
         }
 
         public bool Visit(VarDeclsPart node)
@@ -238,7 +244,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
                 _symStack.CheckIdentifierDuplicate(ident.Token);
                 _symStack.AddVariable(node.IsLocal, ident.ToString(), identsType);
             }
-
+            
             return true;
         }
 
@@ -385,7 +391,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
                         node.Token.Line, node.Token.Column, node.Token.Lexeme));
             node.SymVar = sym;
             node.SymType = sym.VarSymType;
-            node.IsLValue = true;
+            node.IsLValue = sym is SymConstant ? false : true;
 
             return true;
         }
@@ -417,7 +423,6 @@ namespace FEFUPascalCompiler.Parser.Visitors
                     "{0}, {1} : syntax error, expression '{2}' is not lvalue",
                     node.Expr.Token.Line, node.Expr.Token.Column, node.Expr.ToString()));
             }
-
 
             return true;
         }
