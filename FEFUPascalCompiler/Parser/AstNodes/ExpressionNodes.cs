@@ -176,9 +176,17 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
         
         public SymVar SymVar { get; set; }
+//        public Constant DefaultValue { get; set; }
+    }
+
+    public abstract class Constant : Expression
+    {
+        protected Constant(AstNodeType nodeType, Token token = null) : base(nodeType, token)
+        {
+        }
     }
     
-    public class ConstIntegerLiteral : Expression
+    public class ConstIntegerLiteral : Constant
     {
         public ConstIntegerLiteral(Token token) : base(AstNodeType.ConstIntegerLiteral, token)
         {
@@ -190,7 +198,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
     }
 
-    public class ConstFloatLiteral : Expression
+    public class ConstFloatLiteral : Constant
     {
         public ConstFloatLiteral(Token token) : base(AstNodeType.ConstDoubleLiteral, token)
         {
@@ -202,7 +210,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
     }
 
-    public class ConstCharLiteral : Expression
+    public class ConstCharLiteral : Constant
     {
         public ConstCharLiteral(Token token) : base(AstNodeType.ConstCharLiteral, token)
         {
@@ -214,7 +222,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
     }
 
-    public class ConstStringLiteral : Expression
+    public class ConstStringLiteral : Constant
     {
         public ConstStringLiteral(Token token) : base(AstNodeType.ConstStringLiteral, token)
         {
@@ -226,7 +234,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
     }
 
-    public class Nil : Expression
+    public class Nil : Constant
     {
         public Nil(Token token) : base(AstNodeType.Nil, token)
         {
@@ -238,7 +246,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
     }
 
-    public class ConstBooleanLiteral : Expression
+    public class ConstBooleanLiteral : Constant
     {
         public ConstBooleanLiteral(Token token) : base(AstNodeType.BooleanLiteral, token)
         {
