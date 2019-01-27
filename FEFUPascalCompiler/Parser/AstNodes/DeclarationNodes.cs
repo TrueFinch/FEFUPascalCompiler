@@ -77,21 +77,25 @@ public class TypeDecl : AstNode
 
 public class VarDeclsPart : DeclsPart
 {
-    public VarDeclsPart(Token token, List<AstNode> decls) : base(decls, AstNodeType.VarDeclsPart, token)
+    public VarDeclsPart(Token token, List<AstNode> decls, bool isLocal) : base(decls, AstNodeType.VarDeclsPart, token)
     {
+        IsLocal = isLocal;
     }
 
     public override T Accept<T>(IAstVisitor<T> visitor)
     {
         return visitor.Visit(this);
     }
+
+    public bool IsLocal;
 }
 
 public class SimpleVarDecl : AstNode
 {
-    public SimpleVarDecl(List<Ident> identList, AstNode identsType)
+    public SimpleVarDecl(List<Ident> identList, AstNode identsType, bool isLocal)
         : base(AstNodeType.SimpleVarDecl)
     {
+        IsLocal = isLocal;
         IdentList = identList;
         IdentsType = identsType;
     }
@@ -101,29 +105,30 @@ public class SimpleVarDecl : AstNode
         return visitor.Visit(this);
     }
 
+    public bool IsLocal;
     public List<Ident> IdentList { get; set; }
     public AstNode IdentsType { get; set; }
 }
 
-public class InitVarDecl : AstNode
-{
-    public InitVarDecl(AstNode ident, AstNode identsType, AstNode expression)
-        : base(AstNodeType.InitVarDecl)
-    {
-        Ident = ident;
-        IdentType = identsType;
-        Expression = expression;
-    }
-
-    public override T Accept<T>(IAstVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
-
-    public AstNode Ident { get; set; }
-    public AstNode IdentType { get; set; }
-    public AstNode Expression { get; set; }
-}
+//public class InitVarDecl : AstNode
+//{
+//    public InitVarDecl(AstNode ident, AstNode identsType, AstNode expression)
+//        : base(AstNodeType.InitVarDecl)
+//    {
+//        Ident = ident;
+//        IdentType = identsType;
+//        Expression = expression;
+//    }
+//
+//    public override T Accept<T>(IAstVisitor<T> visitor)
+//    {
+//        return visitor.Visit(this);
+//    }
+//
+//    public AstNode Ident { get; set; }
+//    public AstNode IdentType { get; set; }
+//    public AstNode Expression { get; set; }
+//}
 
 
 //public class ProcFuncDeclsPart : DeclsPart

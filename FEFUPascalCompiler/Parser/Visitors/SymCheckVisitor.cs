@@ -117,16 +117,6 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return true;
         }
 
-        public bool Visit(ConstDeclsPart node)
-        {
-            foreach (var nodeDecl in node.Decls)
-            {
-                nodeDecl.Accept(this);
-            }
-
-            return true;
-        }
-
         public bool Visit(TypeDeclsPart node)
         {
             foreach (var nodeDecl in node.Decls)
@@ -176,7 +166,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
                     var arrayElemType = _symStack.CheckTypeDeclared(arrayTypeNode.TypeOfArray.Token);
 
-                    _symStack.CheckDuplicateIdentifier(node.Ident.Token);
+                    _symStack.CheckIdentifierDuplicate(node.Ident.Token);
 
                     _symStack.AddType(node.Ident.ToString(),
                         new SymArrayType(indexRanges, arrayElemType, node.Ident.ToString()));
@@ -192,8 +182,11 @@ namespace FEFUPascalCompiler.Parser.Visitors
                         var fieldType = _symStack.CheckTypeDeclared(field.IdentsType.Token);
                         foreach (var fieldIdent in field.Idents)
                         {
-                            _symStack.CheckDuplicateIdentifier(fieldIdent.Token);
+                            _symStack.CheckIdentifierDuplicate(fieldIdent.Token);
                             _symStack.AddVariable(true, fieldIdent.ToString(), fieldType);
+//                            fieldIdent.SymType = fieldType;
+//                            fieldIdent.SymVar = _symStack.FindIdentInScope(fieldIdent.ToString());
+//                            fieldIdent.IsLValue = true;
                         }
                     }
 
@@ -212,6 +205,16 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return true;
         }
 
+        public bool Visit(ConstDeclsPart node)
+        {
+            foreach (var nodeDecl in node.Decls)
+            {
+                nodeDecl.Accept(this);
+            }
+
+            return true;
+        }
+
         public bool Visit(ConstDecl node)
         {
             throw new NotImplementedException();
@@ -219,20 +222,27 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(VarDeclsPart node)
         {
-            throw new NotImplementedException();
+            foreach (var nodeDecl in node.Decls)
+            {
+                nodeDecl.Accept(this);
+            }
+
+            return true;
         }
 
         public bool Visit(SimpleVarDecl node)
         {
-            throw new NotImplementedException();
+            var identsType = _symStack.CheckTypeDeclared(node.IdentsType.Token);
+            foreach (var ident in node.IdentList)
+            {
+                _symStack.CheckIdentifierDuplicate(ident.Token);
+                _symStack.AddVariable(node.IsLocal, ident.ToString(), identsType);
+            }
+
+            return true;
         }
 
-        public bool Visit(InitVarDecl node)
-        {
-            throw new NotImplementedException();
-        }
-
-//        public bool Visit(ProcFuncDeclsPart node)
+//        public bool Visit(InitVarDecl node)
 //        {
 //            throw new NotImplementedException();
 //        }

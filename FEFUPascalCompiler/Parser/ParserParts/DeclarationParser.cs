@@ -185,7 +185,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 varDecls.Add(varDecl);
             } while (true);
 
-            return new VarDeclsPart(token, varDecls);
+            return new VarDeclsPart(token, varDecls, local);
         }
 
         private AstNode ParseVarDecl(bool local = false)
@@ -207,25 +207,25 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 _symbolTableStack.Peek().AddVariable(local, varIdent.ToString(), type.Item1);
             }
 
-            if (varIdents.Count == 1)
-            {
-                if (PeekToken().Type == TokenType.EqualOperator)
-                {
-                    NextToken();
-                    var expr = ParseExpression();
-                    CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
-                        string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
-                            PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
-
-                    return new InitVarDecl(varIdents[0], type.Item2, expr);
-                }
-            }
+//            if (varIdents.Count == 1)
+//            {
+//                if (PeekToken().Type == TokenType.EqualOperator)
+//                {
+//                    NextToken();
+//                    var expr = ParseExpression();
+//                    CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
+//                        string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
+//                            PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
+//
+//                    return new InitVarDecl(varIdents[0], type.Item2, expr);
+//                }
+//            }
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            return new SimpleVarDecl(varIdents, type.Item2);
+            return new SimpleVarDecl(varIdents, type.Item2, local);
         }
 
 //        private AstNode ParseProcFuncDeclsPart()

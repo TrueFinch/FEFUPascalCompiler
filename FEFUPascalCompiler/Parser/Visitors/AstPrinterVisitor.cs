@@ -119,14 +119,14 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return printer;
         }
 
-        public AstPrinterNode Visit(InitVarDecl node)
-        {
-            var printer = new AstPrinterNode(node.ToString());
-            printer.AddChild(node.Ident.Accept(this));
-            printer.AddChild(node.IdentType.Accept(this));
-            printer.AddChild(node.Expression.Accept(this));
-            return printer;
-        }
+//        public AstPrinterNode Visit(InitVarDecl node)
+//        {
+//            var printer = new AstPrinterNode(node.ToString());
+//            printer.AddChild(node.Ident.Accept(this));
+//            printer.AddChild(node.IdentType.Accept(this));
+//            printer.AddChild(node.Expression.Accept(this));
+//            return printer;
+//        }
 
 //        public AstPrinterNode Visit(ProcFuncDeclsPart node)
 //        {

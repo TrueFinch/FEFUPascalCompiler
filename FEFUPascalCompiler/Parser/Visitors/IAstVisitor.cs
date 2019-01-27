@@ -17,7 +17,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(ConstDecl node);
         T Visit(VarDeclsPart node);
         T Visit(SimpleVarDecl node);
-        T Visit(InitVarDecl node);
+//        T Visit(InitVarDecl node);
 //        T Visit(ProcFuncDeclsPart node);
 //        T Visit(ProcDecl node);
 //        T Visit(ProcHeader node);
