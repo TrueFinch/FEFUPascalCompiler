@@ -66,7 +66,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return null;
         }
 
-        internal void CheckDuplicateIdentifier(Token ident)
+        internal void CheckIdentifierDuplicate(Token ident)
         {
             if (Find(ident.Value) != null)
             {
@@ -80,7 +80,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return _stack.Peek().Find(identifier);
         }
 
-        private void CheckDuplicateIdentifierInScope(Token ident)
+        internal void CheckIdentifierDuplicateInScope(Token ident)
         {
             if (FindInScope(ident.Value) != null)
             {
@@ -171,6 +171,11 @@ namespace FEFUPascalCompiler.Parser.Sematics
             _stack.Peek().AddVariable(identifier, ident);
         }
 
+        public void AddConstant(bool local, string identifier, SymType type)
+        {
+            _stack.Peek().AddVariable(local, identifier, type);
+        }
+        
         public void AddAlias(string aliasIdentifier, SymType typeToAias)
         {
             _stack.Peek().AddAlias(aliasIdentifier, new SymAliasType(aliasIdentifier, typeToAias));
