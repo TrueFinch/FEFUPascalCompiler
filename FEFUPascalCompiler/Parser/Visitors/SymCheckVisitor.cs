@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Sematics;
@@ -107,24 +108,108 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(MainBlock node)
         {
-            //TODO: move declaration checking in visitor
-//            node.
-            throw new NotImplementedException();
+            foreach (var declarationsPart in node.DeclsParts)
+            {
+                declarationsPart.Accept(this);
+            }
+
+            node.MainCompound.Accept(this);
+            return true;
         }
 
         public bool Visit(ConstDeclsPart node)
         {
-            throw new NotImplementedException();
+            foreach (var nodeDecl in node.Decls)
+            {
+                nodeDecl.Accept(this);
+            }
+
+            return true;
         }
 
         public bool Visit(TypeDeclsPart node)
         {
-            throw new NotImplementedException();
+            foreach (var nodeDecl in node.Decls)
+            {
+                nodeDecl.Accept(this);
+            }
+
+            return true;
         }
 
         public bool Visit(TypeDecl node)
         {
-            throw new NotImplementedException();
+            switch (node.IdentType)
+            {
+                case SimpleTypeNode simpleTypeNode:
+                {
+                    var symType = _symStack.CheckTypeDeclared(simpleTypeNode.Token);
+
+                    _symStack.AddAlias(node.Ident.ToString(), symType);
+                    break;
+                }
+                case ArrayTypeNode arrayTypeNode:
+                {
+                    var indexRanges = new List<IndexRange<int, int>>();
+                    foreach (var indexRange in arrayTypeNode.IndexRanges)
+                    {
+                        indexRange.LeftBound.Accept(this);
+                        indexRange.RightBound.Accept(this);
+
+                        if (!(indexRange.LeftBound.Token is IntegerNumberToken leftToken))
+                        {
+                            throw new Exception(string.Format("{0}, {1} : range bounds is not integer '{2}'",
+                                indexRange.LeftBound.Token.Line, indexRange.LeftBound.Token.Column,
+                                indexRange.LeftBound.Token.Lexeme));
+                        }
+
+                        if (!(indexRange.RightBound.Token is IntegerNumberToken rightToken))
+                        {
+                            throw new Exception(string.Format("{0}, {1} : range bounds is not integer '{2}'",
+                                indexRange.RightBound.Token.Line, indexRange.RightBound.Token.Column,
+                                indexRange.RightBound.Token.Lexeme));
+                        }
+
+                        indexRanges.Add(new IndexRange<int, int>(leftToken.NumberValue, rightToken.NumberValue));
+                    }
+
+
+                    var arrayElemType = _symStack.CheckTypeDeclared(arrayTypeNode.TypeOfArray.Token);
+
+                    _symStack.CheckDuplicateIdentifier(node.Ident.Token);
+
+                    _symStack.AddType(node.Ident.ToString(),
+                        new SymArrayType(indexRanges, arrayElemType, node.Ident.ToString()));
+
+                    break;
+                }
+                case RecordTypeNode recordTypeNode:
+                {
+                    // this will be record table for fields
+                    _symStack.Push();
+                    foreach (var field in recordTypeNode.FieldsList)
+                    {
+                        var fieldType = _symStack.CheckTypeDeclared(field.IdentsType.Token);
+                        foreach (var fieldIdent in field.Idents)
+                        {
+                            _symStack.CheckDuplicateIdentifier(fieldIdent.Token);
+                            _symStack.AddVariable(true, fieldIdent.ToString(), fieldType);
+                        }
+                    }
+
+                    _symStack.AddType(node.Ident.ToString(), new SymRecordType(_symStack.Pop()));
+                    break;
+                }
+                case PointerTypeNode pointerTypeNode:
+                {
+                    var ptrType = _symStack.CheckTypeDeclared(pointerTypeNode.SimpleType.Token);
+
+                    _symStack.AddAlias(node.Ident.ToString(), ptrType);
+                    break;
+                }
+            }
+
+            return true;
         }
 
         public bool Visit(ConstDecl node)
@@ -147,30 +232,40 @@ namespace FEFUPascalCompiler.Parser.Visitors
             throw new NotImplementedException();
         }
 
-        public bool Visit(ProcFuncDeclsPart node)
+//        public bool Visit(ProcFuncDeclsPart node)
+//        {
+//            throw new NotImplementedException();
+//        }
+
+        public bool Visit(CallableDeclNode node)
         {
             throw new NotImplementedException();
         }
 
-        public bool Visit(ProcDecl node)
+        public bool Visit(CallableHeader node)
         {
             throw new NotImplementedException();
         }
 
-        public bool Visit(ProcHeader node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit(FuncDecl node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit(FuncHeader node)
-        {
-            throw new NotImplementedException();
-        }
+//        public bool Visit(ProcDecl node)
+//        {
+//            throw new NotImplementedException();
+//        }
+//
+//        public bool Visit(ProcHeader node)
+//        {
+//            throw new NotImplementedException();
+//        }
+//
+//        public bool Visit(FuncDecl node)
+//        {
+//            throw new NotImplementedException();
+//        }
+//
+//        public bool Visit(FuncHeader node)
+//        {
+//            throw new NotImplementedException();
+//        }
 
         public bool Visit(SubroutineBlock node)
         {
@@ -197,45 +292,45 @@ namespace FEFUPascalCompiler.Parser.Visitors
             throw new NotImplementedException();
         }
 
-        public bool Visit(SimpleType node)
+        public bool Visit(SimpleTypeNode node)
         {
             throw new NotImplementedException();
         }
 
-        public bool Visit(ArrayTypeAstNode node)
+        public bool Visit(ArrayTypeNode node)
         {
             throw new NotImplementedException();
         }
 
-        public bool Visit(IndexRangeAstNode node)
+        public bool Visit(IndexRangeNode node)
         {
             throw new NotImplementedException();
         }
 
-        public bool Visit(RecordTypeAstNode node)
+        public bool Visit(RecordTypeNode node)
         {
             throw new NotImplementedException();
         }
 
-        public bool Visit(FieldSection node)
+        public bool Visit(FieldSectionNode node)
         {
             throw new NotImplementedException();
         }
 
-        public bool Visit(PointerType node)
+        public bool Visit(PointerTypeNode node)
         {
             throw new NotImplementedException();
         }
 
-        public bool Visit(ProcSignature node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit(FuncSignature node)
-        {
-            throw new NotImplementedException();
-        }
+//        public bool Visit(ProcSignature node)
+//        {
+//            throw new NotImplementedException();
+//        }
+//
+//        public bool Visit(FuncSignature node)
+//        {
+//            throw new NotImplementedException();
+//        }
 
         public bool Visit(ConformantArray node)
         {
@@ -294,7 +389,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
             {
                 expression.Accept(this);
             }
-            
+
             node.SymType = (node.ArrayIdent.SymType as SymArrayType).ElementSymType;
             node.IsLValue = false;
             return true;
@@ -351,9 +446,9 @@ namespace FEFUPascalCompiler.Parser.Visitors
             node.FieldToAccess.Accept(this);
             _inLastNamespace = false;
             _symStack.Pop();
-            
+
             node.SymType = node.FieldToAccess.SymType;
-            node.IsLValue = false;
+            node.IsLValue = true;
             return true;
         }
 
