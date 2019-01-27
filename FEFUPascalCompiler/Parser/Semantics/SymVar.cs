@@ -32,4 +32,11 @@ namespace FEFUPascalCompiler.Parser.Semantics
 
         public string Modifier { get; }
     }
+
+    public class SymConstant : SymVar
+    {
+        public SymConstant(string ident, SymType varSymType = null) : base(ident, varSymType)
+        {
+        }
+    }
 }

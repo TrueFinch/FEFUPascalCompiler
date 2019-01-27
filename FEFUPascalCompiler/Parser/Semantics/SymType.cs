@@ -202,18 +202,18 @@ namespace FEFUPascalCompiler.Parser.Semantics
         public bool IsForward { get; set; } = false;
         public SymbolTable Parameters { get; set; }
         public SymbolTable Local { get; set; }
-        public SubroutineBlock Body { get; set; }
+        public SubroutineBlock Body { get; set; } //TODO: remove it
         public SymType ReturnSymType { get; set; }
     }
 
-    public class SymConst : SymType
-    {
-        public SymConst(string ident, SymType symType) : base(ident)
-        {
-            Type = symType;
-        }
-
-//        public Expression Value { get; } = null;
-        public SymType Type { get; set; }
-    }
+//    public class SymConst : SymType
+//    {
+//        public SymConst(string ident, SymType symType) : base(ident)
+//        {
+//            Type = symType;
+//        }
+//
+////        public Expression Value { get; } = null;
+//        public SymType Type { get; set; }
+//    }
 }
