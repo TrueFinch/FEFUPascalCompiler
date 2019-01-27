@@ -129,10 +129,11 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public Ident FieldToAccess { get; set; }
     }
     
-    public class FunctionCall : Expression {
-        public FunctionCall(Ident funcIdent, List<Expression> paramList) : base(AstNodeType.FunctionCall)
+    public class FunctionCall : Ident {
+        public FunctionCall(Ident funcIdent, List<Expression> paramList) : base(funcIdent.Token, AstNodeType.FunctionCall)
         {
-            FuncIdent = funcIdent;
+            SymType = funcIdent.SymType;
+            SymVar= funcIdent.SymVar;
             ParamList = paramList;
         }
 
@@ -141,7 +142,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
         
-        public Ident FuncIdent { get; set; }
         public List<Expression> ParamList { get; set; }
     }
     
@@ -171,7 +171,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
         
-        protected Ident(Token token, AstNodeType nodeType) : base(nodeType, token)
+        protected Ident(Token token, AstNodeType nodeType) : base(AstNodeType.Ident, token)
         {
         }
         

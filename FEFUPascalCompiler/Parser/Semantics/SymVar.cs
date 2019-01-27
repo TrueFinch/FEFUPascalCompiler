@@ -1,7 +1,4 @@
-using FEFUPascalCompiler.Parser.AstNodes;
-using FEFUPascalCompiler.Parser.Semantics;
-
-namespace FEFUPascalCompiler.Parser.Sematics
+namespace FEFUPascalCompiler.Parser.Semantics
 {
     public abstract class SymVar : Symbol
     {
@@ -34,14 +31,5 @@ namespace FEFUPascalCompiler.Parser.Sematics
         }
 
         public string Modifier { get; }
-    }
-
-    public class SymConst : SymVar
-    {
-        public SymConst(string ident, SymType varSymType = null) : base(ident, varSymType)
-        {
-        }
-
-        public Expression Value { get; } = null;
     }
 }

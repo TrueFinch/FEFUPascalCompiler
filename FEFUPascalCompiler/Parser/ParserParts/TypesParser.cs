@@ -50,7 +50,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             var symType = CheckTypeDeclared(typeIdent.Token);
 
-            return (symType, new SimpleType(typeIdent));
+            return (symType, new SimpleTypeNode(typeIdent));
         }
 
         private (SymType, AstNode) ParseArrayType()
@@ -73,13 +73,13 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             var type = ParseType();
 
-            return (new SymArrayType(indexRanges.Item1, type.Item1), new ArrayTypeAstNode(indexRanges.Item2, type.Item2));
+            return (new SymArrayType(indexRanges.Item1, type.Item1), new ArrayTypeNode(indexRanges.Item2, type.Item2));
         }
 
-        private (List<IndexRange<int, int>>, List<AstNode>) ParseIndexRanges()
+        private (List<IndexRange<int, int>>, List<IndexRangeNode>) ParseIndexRanges()
         {
             var indexRange = ParseIndexRange();
-            var astNodesIndexRanges = new List<AstNode>();
+            var astNodesIndexRanges = new List<IndexRangeNode>();
             var symbolIndexRanges = new List<IndexRange<int, int>>();
 
             if (indexRange.Item1 == null || indexRange.Item2 == null)
@@ -108,7 +108,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return (symbolIndexRanges, astNodesIndexRanges);
         }
 
-        private (IndexRange<int, int>, AstNode) ParseIndexRange()
+        private (IndexRange<int, int>, IndexRangeNode) ParseIndexRange()
         {
             var leftBound = ParseConstIntegerLiteral();
             if (leftBound == null)
@@ -133,7 +133,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return (
                 new IndexRange<int, int>((leftBound.Token as IntegerNumberToken).NumberValue,
                     (rightBound.Token as IntegerNumberToken).NumberValue),
-                new IndexRangeAstNode(token, leftBound, rightBound));
+                new IndexRangeNode(token, leftBound, rightBound));
         }
 
         private (SymType, AstNode) ParseRecordType()
@@ -147,12 +147,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 string.Format("{0} {1} : syntax error, 'end' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             
-            return (new SymRecordType(_symbolTableStack.Pop()), new RecordTypeAstNode(fieldList));
+            return (new SymRecordType(_symbolTableStack.Pop()), new RecordTypeNode(fieldList));
         }
 
-        private List<AstNode> ParseFieldsList()
+        private List<FieldSectionNode> ParseFieldsList()
         {
-            var fieldsList = new List<AstNode>();
+            var fieldsList = new List<FieldSectionNode>();
             var fieldSection = ParseFieldSection();
 
             if (fieldSection == null)
@@ -178,7 +178,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return fieldsList;
         }
 
-        private AstNode ParseFieldSection()
+        private FieldSectionNode ParseFieldSection()
         {
             var identList = ParseIdentList();
             if (identList == null || identList.Count == 0)
@@ -202,10 +202,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             foreach (var ident in identList)
             {
                 CheckDuplicateIdentifier(ident.Token);
-                _symbolTableStack.AddIdent(ident.ToString(), new SymLocal(fieldsType.Item1));
+                _symbolTableStack.AddVariable(ident.ToString(), new SymLocal(fieldsType.Item1));
             }
             
-            return new FieldSection(token, identList, fieldsType.Item2);
+            return new FieldSectionNode(token, identList, fieldsType.Item2);
         }
 
         private (SymType, AstNode) ParsePointerType()
@@ -220,7 +220,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
 
-            return (new SymPointerType(simpleType.Item1), new PointerType(token, simpleType.Item2));
+            return (new SymPointerType(simpleType.Item1), new PointerTypeNode(token, simpleType.Item2));
         }
 
 //        private AstNode ParseProcedureType()

@@ -72,7 +72,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             foreach (var ident in identsList)
             {
                 CheckDuplicateIdentifierInScope(ident.Token);
-                _symbolTableStack.AddIdent(ident.Token.Value, new SymParameter(paramType.Item1, modifier?.ToString()));
+                _symbolTableStack.AddVariable(ident.Token.Value, new SymParameter(paramType.Item1, modifier?.ToString()));
 //                _symbolTableStack.Peek().Add(ident.ToString(), ));
             }
 

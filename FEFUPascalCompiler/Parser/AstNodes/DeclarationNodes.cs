@@ -60,7 +60,7 @@ public class TypeDeclsPart : DeclsPart
 
 public class TypeDecl : AstNode
 {
-    public TypeDecl(AstNode ident, AstNode identType) : base(AstNodeType.TypeDecl)
+    public TypeDecl(Ident ident, AstNode identType) : base(AstNodeType.TypeDecl)
     {
         Ident = ident;
         IdentType = identType;
@@ -71,7 +71,7 @@ public class TypeDecl : AstNode
         return visitor.Visit(this);
     }
 
-    public AstNode Ident { get; set; }
+    public Ident Ident { get; set; }
     public AstNode IdentType { get; set; }
 }
 
@@ -89,7 +89,7 @@ public class VarDeclsPart : DeclsPart
 
 public class SimpleVarDecl : AstNode
 {
-    public SimpleVarDecl(List<AstNode> identList, AstNode identsType)
+    public SimpleVarDecl(List<Ident> identList, AstNode identsType)
         : base(AstNodeType.SimpleVarDecl)
     {
         IdentList = identList;
@@ -101,7 +101,7 @@ public class SimpleVarDecl : AstNode
         return visitor.Visit(this);
     }
 
-    public List<AstNode> IdentList { get; set; }
+    public List<Ident> IdentList { get; set; }
     public AstNode IdentsType { get; set; }
 }
 

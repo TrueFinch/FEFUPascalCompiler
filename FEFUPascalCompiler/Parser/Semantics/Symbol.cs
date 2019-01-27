@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.Semantics;
 
-namespace FEFUPascalCompiler.Parser.Sematics
+namespace FEFUPascalCompiler.Parser.Semantics
 {
     public abstract class Symbol
     {
@@ -18,40 +18,28 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return Ident.ToString();
         }
     }
-
-    public abstract class CallableSymbol : Symbol
-    {
-        protected CallableSymbol(string ident) : base(ident)
-        {
-        }
-        
-        public SymbolTable Parameters { get; set; }
-        public SymbolTable Local { get; set; }
-        public AstNode Body { get; set; }
-    } 
     
-    public class FunctionSymbol : CallableSymbol
-    {
-        public FunctionSymbol(/*Type returnType, OrderedDictionary parameters, OrderedDictionary local, AstNode body,*/ string ident = "") : base(ident)
-        {
-//            Parameters = parameters;
-//            Local = local;
-//            ReturnType = returnType;
-//            Body = body;
-        }
-        
-
-        public SymType ReturnSymType { get; set; }
-    }
-    
-    public class ProcedureSymbol : CallableSymbol
-    {
-        public ProcedureSymbol(/*Type returnType, OrderedDictionary parameters, OrderedDictionary local, AstNode body,*/ string ident = "") : base(ident)
-        {
-//            Parameters = parameters;
-//            Local = local;
-//            ReturnType = returnType;
-//            Body = body;
-        }
-    }
+//    public class FunctionSymbol : CallableSymbol
+//    {
+//        public FunctionSymbol(/*Type returnType, OrderedDictionary parameters, OrderedDictionary local, AstNode body,*/ string ident = "") : base(ident)
+//        {
+////            Parameters = parameters;
+////            Local = local;
+////            ReturnType = returnType;
+////            Body = body;
+//        }
+//        
+//
+//    }
+//    
+//    public class ProcedureSymbol : CallableSymbol
+//    {
+//        public ProcedureSymbol(/*Type returnType, OrderedDictionary parameters, OrderedDictionary local, AstNode body,*/ string ident = "") : base(ident)
+//        {
+////            Parameters = parameters;
+////            Local = local;
+////            ReturnType = returnType;
+////            Body = body;
+//        }
+//    }
 }

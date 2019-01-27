@@ -7,7 +7,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 {
     public class FormalParamSection : AstNode
     {
-        public FormalParamSection(List<AstNode> paramList, AstNode paramType, string modifier = null)
+        public FormalParamSection(List<Ident> paramList, AstNode paramType, string modifier = null)
             : base(AstNodeType.FormalParamSection)
         {
             ParamList = paramList;
@@ -20,7 +20,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public List<AstNode> ParamList { get; set; }
+        public List<Ident> ParamList { get; set; }
         public AstNode ParamType { get; set; }
         public string ParamModifier { get; set; }
     }

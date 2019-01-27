@@ -128,16 +128,16 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return printer;
         }
 
-        public AstPrinterNode Visit(ProcFuncDeclsPart node)
-        {
-            var printer = new AstPrinterNode(node.ToString());
-            foreach (var ident in node.Decls)
-            {
-                printer.AddChild(ident.Accept(this));
-            }
-
-            return printer;
-        }
+//        public AstPrinterNode Visit(ProcFuncDeclsPart node)
+//        {
+//            var printer = new AstPrinterNode(node.ToString());
+//            foreach (var ident in node.Decls)
+//            {
+//                printer.AddChild(ident.Accept(this));
+//            }
+//
+//            return printer;
+//        }
 
 //        public AstPrinterNode Visit(ProcDecl node)
 //        {
@@ -313,14 +313,14 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return printer;
         }
 
-        public AstPrinterNode Visit(SimpleType node)
+        public AstPrinterNode Visit(SimpleTypeNode node)
         {
             var printer = new AstPrinterNode(node.ToString());
             printer.AddChild(node.TypeIdent.Accept(this));
             return printer;
         }
 
-        public AstPrinterNode Visit(ArrayTypeAstNode node)
+        public AstPrinterNode Visit(ArrayTypeNode node)
         {
             var printer = new AstPrinterNode(node.ToString());
             foreach (var range in node.IndexRanges)
@@ -331,7 +331,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return printer;
         }
 
-        public AstPrinterNode Visit(IndexRangeAstNode node)
+        public AstPrinterNode Visit(IndexRangeNode node)
         {
             var printer = new AstPrinterNode(node.ToString());
             printer.AddChild(node.LeftBound.Accept(this));
@@ -339,7 +339,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return printer;
         }
 
-        public AstPrinterNode Visit(RecordTypeAstNode node)
+        public AstPrinterNode Visit(RecordTypeNode node)
         {
             var printer = new AstPrinterNode(node.ToString());
             foreach (var field in node.FieldsList)
@@ -349,7 +349,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return printer;
         }
 
-        public AstPrinterNode Visit(FieldSection node)
+        public AstPrinterNode Visit(FieldSectionNode node)
         {
             var printer = new AstPrinterNode(node.ToString());
             foreach (var ident in node.Idents)
@@ -360,33 +360,33 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return printer;
         }
 
-        public AstPrinterNode Visit(PointerType node)
+        public AstPrinterNode Visit(PointerTypeNode node)
         {
             var printer = new AstPrinterNode(node.ToString());
             printer.AddChild(node.SimpleType.Accept(this));
             return printer;
         }
 
-        public AstPrinterNode Visit(ProcSignature node)
-        {
-            var printer = new AstPrinterNode(node.ToString());
-            foreach (var param in node.ParamList)
-            {
-                printer.AddChild(param.Accept(this));
-            }
-            return printer;
-        }
-
-        public AstPrinterNode Visit(FuncSignature node)
-        {
-            var printer = new AstPrinterNode(node.ToString());
-            foreach (var param in node.ParamList)
-            {
-                printer.AddChild(param.Accept(this));
-            }
-            printer.AddChild(node.ReturnType.Accept(this));
-            return printer;
-        }
+//        public AstPrinterNode Visit(ProcSignature node)
+//        {
+//            var printer = new AstPrinterNode(node.ToString());
+//            foreach (var param in node.ParamList)
+//            {
+//                printer.AddChild(param.Accept(this));
+//            }
+//            return printer;
+//        }
+//
+//        public AstPrinterNode Visit(FuncSignature node)
+//        {
+//            var printer = new AstPrinterNode(node.ToString());
+//            foreach (var param in node.ParamList)
+//            {
+//                printer.AddChild(param.Accept(this));
+//            }
+//            printer.AddChild(node.ReturnType.Accept(this));
+//            return printer;
+//        }
 
         public AstPrinterNode Visit(ConformantArray node)
         {

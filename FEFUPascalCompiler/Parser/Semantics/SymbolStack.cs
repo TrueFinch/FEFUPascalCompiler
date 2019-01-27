@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.Semantics;
+using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.Sematics
 {
@@ -64,11 +66,29 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return null;
         }
 
+        internal void CheckDuplicateIdentifier(Token ident)
+        {
+            if (Find(ident.Value) != null)
+            {
+                throw new Exception(string.Format("{0}, {1} : Duplicate identifier '{2}'",
+                    ident.Line, ident.Column, ident.Lexeme));
+            }
+        }
+        
         public Symbol FindInScope(string identifier)
         {
             return _stack.Peek().Find(identifier);
         }
 
+        private void CheckDuplicateIdentifierInScope(Token ident)
+        {
+            if (FindInScope(ident.Value) != null)
+            {
+                throw new Exception(string.Format("{0}, {1} : Duplicate identifier '{2}'",
+                    ident.Line, ident.Column, ident.Lexeme));
+            }
+        }
+        
         public SymVar FindIdentInScope(string identifier)
         {
             return _stack.Peek().Find(identifier) as SymVar;
@@ -88,6 +108,19 @@ namespace FEFUPascalCompiler.Parser.Sematics
             }
         }
 
+        internal SymType CheckTypeDeclared(Token type)
+        {
+            var symType = FindType(type.Value);
+
+            if (FindType(type.Value) == null)
+            {
+                throw new Exception(string.Format("{0}, {1} : Undeclared type identifier '{2}'",
+                    type.Line, type.Column, type.Lexeme));
+            }
+
+            return symType;
+        }
+        
         public SymVar FindIdent(string identifier)
         {
             if (Find(identifier) is SymVar variable)
@@ -98,9 +131,9 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return null;
         }
 
-        public FunctionSymbol FindFunc(string identifier)
+        public CallableSymbol FindFunc(string identifier)
         {
-            if (Find(identifier) is FunctionSymbol funcSymb)
+            if (Find(identifier) is CallableSymbol funcSymb)
             {
                 return funcSymb;
             }
@@ -108,9 +141,9 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return null;
         }
 
-        public ProcedureSymbol FindProc(string identifier)
+        public CallableSymbol FindProc(string identifier)
         {
-            if (Find(identifier) is ProcedureSymbol procSymb)
+            if (Find(identifier) is CallableSymbol procSymb)
             {
                 return procSymb;
             }
@@ -128,12 +161,12 @@ namespace FEFUPascalCompiler.Parser.Sematics
             _stack.Peek().AddType(identifier, type);
         }
 
-        public void AddIdent(bool local, string identifier, SymType type)
+        public void AddVariable(bool local, string identifier, SymType type)
         {
             _stack.Peek().AddVariable(local, identifier, type);
         }
 
-        public void AddIdent(string identifier, SymVar ident)
+        public void AddVariable(string identifier, SymVar ident)
         {
             _stack.Peek().AddVariable(identifier, ident);
         }
@@ -143,12 +176,12 @@ namespace FEFUPascalCompiler.Parser.Sematics
             _stack.Peek().AddAlias(aliasIdentifier, new SymAliasType(aliasIdentifier, typeToAias));
         }
 
-        public void PrepareFunction(string identifier, FunctionSymbol funcSym)
+        public void PrepareFunction(string identifier, CallableSymbol funcSym)
         {
             _stack.Peek().AddFunction(identifier, funcSym);
         }
         
-        public void AddFunction(string identifier, FunctionSymbol funcSym)
+        public void AddFunction(string identifier, CallableSymbol funcSym)
         {
             funcSym.Local = Pop();
             funcSym.Parameters = Pop();
@@ -156,12 +189,12 @@ namespace FEFUPascalCompiler.Parser.Sematics
             _stack.Peek().AddFunction(identifier, funcSym);
         }
         
-        public void PrepareProcedure(string identifier, ProcedureSymbol procSym)
+        public void PrepareProcedure(string identifier, CallableSymbol procSym)
         {
             _stack.Peek().AddProcedure(identifier, procSym);
         }
         
-        public void AddProcedure(string identifier, ProcedureSymbol procSym)
+        public void AddProcedure(string identifier, CallableSymbol procSym)
         {
             procSym.Local = Pop();
             procSym.Parameters = Pop();
@@ -238,12 +271,12 @@ namespace FEFUPascalCompiler.Parser.Sematics
             _table.Add(identifier.ToLower(), symbol);
         }
 
-        public void AddFunction(string identifier, FunctionSymbol funcSym)
+        public void AddFunction(string identifier, CallableSymbol funcSym)
         {
             _table.Add(identifier.ToLower(), funcSym);
         }
 
-        public void AddProcedure(string identifier, ProcedureSymbol funcSym)
+        public void AddProcedure(string identifier, CallableSymbol funcSym)
         {
             _table.Add(identifier.ToLower(), funcSym);
         }

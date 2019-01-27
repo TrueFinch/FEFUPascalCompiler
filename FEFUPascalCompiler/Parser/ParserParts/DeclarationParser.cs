@@ -165,7 +165,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
 
-            return new TypeDecl(typeIdent, type.Item2);
+            return new TypeDecl(typeIdent as Ident, type.Item2);
         }
 
         private AstNode ParseVarDeclsPart(bool local = false)
@@ -260,7 +260,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private AstNode ParseFuncDecl()
         {
             CallableSymbol functionSymbol;
-            FuncHeader funcHeader;
+            CallableHeader funcHeader;
             (functionSymbol, funcHeader) = ParseFuncHeader();
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
@@ -289,10 +289,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 //            _symbolTableStack.Pop(); // pop local table
 //            _symbolTableStack.Pop(); // pop parameters table
 
-            return new FuncDecl(funcHeader, funcSubroutineBlock);
+            return new CallableDeclNode(funcHeader, funcSubroutineBlock);
         }
 
-        private (CallableSymbol, FuncHeader) ParseFuncHeader()
+        private (CallableSymbol, CallableHeader) ParseFuncHeader()
         {
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Function},
                 string.Format("{0} {1} : syntax error, 'function' expected, but {2} found",
@@ -314,14 +314,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var returnType = ParseSimpleType();
             funcSymbol.ReturnSymType = returnType.Item1;
 
-            return (funcSymbol, new FuncHeader(funcName, paramList, returnType.Item2));
+            return (funcSymbol, new CallableHeader(funcName, paramList, returnType.Item2));
         }
 
         //TODO: add declaration correctness 
         private AstNode ParseProcDecl()
         {
             CallableSymbol procedureSymbol;
-            ProcHeader procHeader;
+            CallableHeader procHeader;
             (procedureSymbol, procHeader) = ParseProcHeader();
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
@@ -349,10 +349,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 //            _symbolTableStack.Pop(); // pop local table
 //            _symbolTableStack.Pop(); // pop parameters table
 
-            return new ProcDecl(procHeader, procSubroutineBlock);
+            return new CallableDeclNode(procHeader, procSubroutineBlock);
         }
 
-        private (CallableSymbol, ProcHeader) ParseProcHeader()
+        private (CallableSymbol, CallableHeader) ParseProcHeader()
         {
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Procedure},
                 string.Format("{0} {1} : syntax error, 'procedure' expected, but {2} found",
@@ -367,7 +367,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
 //            procSymbol.Parameters = _symbolTableStack.Peek();
 
-            return (procSymbol, new ProcHeader(procName, paramList));
+            return (procSymbol, new CallableHeader(procName, paramList));
         }
         
         private AstNode ParseSubroutineBlock()

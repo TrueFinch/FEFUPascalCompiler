@@ -348,11 +348,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
         }
 
-        public List<AstNode> ParseIdentList()
+        public List<Ident> ParseIdentList()
         {
-            var identList = new List<AstNode>();
-            var ident = ParseIdent();
-            if (ident == null)
+            var identList = new List<Ident>();
+            if (!(ParseIdent() is Ident ident))
             {
                 //exception -- this is not ident list
                 return identList;
@@ -367,7 +366,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 }
 
                 NextToken();
-                ident = ParseIdent();
+                ident = ParseIdent() as Ident;
                 if (ident == null)
                 {
                     //exception unexpected lexeme
