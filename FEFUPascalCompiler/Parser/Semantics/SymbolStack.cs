@@ -131,7 +131,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return null;
         }
 
-        public CallableSymbol FindFunc(string identifier)
+        public CallableSymbol FindFunc(string identifier, List<SymType> parametersTypes)
         {
             if (Find(identifier) is CallableSymbol funcSymb)
             {
@@ -141,15 +141,15 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return null;
         }
 
-        public CallableSymbol FindProc(string identifier)
-        {
-            if (Find(identifier) is CallableSymbol procSymb)
-            {
-                return procSymb;
-            }
-
-            return null;
-        }
+//        public CallableSymbol FindProc(string identifier)
+//        {
+//            if (Find(identifier) is CallableSymbol procSymb)
+//            {
+//                return procSymb;
+//            }
+//
+//            return null;
+//        }
 
         public void AddType(SymType type)
         {
