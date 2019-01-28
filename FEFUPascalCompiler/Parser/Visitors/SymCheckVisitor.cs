@@ -140,6 +140,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
                 }
                 case ArrayTypeNode arrayTypeNode:
                 {
+                    arrayTypeNode.Accept(this);
                     var indexRanges = new List<IndexRange<int, int>>();
                     foreach (var indexRange in arrayTypeNode.IndexRanges)
                     {
@@ -253,45 +254,55 @@ namespace FEFUPascalCompiler.Parser.Visitors
 //            throw new NotImplementedException();
 //        }
 
+        
+        // TODO: at the end we need to add to stack new function
         public bool Visit(CallableDeclNode node)
         {
+            node.Header.Accept(this);
+            
             throw new NotImplementedException();
         }
 
         public bool Visit(CallableHeader node)
         {
+            _symStack.CheckIdentifierDuplicate(node.Name.Token);
+            _symStack.Push(); //this will be param namespace
+            foreach (var paramSection in node.ParamList)
+            {
+                paramSection.Accept(this);
+            }
+            
             throw new NotImplementedException();
         }
+        
+        public bool Visit(FormalParamSection node)
+        {
+            var paramSectionType = _symStack.FindType(node.ParamType.ToString());
+            foreach (var ident in node.ParamList)
+            {
+                _symStack.CheckIdentifierDuplicateInScope(ident.Token);
+                _symStack.AddParameter(node.ParamModifier, ident.ToString(), paramSectionType);
+            }
 
-//        public bool Visit(ProcDecl node)
-//        {
-//            throw new NotImplementedException();
-//        }
-//
-//        public bool Visit(ProcHeader node)
-//        {
-//            throw new NotImplementedException();
-//        }
-//
-//        public bool Visit(FuncDecl node)
-//        {
-//            throw new NotImplementedException();
-//        }
-//
-//        public bool Visit(FuncHeader node)
-//        {
-//            throw new NotImplementedException();
-//        }
-
+            return true;
+        }
+        
         public bool Visit(SubroutineBlock node)
         {
-            throw new NotImplementedException();
+            foreach (var nodeDeclPart in node.DeclParts)
+            {
+                nodeDeclPart.Accept(this);
+            }
+
+            node.CompoundStatement.Accept(this);
+
+            return true;
         }
 
-        public bool Visit(Forward node)
-        {
-            throw new NotImplementedException();
-        }
+//        public bool Visit(Forward node)
+//        {
+//            throw new NotImplementedException();
+//        }
 
         public bool Visit(IfStatement node)
         {
@@ -443,11 +454,6 @@ namespace FEFUPascalCompiler.Parser.Visitors
 //            node.SymType = node.FieldToAccess.SymType;
 //            node.IsLValue = true;
 //            return true;
-            throw new NotImplementedException();
-        }
-
-        public bool Visit(FormalParamSection node)
-        {
             throw new NotImplementedException();
         }
 
