@@ -163,7 +163,7 @@ public class CallableDeclNode : AstNode
         return visitor.Visit(this);
     }
 
-    public bool IsForward { get; set; };
+    public bool IsForward { get; set; }
     public CallableHeader Header { get; set; }
     public AstNode Block { get; set; }
 }
