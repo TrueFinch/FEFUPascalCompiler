@@ -175,6 +175,11 @@ namespace FEFUPascalCompiler.Parser.Sematics
         {
             _stack.Peek().AddVariable(local, identifier, type);
         }
+
+        public void AddParameter(string modifier, string identifier, SymType type)
+        {
+            _stack.Peek().AddVariable(identifier, new SymParameter(type, modifier));
+        }
         
         public void AddAlias(string aliasIdentifier, SymType typeToAias)
         {
@@ -189,23 +194,23 @@ namespace FEFUPascalCompiler.Parser.Sematics
         public void AddFunction(string identifier, CallableSymbol funcSym)
         {
             funcSym.Local = Pop();
-            funcSym.Parameters = Pop();
+//            funcSym.Parameters = Pop();
             _stack.Peek().Remove(identifier);
             _stack.Peek().AddFunction(identifier, funcSym);
         }
         
-        public void PrepareProcedure(string identifier, CallableSymbol procSym)
-        {
-            _stack.Peek().AddProcedure(identifier, procSym);
-        }
-        
-        public void AddProcedure(string identifier, CallableSymbol procSym)
-        {
-            procSym.Local = Pop();
-            procSym.Parameters = Pop();
-            _stack.Peek().Remove(identifier);
-            _stack.Peek().AddProcedure(identifier, procSym);
-        }
+//        public void PrepareProcedure(string identifier, CallableSymbol procSym)
+//        {
+//            _stack.Peek().AddProcedure(identifier, procSym);
+//        }
+//        
+//        public void AddProcedure(string identifier, CallableSymbol procSym)
+//        {
+//            procSym.Local = Pop();
+//            procSym.Parameters = Pop();
+//            _stack.Peek().Remove(identifier);
+//            _stack.Peek().AddProcedure(identifier, procSym);
+//        }
 
 //        public bool IsLvalue(Expression expr)
 //        {

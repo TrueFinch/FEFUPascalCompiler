@@ -192,11 +192,11 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return printer;
         }
 
-        public AstPrinterNode Visit(Forward node)
-        {
-            var printer = new AstPrinterNode(node.ToString());
-            return printer;
-        }
+//        public AstPrinterNode Visit(Forward node)
+//        {
+//            var printer = new AstPrinterNode(node.ToString());
+//            return printer;
+//        }
 
         public AstPrinterNode Visit(UnaryOperator node)
         {
@@ -327,6 +327,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
             {
                 printer.AddChild(range.Accept(this));
             }
+
             printer.AddChild(node.TypeOfArray.Accept(this));
             return printer;
         }
@@ -346,6 +347,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
             {
                 printer.AddChild(field.Accept(this));
             }
+
             return printer;
         }
 
@@ -356,6 +358,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
             {
                 printer.AddChild(ident.Accept(this));
             }
+
             printer.AddChild(node.IdentsType.Accept(this));
             return printer;
         }
@@ -450,7 +453,11 @@ namespace FEFUPascalCompiler.Parser.Visitors
         {
             var printer = new AstPrinterNode(node.ToString());
             printer.AddChild(node.Header.Accept(this));
-            printer.AddChild(node.Block.Accept(this));
+            if (node.Block != null)
+            {
+                printer.AddChild(node.Block.Accept(this));
+            }
+
             return printer;
         }
 
@@ -462,10 +469,10 @@ namespace FEFUPascalCompiler.Parser.Visitors
             {
                 printer.AddChild(param.Accept(this));
             }
-            
+
             if (node.ReturnType != null)
                 printer.AddChild(node.ReturnType.Accept(this));
-            
+
             return printer;
         }
     }
@@ -567,7 +574,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
                 stringBuilder.Insert(stringBuilder.Length, _bgSign.ToString(), maxWidth - stringBuilder.Length);
             }
         }
-        
+
         public AstPrinterNode(string header)
         {
             Header = header;

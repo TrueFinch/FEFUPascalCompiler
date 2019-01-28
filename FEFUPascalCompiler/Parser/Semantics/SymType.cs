@@ -200,7 +200,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
         }
 
         public bool IsForward { get; set; } = false;
-        public SymbolTable Parameters { get; set; }
+//        public SymbolTable Parameters { get; set; }
         public SymbolTable Local { get; set; }
         public SubroutineBlock Body { get; set; } //TODO: remove it
         public SymType ReturnSymType { get; set; }

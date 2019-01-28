@@ -9,7 +9,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 {
     internal partial class PascalParser
     {
-        public List<AstNode> ParseFormalParamList()
+        public List<FormalParamSection> ParseFormalParamList()
         {
             var token = PeekToken();
 
@@ -17,7 +17,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 string.Format("{0} {1} : syntax error, '(' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            var paramSections = new List<AstNode>();
+            var paramSections = new List<FormalParamSection>();
 
             while (true)
             {
@@ -44,7 +44,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return paramSections;
         }
 
-        private AstNode ParseFormalParamSection()
+        private FormalParamSection ParseFormalParamSection()
         {
             var token = PeekToken();
 

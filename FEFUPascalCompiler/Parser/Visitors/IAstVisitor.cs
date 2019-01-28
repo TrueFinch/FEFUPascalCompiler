@@ -24,7 +24,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
 //        T Visit(FuncDecl node);
 //        T Visit(FuncHeader node);
         T Visit(SubroutineBlock node);
-        T Visit(Forward node);
+//        T Visit(Forward node);
         T Visit(UnaryOperator node);
         T Visit(ArrayAccess node);
         T Visit(RecordAccess node);

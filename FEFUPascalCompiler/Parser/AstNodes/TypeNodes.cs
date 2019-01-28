@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Visitors;
 using FEFUPascalCompiler.Tokens;
 

@@ -328,17 +328,20 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            _symbolTableStack.PrepareProcedure(procedureSymbol.Ident, procedureSymbol); // Add function to handle recursion 
+//            _symbolTableStack.PrepareProcedure(procedureSymbol.Ident, procedureSymbol); // Add function to handle recursion 
             
             _symbolTableStack.Push(); // this will be local table
             var procSubroutineBlock = ParseSubroutineBlock();
+            if (procSubroutineBlock == null)
+            {
+            }
             procedureSymbol.Body = procSubroutineBlock as SubroutineBlock;
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            _symbolTableStack.AddProcedure(procedureSymbol.Ident, procedureSymbol);
+//            _symbolTableStack.AddProcedure(procedureSymbol.Ident, procedureSymbol);
 
             //TODO: move to type checker
 //            _symbolTableStack.Push(procedureSymbol.Parameters); // push parameters table
@@ -374,7 +377,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             if (PeekToken().Type == TokenType.Forward)
             {
-                return new Forward(PeekAndNext());
+                return null;
             }
 
             var declsParts = new List<AstNode>();
