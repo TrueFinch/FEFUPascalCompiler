@@ -217,7 +217,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                             string.Format("{0}, {1} : syntax error, ']' expected, but {2} found",
                                 PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-                        left = new ArrayAccess(left, paramList);
+                        if (!(left is Ident))
+                        {
+                            throw new Exception(string.Format(
+                                "{0}, {1} : syntax error, accessing array must be identifier",
+                                left.Token.Line, left.Token.Column, left.Token.Lexeme));
+                        }
+                        
+                        left = new ArrayAccess(left as Ident, paramList);
                         break;
                     }
                     case TokenType.Dot:
@@ -257,7 +264,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                             string.Format("{0}, {1} : syntax error, ')' expected, but {2} found",
                                 PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-                        left = new FunctionCall(left, paramList);
+                        if (!(left is Ident))
+                        {
+                            throw new Exception(string.Format(
+                                "{0}, {1} : syntax error, accessing field must be identifier",
+                                left.Token.Line, left.Token.Column, left.Token.Lexeme));
+                        }
+                        
+                        left = new FunctionCall(left as Ident, paramList);
                         break;
                     }
                     case TokenType.Carriage:
@@ -334,11 +348,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
         }
 
-        public List<AstNode> ParseIdentList()
+        public List<Ident> ParseIdentList()
         {
-            var identList = new List<AstNode>();
-            var ident = ParseIdent();
-            if (ident == null)
+            var identList = new List<Ident>();
+            if (!(ParseIdent() is Ident ident))
             {
                 //exception -- this is not ident list
                 return identList;
@@ -353,7 +366,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 }
 
                 NextToken();
-                ident = ParseIdent();
+                ident = ParseIdent() as Ident;
                 if (ident == null)
                 {
                     //exception unexpected lexeme

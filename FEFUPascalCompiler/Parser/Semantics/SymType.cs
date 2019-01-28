@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.Sematics;
 
 namespace FEFUPascalCompiler.Parser.Semantics
@@ -16,7 +17,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
             return false;
         }
     }
-    
+
     public class SymIntegerType : SymType
     {
         public SymIntegerType() : base("Integer")
@@ -40,7 +41,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
             return true;
         }
     }
-    
+
     public class SymCharType : SymType
     {
         public SymCharType() : base("Char")
@@ -64,7 +65,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
             return true;
         }
     }
-    
+
     public class SymBoolType : SymType
     {
         public SymBoolType() : base("Boolean")
@@ -82,13 +83,13 @@ namespace FEFUPascalCompiler.Parser.Semantics
         public SymNilConst() : base("nil")
         {
         }
-        
+
         public bool Equals(ref SymNilConst symbolType)
         {
             return true;
         }
     }
-    
+
     public class SymAliasType : SymType
     {
         public SymAliasType(string ident, SymType symType) : base(ident)
@@ -127,7 +128,8 @@ namespace FEFUPascalCompiler.Parser.Semantics
 
     public class SymArrayType : SymType
     {
-        public SymArrayType(List<IndexRange<int, int>> indexRanges, SymType elemSymType, string ident = "") : base(ident)
+        public SymArrayType(List<IndexRange<int, int>> indexRanges, SymType elemSymType, string ident = "") :
+            base(ident)
         {
             IndexRanges = indexRanges;
             ElementSymType = elemSymType;
@@ -153,7 +155,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
         {
             ElementSymType = elemSymType;
         }
-        
+
         public SymType ElementSymType { get; }
     }
 
@@ -163,7 +165,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
         {
             ReferencedSymType = referencedSymType;
         }
-        
+
         public SymType ReferencedSymType { get; set; }
 
 //        static string GetPointerType(SymType type)
@@ -174,7 +176,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
 //            }
 //        }
     }
-    
+
     public class IndexRange<T1, T2>
     {
             // @formatter:off
@@ -190,4 +192,29 @@ namespace FEFUPascalCompiler.Parser.Semantics
             // @formatter:on
         }
     }
+
+    public class CallableSymbol : Symbol
+    {
+        public CallableSymbol(string ident) : base(ident)
+        {
+        }
+        
+        public List<SymType> ParametersTypes { get; set; } = new List<SymType>();
+        public bool IsForward { get; set; } = false;
+//        public SymbolTable Parameters { get; set; }
+        public SymbolTable Local { get; set; }
+        public SubroutineBlock Body { get; set; } //TODO: remove it
+        public SymType ReturnSymType { get; set; }
+    }
+
+//    public class SymConst : SymType
+//    {
+//        public SymConst(string ident, SymType symType) : base(ident)
+//        {
+//            Type = symType;
+//        }
+//
+////        public Expression Value { get; } = null;
+//        public SymType Type { get; set; }
+//    }
 }

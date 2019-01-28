@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Visitors;
 using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.AstNodes
 {
-    public class SimpleType : AstNode
+    public class SimpleTypeNode : AstNode
     {
-        public SimpleType(AstNode typeIdent) : base(AstNodeType.SimpleType)
+        public SimpleTypeNode(AstNode typeIdent) : base(AstNodeType.SimpleType)
         {
             TypeIdent = typeIdent;
         }
@@ -19,9 +20,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode TypeIdent { get; set; }
     }
 
-    public class ArrayTypeAstNode : AstNode
+    public class ArrayTypeNode : AstNode
     {
-        public ArrayTypeAstNode(List<AstNode> indexRanges, AstNode arrayType) : base(AstNodeType.ArrayType)
+        public ArrayTypeNode(List<IndexRangeNode> indexRanges, AstNode arrayType) : base(AstNodeType.ArrayType)
         {
             IndexRanges = indexRanges;
             TypeOfArray = arrayType;
@@ -33,13 +34,13 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public List<AstNode> IndexRanges { get; set; }
+        public List<IndexRangeNode> IndexRanges { get; set; }
         public AstNode TypeOfArray { get; set; }
     }
 
-    public class IndexRangeAstNode : AstNode
+    public class IndexRangeNode : AstNode
     {
-        public IndexRangeAstNode(Token doubleDot, AstNode leftBound, AstNode rightBound) : base(AstNodeType.IndexRange)
+        public IndexRangeNode(Token doubleDot, AstNode leftBound, AstNode rightBound) : base(AstNodeType.IndexRange)
         {
             DoubleDot = doubleDot;
             LeftBound = leftBound;
@@ -57,9 +58,9 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode RightBound { get; set; }
     }
 
-    public class RecordTypeAstNode : AstNode
+    public class RecordTypeNode : AstNode
     {
-        public RecordTypeAstNode(List<AstNode> fieldsList) : base(AstNodeType.RecordType)
+        public RecordTypeNode(List<FieldSectionNode> fieldsList) : base(AstNodeType.RecordType)
         {
             FieldsList = fieldsList;
             Value = NodeType.ToString();
@@ -70,12 +71,12 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public List<AstNode> FieldsList { get; set; }
+        public List<FieldSectionNode> FieldsList { get; set; }
     }
 
-    public class FieldSection : AstNode
+    public class FieldSectionNode : AstNode
     {
-        public FieldSection(Token colon, List<AstNode> identList, AstNode identsType) : base(AstNodeType.FieldSection,
+        public FieldSectionNode(Token colon, List<Ident> identList, AstNode identsType) : base(AstNodeType.FieldSection,
             colon)
         {
             Colon = colon;
@@ -90,13 +91,13 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public Token Colon { get; }
-        public List<AstNode> Idents { get; set;}
+        public List<Ident> Idents { get; set;}
         public AstNode IdentsType { get; set;}
     }
 
-    public class PointerType : AstNode
+    public class PointerTypeNode : AstNode
     {
-        public PointerType(Token carriage, AstNode simpleType) : base(AstNodeType.PointerType, carriage)
+        public PointerTypeNode(Token carriage, AstNode simpleType) : base(AstNodeType.PointerType, carriage)
         {
             Carriage = carriage;
             SimpleType = simpleType;
@@ -112,38 +113,38 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode SimpleType { get; set;}
     }
 
-    public class ProcSignature : AstNode
-    {
-        public ProcSignature(Token token, List<AstNode> paramSections) : base(AstNodeType.ProcSignature, token)
-        {
-            ParamList = paramSections;
-        }
+//    public class ProcSignature : AstNode
+//    {
+//        public ProcSignature(Token token, List<AstNode> paramSections) : base(AstNodeType.ProcSignature, token)
+//        {
+//            ParamList = paramSections;
+//        }
+//
+//        public override T Accept<T>(IAstVisitor<T> visitor)
+//        {
+//            return visitor.Visit(this);
+//        }
+//
+//        public List<AstNode> ParamList  { get; set;}
+//    }
 
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public List<AstNode> ParamList  { get; set;}
-    }
-
-    public class FuncSignature : AstNode
-    {
-        public FuncSignature(Token token, List<AstNode> paramSections, AstNode returnType)
-            : base(AstNodeType.FuncSignature, token)
-        {
-            ParamList = paramSections;
-            ReturnType = returnType;
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-        public List<AstNode> ParamList { get; set;}
-        public AstNode ReturnType { get; set;}
-    }
+//    public class FuncSignature : AstNode
+//    {
+//        public FuncSignature(Token token, List<AstNode> paramSections, AstNode returnType)
+//            : base(AstNodeType.FuncSignature, token)
+//        {
+//            ParamList = paramSections;
+//            ReturnType = returnType;
+//        }
+//
+//        public override T Accept<T>(IAstVisitor<T> visitor)
+//        {
+//            return visitor.Visit(this);
+//        }
+//
+//        public List<AstNode> ParamList { get; set;}
+//        public AstNode ReturnType { get; set;}
+//    }
 
     public class ConformantArray : AstNode
     {

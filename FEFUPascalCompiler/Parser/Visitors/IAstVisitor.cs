@@ -17,14 +17,14 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(ConstDecl node);
         T Visit(VarDeclsPart node);
         T Visit(SimpleVarDecl node);
-        T Visit(InitVarDecl node);
-        T Visit(ProcFuncDeclsPart node);
-        T Visit(ProcDecl node);
-        T Visit(ProcHeader node);
-        T Visit(FuncDecl node);
-        T Visit(FuncHeader node);
+//        T Visit(InitVarDecl node);
+//        T Visit(ProcFuncDeclsPart node);
+//        T Visit(ProcDecl node);
+//        T Visit(ProcHeader node);
+//        T Visit(FuncDecl node);
+//        T Visit(FuncHeader node);
         T Visit(SubroutineBlock node);
-        T Visit(Forward node);
+//        T Visit(Forward node);
         T Visit(UnaryOperator node);
         T Visit(ArrayAccess node);
         T Visit(RecordAccess node);
@@ -38,14 +38,14 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(IfStatement node);
         T Visit(WhileStatement node);
         T Visit(ForStatement node);
-        T Visit(SimpleType node);
-        T Visit(ArrayTypeAstNode node);
-        T Visit(IndexRangeAstNode node);
-        T Visit(RecordTypeAstNode node);
-        T Visit(FieldSection node);
-        T Visit(PointerType node);
-        T Visit(ProcSignature node);
-        T Visit(FuncSignature node);
+        T Visit(SimpleTypeNode node);
+        T Visit(ArrayTypeNode node);
+        T Visit(IndexRangeNode node);
+        T Visit(RecordTypeNode node);
+        T Visit(FieldSectionNode node);
+        T Visit(PointerTypeNode node);
+//        T Visit(ProcSignature node);
+//        T Visit(FuncSignature node);
         T Visit(ConformantArray node);
         T Visit(ForRange node);
         T Visit(DereferenceOperator node);
@@ -54,5 +54,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(ComparingOperator node);
         T Visit(AdditiveOperator node);
         T Visit(MultiplyingOperator node);
+        T Visit(CallableDeclNode node);
+        T Visit(CallableHeader node);
     }
 }

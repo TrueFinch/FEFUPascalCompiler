@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.ParserParts;
 using FEFUPascalCompiler.Parser.Semantics;
+using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.Sematics
 {
@@ -64,11 +67,29 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return null;
         }
 
+        internal void CheckIdentifierDuplicate(Token ident)
+        {
+            if (Find(ident.Value) != null)
+            {
+                throw new Exception(string.Format("{0}, {1} : Duplicate identifier '{2}'",
+                    ident.Line, ident.Column, ident.Lexeme));
+            }
+        }
+        
         public Symbol FindInScope(string identifier)
         {
             return _stack.Peek().Find(identifier);
         }
 
+        internal void CheckIdentifierDuplicateInScope(Token ident)
+        {
+            if (FindInScope(ident.Value) != null)
+            {
+                throw new Exception(string.Format("{0}, {1} : Duplicate identifier '{2}'",
+                    ident.Line, ident.Column, ident.Lexeme));
+            }
+        }
+        
         public SymVar FindIdentInScope(string identifier)
         {
             return _stack.Peek().Find(identifier) as SymVar;
@@ -88,6 +109,19 @@ namespace FEFUPascalCompiler.Parser.Sematics
             }
         }
 
+        internal SymType CheckTypeDeclared(Token type)
+        {
+            var symType = FindType(type.Value);
+
+            if (FindType(type.Value) == null)
+            {
+                throw new Exception(string.Format("{0}, {1} : Undeclared type identifier '{2}'",
+                    type.Line, type.Column, type.Lexeme));
+            }
+
+            return symType;
+        }
+        
         public SymVar FindIdent(string identifier)
         {
             if (Find(identifier) is SymVar variable)
@@ -98,9 +132,9 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return null;
         }
 
-        public FunctionSymbol FindFunc(string identifier)
+        public CallableSymbol FindFunc(string identifier, List<SymType> parametersTypes)
         {
-            if (Find(identifier) is FunctionSymbol funcSymb)
+            if (Find(identifier) is CallableSymbol funcSymb)
             {
                 return funcSymb;
             }
@@ -108,15 +142,15 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return null;
         }
 
-        public ProcedureSymbol FindProc(string identifier)
-        {
-            if (Find(identifier) is ProcedureSymbol procSymb)
-            {
-                return procSymb;
-            }
-
-            return null;
-        }
+//        public CallableSymbol FindProc(string identifier)
+//        {
+//            if (Find(identifier) is CallableSymbol procSymb)
+//            {
+//                return procSymb;
+//            }
+//
+//            return null;
+//        }
 
         public void AddType(SymType type)
         {
@@ -128,52 +162,49 @@ namespace FEFUPascalCompiler.Parser.Sematics
             _stack.Peek().AddType(identifier, type);
         }
 
-        public void AddIdent(bool local, string identifier, SymType type)
+        public void AddVariable(bool local, string identifier, SymType type)
         {
             _stack.Peek().AddVariable(local, identifier, type);
         }
 
-        public void AddIdent(string identifier, SymVar ident)
+        public void AddVariable(string identifier, SymVar ident)
         {
             _stack.Peek().AddVariable(identifier, ident);
         }
 
+        public void AddConstant(bool local, string identifier, SymType type)
+        {
+            _stack.Peek().AddVariable(local, identifier, type);
+        }
+
+        public void AddParameter(string modifier, string identifier, SymType type)
+        {
+            _stack.Peek().AddVariable(identifier, new SymParameter(type, modifier));
+        }
+        
         public void AddAlias(string aliasIdentifier, SymType typeToAias)
         {
             _stack.Peek().AddAlias(aliasIdentifier, new SymAliasType(aliasIdentifier, typeToAias));
         }
 
-        public void PrepareFunction(string identifier, FunctionSymbol funcSym)
+        public bool PrepareFunction(CallableSymbol funcSym)
         {
-            _stack.Peek().AddFunction(identifier, funcSym);
+            var existCallable = _stack.Peek().FindCallable(funcSym.Ident, funcSym.ParametersTypes);
+            if (existCallable != null && existCallable.IsForward)
+            {
+                return true; // function header already prepared by forward
+            }
+            return _stack.Peek().AddFunction(funcSym.Ident, funcSym);
         }
         
-        public void AddFunction(string identifier, FunctionSymbol funcSym)
+        public void AddFunction(CallableSymbol funcSym)
         {
-            funcSym.Local = Pop();
-            funcSym.Parameters = Pop();
-            _stack.Peek().Remove(identifier);
-            _stack.Peek().AddFunction(identifier, funcSym);
-        }
-        
-        public void PrepareProcedure(string identifier, ProcedureSymbol procSym)
-        {
-            _stack.Peek().AddProcedure(identifier, procSym);
-        }
-        
-        public void AddProcedure(string identifier, ProcedureSymbol procSym)
-        {
-            procSym.Local = Pop();
-            procSym.Parameters = Pop();
-            _stack.Peek().Remove(identifier);
-            _stack.Peek().AddProcedure(identifier, procSym);
+//            funcSym.Local = Pop();
+//            funcSym.Parameters = Pop();
+            _stack.Peek().RemoveFunction(funcSym.Ident, funcSym); // remove prepared callable
+            _stack.Peek().AddFunction(funcSym.Ident, funcSym); // add full callable
         }
 
-//        public bool IsLvalue(Expression expr)
-//        {
-//            return expr is 
-//        }
-        
         public IEnumerator<SymbolTable> GetEnumerator()
         {
             return _stack.GetEnumerator();
@@ -238,15 +269,66 @@ namespace FEFUPascalCompiler.Parser.Sematics
             _table.Add(identifier.ToLower(), symbol);
         }
 
-        public void AddFunction(string identifier, FunctionSymbol funcSym)
+        public CallableSymbol FindCallable(string identifier, List<SymType> parametersTypes)
         {
-            _table.Add(identifier.ToLower(), funcSym);
+            if (!_table.Contains(identifier) || !(_table[identifier] is List<CallableSymbol> callables)) return null;
+            foreach (var callableSymbol in callables)
+            {
+                if (parametersTypes.Count != callableSymbol.ParametersTypes.Count)
+                    continue;
+                bool found = true;
+                for (int i = 0; i < parametersTypes.Count; ++i)
+                {
+                    if (!parametersTypes[i].Equals(callableSymbol.ParametersTypes[i]))
+                    {
+                        found = false;
+                    }
+                }
+
+                if (found)
+                    return callableSymbol;
+            }
+
+            return null;
         }
 
-        public void AddProcedure(string identifier, ProcedureSymbol funcSym)
+        public bool AddFunction(string identifier, CallableSymbol callable)
         {
-            _table.Add(identifier.ToLower(), funcSym);
+            if (FindCallable(identifier, callable.ParametersTypes) != null)
+            {
+                return false;
+            }
+            
+            if (_table.Contains(identifier))
+                if (_table[identifier] is List<CallableSymbol> callableSymbols && !callableSymbols.Contains(callable))
+                    callableSymbols.Add(callable);
+            else
+                _table.Add(identifier.ToLower(), new List<CallableSymbol>{callable});
+
+            return true;
         }
+
+        public void RemoveFunction(string identifier, CallableSymbol callable)
+        {
+            if (!_table.Contains(identifier) || !(_table[identifier] is List<CallableSymbol> callables)) return;
+            foreach (var callableSymbol in callables)
+            {
+                if (callable.ParametersTypes.Count != callableSymbol.ParametersTypes.Count)
+                    continue;
+                bool found = true;
+                for (int i = 0; i < callable.ParametersTypes.Count; ++i)
+                {
+                    if (!callable.ParametersTypes[i].Equals(callableSymbol.ParametersTypes[i]))
+                    {
+                        found = false;
+                    }
+                }
+
+                if (found)
+                    callables.Remove(callableSymbol);
+            }
+        }
+        
         
         public void Remove(string identifier)
         {
