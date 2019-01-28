@@ -133,7 +133,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public FunctionCall(Ident funcIdent, List<Expression> paramList) : base(funcIdent.Token, AstNodeType.FunctionCall)
         {
             SymType = funcIdent.SymType;
-            SymVar= funcIdent.SymVar;
+            SymVar = funcIdent.SymVar;
             ParamList = paramList;
         }
 

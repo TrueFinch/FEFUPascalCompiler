@@ -170,7 +170,7 @@ public class CallableDeclNode : AstNode
 
 public class CallableHeader : AstNode
 {
-    public CallableHeader(AstNode name, List<FormalParamSection> paramList, AstNode returnType = null)
+    public CallableHeader(Ident name, List<FormalParamSection> paramList, AstNode returnType = null)
         : base(AstNodeType.FuncHeader)
     {
         Name = name;
@@ -183,7 +183,24 @@ public class CallableHeader : AstNode
         return visitor.Visit(this);
     }
 
-    public AstNode Name { get; set; }
+    public string GetSignature()
+    {
+        var signature = Name.ToString() + "("; 
+        for(int i = 0; i < CallableSymbol.ParametersTypes.Count - 1; ++i)
+        {
+            signature += CallableSymbol.ParametersTypes[i].ToString() + ", ";
+        }
+
+        if (CallableSymbol.ParametersTypes.Count > 0)
+        {
+            signature += CallableSymbol.ParametersTypes[CallableSymbol.ParametersTypes.Count - 1].ToString();
+        }
+
+        signature += ");";
+        return signature;
+    }
+    public CallableSymbol CallableSymbol { get; set; }
+    public Ident Name { get; set; }
     public List<FormalParamSection> ParamList { get; set; }
     public AstNode ReturnType { get; set; }
 }

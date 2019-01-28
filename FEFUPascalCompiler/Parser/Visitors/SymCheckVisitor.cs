@@ -219,11 +219,11 @@ namespace FEFUPascalCompiler.Parser.Visitors
         public bool Visit(ConstDecl node)
         {
             node.Expression.Accept(this);
-            
+
             _symStack.CheckIdentifierDuplicate(node.Ident.Token);
 
             _symStack.AddConstant(node.IsLocal, node.Ident.ToString(), node.Expression.SymType);
-            
+
             return true;
         }
 
@@ -245,7 +245,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
                 _symStack.CheckIdentifierDuplicate(ident.Token);
                 _symStack.AddVariable(node.IsLocal, ident.ToString(), identsType);
             }
-            
+
             return true;
         }
 
@@ -254,27 +254,56 @@ namespace FEFUPascalCompiler.Parser.Visitors
 //            throw new NotImplementedException();
 //        }
 
-        
+
         // TODO: at the end we need to add to stack new function
         public bool Visit(CallableDeclNode node)
         {
+            _symStack.Push(); //this will be function namespace
             node.Header.Accept(this);
-            
+
+            if (node.Block != null)
+            {
+                _symStack.Push(node.Header.CallableSymbol.Local);
+                node.Header.CallableSymbol.IsForward = false;
+                node.Block.Accept(this);
+                node.Header.CallableSymbol.Local = _symStack.Pop();
+                _symStack.AddFunction(node.Header.CallableSymbol);
+            }
+
             throw new NotImplementedException();
         }
 
         public bool Visit(CallableHeader node)
         {
-            _symStack.CheckIdentifierDuplicate(node.Name.Token);
-            _symStack.Push(); //this will be param namespace
+//            _symStack.CheckIdentifierDuplicate(node.Name.Token);
+            var callable = new CallableSymbol(node.Name.ToString());
+
             foreach (var paramSection in node.ParamList)
             {
                 paramSection.Accept(this);
+                foreach (var parameter in paramSection.ParamList)
+                {
+                    callable.ParametersTypes.Add(_symStack.FindIdentInScope(parameter.ToString()).VarSymType);
+                }
             }
-            
-            throw new NotImplementedException();
+
+            var retType = _symStack.FindType(node.ReturnType.ToString());
+            callable.IsForward = true;
+            callable.ReturnSymType = retType;
+            // pop function's namespace because we want to push function in the scope upper
+            callable.Local = _symStack.Pop();
+            node.CallableSymbol = callable;
+            if (!_symStack.PrepareFunction(callable))
+            {
+                throw new Exception(string.Format("{0}, {1} syntax error: duplicate declaration of {2} '{3}' ",
+                    node.Name.Token.Line, node.Name.Token.Column,
+                    retType == null ? "procedure" : "function",
+                    node.GetSignature()));
+            }
+
+            return true;
         }
-        
+
         public bool Visit(FormalParamSection node)
         {
             var paramSectionType = _symStack.FindType(node.ParamType.ToString());
@@ -286,7 +315,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
             return true;
         }
-        
+
         public bool Visit(SubroutineBlock node)
         {
             foreach (var nodeDeclPart in node.DeclParts)

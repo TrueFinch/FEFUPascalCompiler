@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.ParserParts;
 using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Tokens;
 
@@ -186,37 +187,24 @@ namespace FEFUPascalCompiler.Parser.Sematics
             _stack.Peek().AddAlias(aliasIdentifier, new SymAliasType(aliasIdentifier, typeToAias));
         }
 
-        public void PrepareFunction(string identifier, CallableSymbol funcSym)
+        public bool PrepareFunction(CallableSymbol funcSym)
         {
-            _stack.Peek().AddFunction(identifier, funcSym);
+            var existCallable = _stack.Peek().FindCallable(funcSym.Ident, funcSym.ParametersTypes);
+            if (existCallable != null && existCallable.IsForward)
+            {
+                return true; // function header already prepared by forward
+            }
+            return _stack.Peek().AddFunction(funcSym.Ident, funcSym);
         }
         
-        public void AddFunction(string identifier, CallableSymbol funcSym)
+        public void AddFunction(CallableSymbol funcSym)
         {
-            funcSym.Local = Pop();
+//            funcSym.Local = Pop();
 //            funcSym.Parameters = Pop();
-            _stack.Peek().Remove(identifier);
-            _stack.Peek().AddFunction(identifier, funcSym);
+            _stack.Peek().RemoveFunction(funcSym.Ident, funcSym); // remove prepared callable
+            _stack.Peek().AddFunction(funcSym.Ident, funcSym); // add full callable
         }
-        
-//        public void PrepareProcedure(string identifier, CallableSymbol procSym)
-//        {
-//            _stack.Peek().AddProcedure(identifier, procSym);
-//        }
-//        
-//        public void AddProcedure(string identifier, CallableSymbol procSym)
-//        {
-//            procSym.Local = Pop();
-//            procSym.Parameters = Pop();
-//            _stack.Peek().Remove(identifier);
-//            _stack.Peek().AddProcedure(identifier, procSym);
-//        }
 
-//        public bool IsLvalue(Expression expr)
-//        {
-//            return expr is 
-//        }
-        
         public IEnumerator<SymbolTable> GetEnumerator()
         {
             return _stack.GetEnumerator();
@@ -281,15 +269,66 @@ namespace FEFUPascalCompiler.Parser.Sematics
             _table.Add(identifier.ToLower(), symbol);
         }
 
-        public void AddFunction(string identifier, CallableSymbol funcSym)
+        public CallableSymbol FindCallable(string identifier, List<SymType> parametersTypes)
         {
-            _table.Add(identifier.ToLower(), funcSym);
+            if (!_table.Contains(identifier) || !(_table[identifier] is List<CallableSymbol> callables)) return null;
+            foreach (var callableSymbol in callables)
+            {
+                if (parametersTypes.Count != callableSymbol.ParametersTypes.Count)
+                    continue;
+                bool found = true;
+                for (int i = 0; i < parametersTypes.Count; ++i)
+                {
+                    if (!parametersTypes[i].Equals(callableSymbol.ParametersTypes[i]))
+                    {
+                        found = false;
+                    }
+                }
+
+                if (found)
+                    return callableSymbol;
+            }
+
+            return null;
         }
 
-        public void AddProcedure(string identifier, CallableSymbol funcSym)
+        public bool AddFunction(string identifier, CallableSymbol callable)
         {
-            _table.Add(identifier.ToLower(), funcSym);
+            if (FindCallable(identifier, callable.ParametersTypes) != null)
+            {
+                return false;
+            }
+            
+            if (_table.Contains(identifier))
+                if (_table[identifier] is List<CallableSymbol> callableSymbols && !callableSymbols.Contains(callable))
+                    callableSymbols.Add(callable);
+            else
+                _table.Add(identifier.ToLower(), new List<CallableSymbol>{callable});
+
+            return true;
         }
+
+        public void RemoveFunction(string identifier, CallableSymbol callable)
+        {
+            if (!_table.Contains(identifier) || !(_table[identifier] is List<CallableSymbol> callables)) return;
+            foreach (var callableSymbol in callables)
+            {
+                if (callable.ParametersTypes.Count != callableSymbol.ParametersTypes.Count)
+                    continue;
+                bool found = true;
+                for (int i = 0; i < callable.ParametersTypes.Count; ++i)
+                {
+                    if (!callable.ParametersTypes[i].Equals(callableSymbol.ParametersTypes[i]))
+                    {
+                        found = false;
+                    }
+                }
+
+                if (found)
+                    callables.Remove(callableSymbol);
+            }
+        }
+        
         
         public void Remove(string identifier)
         {

@@ -198,7 +198,8 @@ namespace FEFUPascalCompiler.Parser.Semantics
         public CallableSymbol(string ident) : base(ident)
         {
         }
-
+        
+        public List<SymType> ParametersTypes { get; set; } = new List<SymType>();
         public bool IsForward { get; set; } = false;
 //        public SymbolTable Parameters { get; set; }
         public SymbolTable Local { get; set; }

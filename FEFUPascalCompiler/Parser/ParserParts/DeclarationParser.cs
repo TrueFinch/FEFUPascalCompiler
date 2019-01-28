@@ -207,55 +207,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 _symbolTableStack.Peek().AddVariable(local, varIdent.ToString(), type.Item1);
             }
 
-//            if (varIdents.Count == 1)
-//            {
-//                if (PeekToken().Type == TokenType.EqualOperator)
-//                {
-//                    NextToken();
-//                    var expr = ParseExpression();
-//                    CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
-//                        string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
-//                            PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
-//
-//                    return new InitVarDecl(varIdents[0], type.Item2, expr);
-//                }
-//            }
-
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             return new SimpleVarDecl(varIdents, type.Item2, local);
         }
-
-//        private AstNode ParseProcFuncDeclsPart()
-//        {
-//            var declarations = new List<AstNode>();
-//            bool stopParse = false;
-//            while (!stopParse)
-//            {
-//                stopParse = true;
-//                switch (PeekToken().Type)
-//                {
-//                    case TokenType.Procedure:
-//                    {
-//                        stopParse = false;
-//                        var procDecl = ParseProcDecl();
-//                        declarations.Add(procDecl);
-//                        break;
-//                    }
-//                    case TokenType.Function:
-//                    {
-//                        stopParse = false;
-//                        var funcDecl = ParseFuncDecl();
-//                        declarations.Add(funcDecl);
-//                        break;
-//                    }
-//                }
-//            }
-//
-//            return new ProcFuncDeclsPart(declarations);
-//        }
 
         private AstNode ParseFuncDecl()
         {
@@ -267,7 +224,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            _symbolTableStack.PrepareFunction(functionSymbol.Ident, functionSymbol); // Add function to handle recursion 
+//            _symbolTableStack.PrepareFunction(functionSymbol.Ident, functionSymbol); // Add function to handle recursion 
 
             _symbolTableStack.Push(); // this will be local table
             var funcSubroutineBlock = ParseSubroutineBlock();
@@ -278,7 +235,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             
-            _symbolTableStack.AddFunction(functionSymbol.Ident, functionSymbol);
+//            _symbolTableStack.AddFunction(functionSymbol.Ident, functionSymbol);
 
             //TODO: remove this to typeChecker visitor
 //            _symbolTableStack.Push(functionSymbol.Parameters); // push parameters table
@@ -314,7 +271,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var returnType = ParseSimpleType();
             funcSymbol.ReturnSymType = returnType.Item1;
 
-            return (funcSymbol, new CallableHeader(funcName, paramList, returnType.Item2));
+            return (funcSymbol, new CallableHeader(funcName as Ident, paramList, returnType.Item2));
         }
 
         //TODO: add declaration correctness 
@@ -370,7 +327,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
 //            procSymbol.Parameters = _symbolTableStack.Peek();
 
-            return (procSymbol, new CallableHeader(procName, paramList));
+            return (procSymbol, new CallableHeader(procName as Ident, paramList));
         }
         
         private AstNode ParseSubroutineBlock()
