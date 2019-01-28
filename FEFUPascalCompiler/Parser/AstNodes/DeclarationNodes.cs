@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using FEFUPascalCompiler.Parser.AstNodes;
+using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Visitors;
 using FEFUPascalCompiler.Tokens;
 
@@ -31,7 +32,8 @@ public class ConstDeclsPart : DeclsPart
 
 public class ConstDecl : AstNode
 {
-    public ConstDecl(Token token, AstNode ident, Expression expression, bool isLocal) : base(AstNodeType.ConstDecl, token)
+    public ConstDecl(Token token, AstNode ident, Expression expression, bool isLocal) : base(AstNodeType.ConstDecl,
+        token)
     {
         Ident = ident;
         Expression = expression;
@@ -41,7 +43,7 @@ public class ConstDecl : AstNode
     {
         return visitor.Visit(this);
     }
-    
+
     public bool IsLocal;
     public AstNode Ident { get; set; }
     public Expression Expression { get; set; }
@@ -150,35 +152,40 @@ public class CallableDeclNode : AstNode
     {
         Header = header;
         Block = block;
+        if (block == null)
+        {
+            IsForward = true;
+        }
     }
-    
+
     public override T Accept<T>(IAstVisitor<T> visitor)
     {
         return visitor.Visit(this);
     }
-    
+
+    public bool IsForward { get; set; };
     public CallableHeader Header { get; set; }
     public AstNode Block { get; set; }
 }
 
 public class CallableHeader : AstNode
 {
-    public CallableHeader(AstNode name, List<AstNode> paramList, AstNode returnType = null)
+    public CallableHeader(AstNode name, List<FormalParamSection> paramList, AstNode returnType = null)
         : base(AstNodeType.FuncHeader)
     {
         Name = name;
         ParamList = paramList;
         ReturnType = returnType;
     }
-    
+
     public override T Accept<T>(IAstVisitor<T> visitor)
     {
         return visitor.Visit(this);
     }
-    
-    public AstNode Name {get; set;}
-    public List<AstNode> ParamList {get; set;}
-    public AstNode ReturnType {get; set;}
+
+    public AstNode Name { get; set; }
+    public List<FormalParamSection> ParamList { get; set; }
+    public AstNode ReturnType { get; set; }
 }
 
 //public class ProcDecl : AstNode
@@ -266,19 +273,18 @@ public class SubroutineBlock : AstNode
         return visitor.Visit(this);
     }
 
-    public List<AstNode> DeclParts {get; set;}
-    public AstNode CompoundStatement {get; set;}
+    public List<AstNode> DeclParts { get; set; }
+    public AstNode CompoundStatement { get; set; }
 }
 
-public class Forward : AstNode
-{
-    public Forward(Token token) : base(AstNodeType.Forward, token)
-    {
-    }
-
-    public override T Accept<T>(IAstVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
-}
-
+//public class Forward : AstNode
+//{
+//    public Forward(Token token) : base(AstNodeType.Forward, token)
+//    {
+//    }
+//
+//    public override T Accept<T>(IAstVisitor<T> visitor)
+//    {
+//        return visitor.Visit(this);
+//    }
+//}
