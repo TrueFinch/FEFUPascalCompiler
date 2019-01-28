@@ -13,7 +13,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
     public class CompoundStatement : Statement
     {
-        public CompoundStatement(Token beginToken, Token endToken, List<AstNode> statements)
+        public CompoundStatement(Token beginToken, Token endToken, List<Statement> statements)
             : base(AstNodeType.CompoundStatement)
         {
             BeginToken = beginToken;
@@ -61,11 +61,26 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public Expression Left { get; set; }
         public Expression Right { get; set; }
     }
+    
+    public class CallableCallStatement : Statement
+    {
+        public CallableCallStatement(FunctionCall callable) : base(AstNodeType.CallableCallStatement)
+        {
+            Callable = callable;
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
+        
+        public Expression Callable { get; set; }
+    }
 
     public class IfStatement : Statement
     {
-        public IfStatement(Token ifToken, AstNode expression, Token thenToken, AstNode thenStatement,
-            Token elseToken = null, AstNode elseStatement = null) : base(AstNodeType.IfStatement)
+        public IfStatement(Token ifToken, Expression expression, Token thenToken, Statement thenStatement,
+            Token elseToken = null, Statement elseStatement = null) : base(AstNodeType.IfStatement)
         {
             IfToken = ifToken;
             Expression = expression;
@@ -83,19 +98,19 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public Token IfToken { get; }
         public Token ThenToken { get; }
         public Token ElseToken { get; }
-        public AstNode Expression { get; set; }
-        public AstNode ThenStatement { get; set; }
-        public AstNode ElseStatement { get; set; }
+        public Expression Expression { get; set; }
+        public Statement ThenStatement { get; set; }
+        public Statement ElseStatement { get; set; }
     }
 
     public class WhileStatement : Statement
     {
-        public WhileStatement(Token whileToken, AstNode expression, Token doToken, AstNode statement)
+        public WhileStatement(Token whileToken, Expression expression, Token doToken, Statement statement)
             : this(whileToken, expression, doToken, statement, AstNodeType.WhileStatement)
         {
         }
 
-        protected WhileStatement(Token whileToken, AstNode expression, Token doToken, AstNode statement,
+        protected WhileStatement(Token whileToken, Expression expression, Token doToken, Statement statement,
             AstNodeType nodeType)
             : base(nodeType)
         {
@@ -112,13 +127,13 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
         public Token WhileToken { get; }
         public Token DoToken { get; }
-        public AstNode Expression { get; set; }
-        public AstNode Statement { get; set; }
+        public Expression Expression { get; set; }
+        public Statement Statement { get; set; }
     }
 
     public class DoWhileStatement : WhileStatement
     {
-        public DoWhileStatement(Token whileToken, AstNode expression, Token doToken, AstNode statement)
+        public DoWhileStatement(Token whileToken, Expression expression, Token doToken, Statement statement)
             : base(whileToken, expression, doToken, statement, AstNodeType.DoWhileStatement)
         {
         }
@@ -131,8 +146,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
     public class ForStatement : Statement
     {
-        public ForStatement(Token forToken, AstNode iterator, Token assignToken, AstNode range,
-            Token doToken, AstNode statement)
+        public ForStatement(Token forToken, Ident iterator, Token assignToken, ForRange range,
+            Token doToken, Statement statement)
             : base(AstNodeType.ForStatement)
         {
             ForToken = forToken;
@@ -152,14 +167,14 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public Token AssignToken { get; }
         public Token DoToken { get; }
 
-        public AstNode Iterator { get; set; }
-        public AstNode Range { get; set; }
-        public AstNode Statement { get; set; }
+        public Ident Iterator { get; set; }
+        public ForRange Range { get; set; }
+        public Statement Statement { get; set; }
     }
 
     public class ForRange : Statement
     {
-        public ForRange(Token token, AstNode start, AstNode finish) : base(AstNodeType.ForRange, token)
+        public ForRange(Token token, Expression start, Expression finish) : base(AstNodeType.ForRange, token)
         {
             Start = start;
             Finish = finish;
@@ -170,7 +185,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public AstNode Start { get; set; }
-        public AstNode Finish { get; set; }
+        public Expression Start { get; set; }
+        public Expression Finish { get; set; }
     }
 }

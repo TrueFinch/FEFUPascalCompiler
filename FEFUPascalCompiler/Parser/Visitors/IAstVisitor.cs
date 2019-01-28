@@ -56,5 +56,6 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(MultiplyingOperator node);
         T Visit(CallableDeclNode node);
         T Visit(CallableHeader node);
+        T Visit(CallableCallStatement node);
     }
 }

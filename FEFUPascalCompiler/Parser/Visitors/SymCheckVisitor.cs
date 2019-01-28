@@ -270,7 +270,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
                 _symStack.AddFunction(node.Header.CallableSymbol);
             }
 
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool Visit(CallableHeader node)
@@ -304,6 +304,11 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return true;
         }
 
+        public bool Visit(CallableCallStatement node)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Visit(FormalParamSection node)
         {
             var paramSectionType = _symStack.FindType(node.ParamType.ToString());
@@ -328,14 +333,20 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return true;
         }
 
-//        public bool Visit(Forward node)
-//        {
-//            throw new NotImplementedException();
-//        }
-
         public bool Visit(IfStatement node)
         {
-            throw new NotImplementedException();
+            node.Expression.Accept(this);
+            if (!node.Expression.SymType.Equals(_symStack.SymBool))
+            {
+                throw new Exception(string.Format("{0}, {1} error: '{2}' expected, but '{3}' found",
+                    node.IfToken.Line, node.IfToken.Column, _symStack.SymBool.ToString(), 
+                    node.Expression.SymType.ToString()));
+            }
+
+            node.ThenStatement.Accept(this);
+            node.ElseStatement?.Accept(this);
+
+            return true;
         }
 
         public bool Visit(WhileStatement node)
