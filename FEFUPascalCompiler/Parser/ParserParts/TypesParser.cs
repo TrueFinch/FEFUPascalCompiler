@@ -10,7 +10,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 {
     internal partial class PascalParser
     {
-        private (SymType, AstNode) ParseType()
+        private AstNode ParseType()
         {
             switch (PeekToken().Type)
             {
@@ -44,16 +44,16 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
         }
 
-        private (SymType, AstNode) ParseSimpleType()
+        private AstNode ParseSimpleType()
         {
             var typeIdent = ParseIdent();
 
-            var symType = CheckTypeDeclared(typeIdent.Token);
+//            var symType = CheckTypeDeclared(typeIdent.Token);
 
-            return (symType, new SimpleTypeNode(typeIdent));
+            return new SimpleTypeNode(typeIdent);
         }
 
-        private (SymType, AstNode) ParseArrayType()
+        private AstNode ParseArrayType()
         {
             var token = PeekAndNext();
 
@@ -73,42 +73,42 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             var type = ParseType();
 
-            return (new SymArrayType(indexRanges.Item1, type.Item1), new ArrayTypeNode(indexRanges.Item2, type.Item2));
+            return new ArrayTypeNode(indexRanges, type);
         }
 
-        private (List<IndexRange<int, int>>, List<IndexRangeNode>) ParseIndexRanges()
+        private List<IndexRangeNode> ParseIndexRanges()
         {
             var indexRange = ParseIndexRange();
             var astNodesIndexRanges = new List<IndexRangeNode>();
-            var symbolIndexRanges = new List<IndexRange<int, int>>();
+//            var symbolIndexRanges = new List<IndexRange<int, int>>();
 
-            if (indexRange.Item1 == null || indexRange.Item2 == null)
+            if (indexRange == null)
             {
                 throw new Exception(string.Format("{0} {1} : syntax error, index range expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
 
-            symbolIndexRanges.Add(indexRange.Item1);
-            astNodesIndexRanges.Add(indexRange.Item2);
+//            symbolIndexRanges.Add(indexRange.Item1);
+            astNodesIndexRanges.Add(indexRange);
             
             while (PeekToken().Type == TokenType.Comma)
             {
                 NextToken();
                 indexRange = ParseIndexRange();
-                if (indexRange.Item1 == null || indexRange.Item2 == null)
+                if (indexRange == null)
                 {
                     throw new Exception(string.Format("{0} {1} : syntax error, index range expected, but {2} found",
                         PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
                 }
 
-                symbolIndexRanges.Add(indexRange.Item1);
-                astNodesIndexRanges.Add(indexRange.Item2);
+//                symbolIndexRanges.Add(indexRange.Item1);
+                astNodesIndexRanges.Add(indexRange);
             }
 
-            return (symbolIndexRanges, astNodesIndexRanges);
+            return astNodesIndexRanges;
         }
 
-        private (IndexRange<int, int>, IndexRangeNode) ParseIndexRange()
+        private IndexRangeNode ParseIndexRange()
         {
             var leftBound = ParseConstIntegerLiteral();
             if (leftBound == null)
@@ -130,16 +130,13 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
 
-            return (
-                new IndexRange<int, int>((leftBound.Token as IntegerNumberToken).NumberValue,
-                    (rightBound.Token as IntegerNumberToken).NumberValue),
-                new IndexRangeNode(token, leftBound, rightBound));
+            return new IndexRangeNode(token, leftBound, rightBound);
         }
 
-        private (SymType, AstNode) ParseRecordType()
+        private AstNode ParseRecordType()
         {
             var token = PeekAndNext();
-            _symbolTableStack.Push();
+//            _symbolTableStack.Push();
             var fieldList = ParseFieldsList();
             token = PeekToken();
             
@@ -147,7 +144,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 string.Format("{0} {1} : syntax error, 'end' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             
-            return (new SymRecordType(_symbolTableStack.Pop()), new RecordTypeNode(fieldList));
+            return new RecordTypeNode(fieldList);
         }
 
         private List<FieldSectionNode> ParseFieldsList()
@@ -193,34 +190,34 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             
             var fieldsType = ParseType();
-            if (fieldsType.Item1 == null && fieldsType.Item2 == null)
+            if (fieldsType== null)
             {
                 throw new Exception(string.Format("{0} {1} : syntax error, field's type expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
 
-            foreach (var ident in identList)
-            {
-                CheckDuplicateIdentifier(ident.Token);
-                _symbolTableStack.AddVariable(ident.ToString(), new SymLocal(fieldsType.Item1));
-            }
+//            foreach (var ident in identList)
+//            {
+//                CheckDuplicateIdentifier(ident.Token);
+//                _symbolTableStack.AddVariable(ident.ToString(), new SymLocal(fieldsType.Item1));
+//            }
             
-            return new FieldSectionNode(token, identList, fieldsType.Item2);
+            return new FieldSectionNode(token, identList, fieldsType);
         }
 
-        private (SymType, AstNode) ParsePointerType()
+        private AstNode ParsePointerType()
         {
             var token = PeekAndNext();
             
             var simpleType = ParseSimpleType();
-            if (simpleType.Item1 == null && simpleType.Item2 == null)
+            if (simpleType == null)
             {
                 //exception -- pointer must be on a simple type
                 throw new Exception(string.Format("{0} {1} : syntax error, simple type expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             }
 
-            return (new SymPointerType(simpleType.Item1), new PointerTypeNode(token, simpleType.Item2));
+            return new PointerTypeNode(token, simpleType);
         }
 
 //        private AstNode ParseProcedureType()

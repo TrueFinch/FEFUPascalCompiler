@@ -109,9 +109,9 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(Program node)
         {
-//            node.MainBlock.Accept(this);
-//            node.
-            throw new NotImplementedException();
+            _symStack.Push(); // global namespace
+            node.MainBlock.Accept(this);
+            return true;
         }
 
         public bool Visit(MainBlock node)

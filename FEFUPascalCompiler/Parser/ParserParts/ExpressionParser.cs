@@ -238,12 +238,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                                 PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
                         }
 
-                        if (!(field is Ident))
-                        {
-                            throw new Exception(string.Format(
-                                "{0}, {1} : syntax error, accessing field must be identifier",
-                                field.Token.Line, field.Token.Column, field.Token.Lexeme));
-                        }
+//                        if (!(field is Ident))
+//                        {
+//                            throw new Exception(string.Format(
+//                                "{0}, {1} : syntax error, accessing field must be identifier",
+//                                field.Token.Line, field.Token.Column, field.Token.Lexeme));
+//                        }
                         
                         left = new RecordAccess(left as Expression, field as Ident);
                         break;
@@ -333,15 +333,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return paramList;
         }
 
-        private (SymType, AstNode) ParseConformatArray()
+        private AstNode ParseConformatArray()
         {
             var arrayToken = PeekAndNext();
             var ofToken = PeekAndNext();
             if (arrayToken.Type == TokenType.Array && ofToken.Type == TokenType.Of)
             {
                 var simpleType = ParseSimpleType();
-                return (new SymConformatArrayType(simpleType.Item1),
-                    new ConformantArray(arrayToken, ofToken, simpleType.Item2));
+                return new ConformantArray(arrayToken, ofToken, simpleType);
             }
 
             throw new Exception(string.Format("{0}, {1} : syntax error, conformat array type expected, but {2} found",

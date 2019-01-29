@@ -141,7 +141,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 return null;
             }
 
-            CheckDuplicateIdentifier(typeIdent.Token);
+//            CheckDuplicateIdentifier(typeIdent.Token);
 
             var token = PeekToken();
 
@@ -155,17 +155,17 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            if (type.Item1.Ident.Length != 0 && _symbolTableStack.FindType(type.Item1.Ident) != null)
-            {
-                _symbolTableStack.AddAlias(typeIdent.ToString(), type.Item1);
-            }
-            else
-            {
-                _symbolTableStack.AddType(typeIdent.ToString(), type.Item1);
-            }
+//            if (type.Item1.Ident.Length != 0 && _symbolTableStack.FindType(type.Item1.Ident) != null)
+//            {
+//                _symbolTableStack.AddAlias(typeIdent.ToString(), type.Item1);
+//            }
+//            else
+//            {
+//                _symbolTableStack.AddType(typeIdent.ToString(), type.Item1);
+//            }
 
 
-            return new TypeDecl(typeIdent as Ident, type.Item2);
+            return new TypeDecl(typeIdent as Ident, type);
         }
 
         private AstNode ParseVarDeclsPart(bool local = false)
@@ -201,24 +201,23 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             var type = ParseType();
 
-            foreach (var varIdent in varIdents)
-            {
-                CheckDuplicateIdentifier(varIdent.Token);
-                _symbolTableStack.Peek().AddVariable(local, varIdent.ToString(), type.Item1);
-            }
+//            foreach (var varIdent in varIdents)
+//            {
+//                CheckDuplicateIdentifier(varIdent.Token);
+//                _symbolTableStack.Peek().AddVariable(local, varIdent.ToString(), type.Item1);
+//            }
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-            return new SimpleVarDecl(varIdents, type.Item2, local);
+            return new SimpleVarDecl(varIdents, type, local);
         }
 
         private AstNode ParseFuncDecl()
         {
             CallableSymbol functionSymbol;
-            CallableHeader funcHeader;
-            (functionSymbol, funcHeader) = ParseFuncHeader();
+            var funcHeader = ParseFuncHeader();
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
@@ -226,10 +225,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
 //            _symbolTableStack.PrepareFunction(functionSymbol.Ident, functionSymbol); // Add function to handle recursion 
 
-            _symbolTableStack.Push(); // this will be local table
+//            _symbolTableStack.Push(); // this will be local table
             var funcSubroutineBlock = ParseSubroutineBlock();
 
-            functionSymbol.Body = funcSubroutineBlock as SubroutineBlock;
+//            functionSymbol.Body = funcSubroutineBlock as SubroutineBlock;
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
@@ -249,17 +248,17 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new CallableDeclNode(funcHeader, funcSubroutineBlock);
         }
 
-        private (CallableSymbol, CallableHeader) ParseFuncHeader()
+        private CallableHeader ParseFuncHeader()
         {
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Function},
                 string.Format("{0} {1} : syntax error, 'function' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var funcName = ParseIdent();
-            CheckDuplicateIdentifier(funcName.Token);
-            var funcSymbol = new CallableSymbol(funcName.ToString());
+//            CheckDuplicateIdentifier(funcName.Token);
+//            var funcSymbol = new CallableSymbol(funcName.ToString());
 
-            _symbolTableStack.Push(); //this will be Parameters table
+//            _symbolTableStack.Push(); //this will be Parameters table
             var paramList = ParseFormalParamList();
 
 //            funcSymbol.Parameters = _symbolTableStack.Peek();
@@ -269,17 +268,16 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var returnType = ParseSimpleType();
-            funcSymbol.ReturnSymType = returnType.Item1;
+//            funcSymbol.ReturnSymType = returnType.Item1;
 
-            return (funcSymbol, new CallableHeader(funcName as Ident, paramList, returnType.Item2));
+            return new CallableHeader(funcName, paramList, returnType);
         }
 
         //TODO: add declaration correctness 
         private AstNode ParseProcDecl()
         {
-            CallableSymbol procedureSymbol;
-            CallableHeader procHeader;
-            (procedureSymbol, procHeader) = ParseProcHeader();
+//            CallableSymbol procedureSymbol;
+            var procHeader = ParseProcHeader();
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
@@ -292,7 +290,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             if (procSubroutineBlock == null)
             {
             }
-            procedureSymbol.Body = procSubroutineBlock as SubroutineBlock;
+//            procedureSymbol.Body = procSubroutineBlock as SubroutineBlock;
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},
                 string.Format("{0} {1} : syntax error, ';' expected, but {2} found",
@@ -312,22 +310,22 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new CallableDeclNode(procHeader, procSubroutineBlock);
         }
 
-        private (CallableSymbol, CallableHeader) ParseProcHeader()
+        private CallableHeader ParseProcHeader()
         {
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Procedure},
                 string.Format("{0} {1} : syntax error, 'procedure' expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var procName = ParseIdent();
-            CheckDuplicateIdentifier(procName.Token);
-            var procSymbol = new CallableSymbol(procName.ToString());
+//            CheckDuplicateIdentifier(procName.Token);
+//            var procSymbol = new CallableSymbol(procName.ToString());
 
-            _symbolTableStack.Push(); //this will be Parameters table
+//            _symbolTableStack.Push(); //this will be Parameters table
             var paramList = ParseFormalParamList();
 
 //            procSymbol.Parameters = _symbolTableStack.Peek();
 
-            return (procSymbol, new CallableHeader(procName as Ident, paramList));
+            return new CallableHeader(procName as Ident, paramList);
         }
         
         private AstNode ParseSubroutineBlock()

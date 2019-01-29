@@ -24,13 +24,13 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var compoundStatement = new CompoundStatement(beginToken, endToken, statements);
-            var semanticValid =
-                compoundStatement.Accept(new SymCheckVisitor(_symbolTableStack, new TypeChecker(_symbolTableStack)));
-            if (!semanticValid)
-            {
-                throw new Exception(string.Format("{0}, {1} : syntax error, semantic is invalid",
-                    beginToken.Line, beginToken.Column, beginToken.Lexeme));
-            }
+//            var semanticValid =
+//                compoundStatement.Accept(new SymCheckVisitor(_symbolTableStack, new TypeChecker(_symbolTableStack)));
+//            if (!semanticValid)
+//            {
+//                throw new Exception(string.Format("{0}, {1} : syntax error, semantic is invalid",
+//                    beginToken.Line, beginToken.Column, beginToken.Lexeme));
+//            }
             return compoundStatement;
         }
 
