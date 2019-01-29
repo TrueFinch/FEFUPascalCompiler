@@ -339,7 +339,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
             if (!node.Expression.SymType.Equals(_symStack.SymBool))
             {
                 throw new Exception(string.Format("{0}, {1} error: '{2}' expected, but '{3}' found",
-                    node.IfToken.Line, node.IfToken.Column, _symStack.SymBool.ToString(), 
+                    node.IfToken.Line, node.IfToken.Column, _symStack.SymBool.ToString(),
                     node.Expression.SymType.ToString()));
             }
 
@@ -351,12 +351,55 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(WhileStatement node)
         {
-            throw new NotImplementedException();
+            node.Expression.Accept(this);
+            if (!node.Expression.SymType.Equals(_symStack.SymBool))
+            {
+                throw new Exception(string.Format("{0}, {1} error: '{2}' expected, but '{3}' found",
+                    node.WhileToken.Line, node.WhileToken.Column, _symStack.SymBool.ToString(),
+                    node.Expression.SymType.ToString()));
+            }
+
+            node.Statement.Accept(this);
+
+            return true;
         }
 
         public bool Visit(ForStatement node)
         {
-            throw new NotImplementedException();
+            node.Iterator.Accept(this);
+            if (!node.Iterator.SymType.Equals(_symStack.SymInt))
+            {
+                throw new Exception(string.Format("{0}, {1} error: '{2}' expected, but '{3}' found",
+                    node.Iterator.Token.Line, node.Iterator.Token.Column, _symStack.SymInt.ToString(),
+                    node.Iterator.SymType.ToString()));
+            }
+
+            node.Range.Accept(this);
+            if (!node.Range.Start.SymType.Equals(_symStack.SymInt))
+            {
+                throw new Exception(string.Format("{0}, {1} error: '{2}' expected, but '{3}' found",
+                    node.ForToken.Line, node.ForToken.Column, _symStack.SymInt.ToString(),
+                    node.Range.Start.SymType.ToString()));
+            }
+
+            if (!node.Range.Finish.SymType.Equals(_symStack.SymInt))
+            {
+                throw new Exception(string.Format("{0}, {1} error: '{2}' expected, but '{3}' found",
+                    node.ForToken.Line, node.ForToken.Column, _symStack.SymInt.ToString(),
+                    node.Range.Finish.SymType.ToString()));
+            }
+
+            node.Statement.Accept(this);
+
+            return true;
+        }
+
+        public bool Visit(ForRange node)
+        {
+            node.Start.Accept(this);
+            node.Finish.Accept(this);
+
+            return true;
         }
 
         public bool Visit(SimpleTypeNode node)
@@ -389,22 +432,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
             throw new NotImplementedException();
         }
 
-//        public bool Visit(ProcSignature node)
-//        {
-//            throw new NotImplementedException();
-//        }
-//
-//        public bool Visit(FuncSignature node)
-//        {
-//            throw new NotImplementedException();
-//        }
-
         public bool Visit(ConformantArray node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit(ForRange node)
         {
             throw new NotImplementedException();
         }
