@@ -28,7 +28,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
         public Token BeginToken { get; }
         public Token EndToken { get; }
-        public List<AstNode> Statements { get; set; }
+        public List<Statement> Statements { get; set; }
     }
 
     public class EmptyStatement : Statement
