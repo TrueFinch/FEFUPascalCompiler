@@ -115,11 +115,17 @@ namespace FEFUPascalCompiler.Parser.Sematics
 
             if (FindType(type.Value) == null)
             {
-                throw new Exception(string.Format("{0}, {1} : Undeclared type identifier '{2}'",
-                    type.Line, type.Column, type.Lexeme));
+                return null;
+//                throw new Exception(string.Format("{0}, {1} : Undeclared type identifier '{2}'",
+//                    type.Line, type.Column, type.Lexeme));
             }
 
             return symType;
+        }
+
+        internal SymType CheckTypeDeclaredInScope(Token type)
+        {
+            return _stack.Peek().Find(type.Value) is SymType symbol ? symbol : null;
         }
         
         public SymVar FindIdent(string identifier)
@@ -132,26 +138,32 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return null;
         }
 
+        //TODO: rename with callable
         public CallableSymbol FindFunc(string identifier, List<SymType> parametersTypes)
         {
-            if (Find(identifier) is CallableSymbol funcSymb)
+            foreach (var table in _stack)
             {
-                return funcSymb;
+                if (table.FindCallable(identifier, parametersTypes) is CallableSymbol callable)
+                {
+                    return callable;
+                }
             }
 
             return null;
         }
+        
+        //TODO: rename with callable
+        public bool FindFunc(string identifier)
+        {
+            foreach (var table in _stack)
+            {
+                if (table.FindCallable(identifier))
+                    return true;
+            }
 
-//        public CallableSymbol FindProc(string identifier)
-//        {
-//            if (Find(identifier) is CallableSymbol procSymb)
-//            {
-//                return procSymb;
-//            }
-//
-//            return null;
-//        }
-
+            return false;
+        }
+        
         public void AddType(SymType type)
         {
             _stack.Peek().AddType(type);
@@ -187,6 +199,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
             _stack.Peek().AddAlias(aliasIdentifier, new SymAliasType(aliasIdentifier, typeToAias));
         }
 
+        //TODO: rename with callable
         public bool PrepareFunction(CallableSymbol funcSym)
         {
             var existCallable = _stack.Peek().FindCallable(funcSym.Ident, funcSym.ParametersTypes);
@@ -197,6 +210,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return _stack.Peek().AddFunction(funcSym.Ident, funcSym);
         }
         
+        //TODO: rename with callable
         public void AddFunction(CallableSymbol funcSym)
         {
 //            funcSym.Local = Pop();
@@ -272,6 +286,11 @@ namespace FEFUPascalCompiler.Parser.Sematics
         public CallableSymbol FindCallable(string identifier, List<SymType> parametersTypes)
         {
             if (!_table.Contains(identifier) || !(_table[identifier] is List<CallableSymbol> callables)) return null;
+            if (parametersTypes == null)
+            {
+                return callables[0];
+            }
+            
             foreach (var callableSymbol in callables)
             {
                 if (parametersTypes.Count != callableSymbol.ParametersTypes.Count)
@@ -292,6 +311,12 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return null;
         }
 
+        public bool FindCallable(string identifier)
+        {
+            return FindCallable(identifier, null) == null ? false : true;
+        }
+        
+        //TODO: rename with callable
         public bool AddFunction(string identifier, CallableSymbol callable)
         {
             if (FindCallable(identifier, callable.ParametersTypes) != null)
@@ -308,6 +333,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return true;
         }
 
+        //TODO: rename with callable
         public void RemoveFunction(string identifier, CallableSymbol callable)
         {
             if (!_table.Contains(identifier) || !(_table[identifier] is List<CallableSymbol> callables)) return;
