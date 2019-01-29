@@ -37,6 +37,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         CompoundStatement,
             EmptyStatement,
             AssignmentStatement,
+            CallableCallStatement,
             IfStatement,
             WhileStatement,
             DoWhileStatement,

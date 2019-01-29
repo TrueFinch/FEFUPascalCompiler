@@ -475,6 +475,11 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
             return printer;
         }
+
+        public AstPrinterNode Visit(CallableCallStatement node)
+        {
+            return node.Callable.Accept(this);
+        }
     }
 
     public class AstPrinterNode

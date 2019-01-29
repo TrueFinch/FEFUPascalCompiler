@@ -57,10 +57,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
             var identsList = ParseIdentList();
-            foreach (var ident in identsList)
-            {
-                CheckDuplicateIdentifier(ident.Token);
-            }
+//            foreach (var ident in identsList)
+//            {
+//                CheckDuplicateIdentifier(ident.Token);
+//            }
 
             if (PeekToken() == null || PeekToken().Type != TokenType.Colon)
             {
@@ -69,12 +69,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
             var paramType = ParseParamType();
 
-            foreach (var ident in identsList)
-            {
-                CheckDuplicateIdentifierInScope(ident.Token);
-                _symbolTableStack.AddVariable(ident.Token.Value, new SymParameter(paramType.Item1, modifier?.ToString()));
-//                _symbolTableStack.Peek().Add(ident.ToString(), ));
-            }
+//            foreach (var ident in identsList)
+//            {
+//                CheckDuplicateIdentifierInScope(ident.Token);
+//                _symbolTableStack.AddVariable(ident.Token.Value, new SymParameter(paramType.Item1, modifier?.ToString()));
+////                _symbolTableStack.Peek().Add(ident.ToString(), ));
+//            }
 
             return new FormalParamSection(identsList, paramType.Item2, modifier);
         }

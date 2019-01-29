@@ -193,7 +193,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
         }
     }
 
-    public class CallableSymbol : Symbol
+    public class CallableSymbol : SymType
     {
         public CallableSymbol(string ident) : base(ident)
         {

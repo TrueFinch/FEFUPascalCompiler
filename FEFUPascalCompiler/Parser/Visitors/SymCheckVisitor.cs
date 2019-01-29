@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.SymbolStore;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Sematics;
@@ -92,6 +93,13 @@ namespace FEFUPascalCompiler.Parser.Visitors
                     node.Left.Token.Line, node.Left.Token.Column, node.Left.ToString()));
             }
 
+            if (node.Right is FunctionCall functionCall && functionCall.SymType == null)
+            {
+                throw new Exception(string.Format(
+                    "{0}, {1} : syntax error, expression expected, but procedure '{2}' found",
+                    node.Right.Token.Line, node.Right.Token.Column, node.Right.ToString()));
+            }
+            
             Expression nodeLeft = node.Left;
             Expression nodeRight = node.Right;
             _typeChecker.Assignment(ref nodeLeft, ref nodeRight, node.Token);
@@ -129,6 +137,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(TypeDecl node)
         {
+            _symStack.CheckIdentifierDuplicateInScope(node.Ident.Token);
             switch (node.IdentType)
             {
                 case SimpleTypeNode simpleTypeNode:
@@ -206,6 +215,11 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return true;
         }
 
+        public bool Visit(SimpleTypeNode node)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Visit(ConstDeclsPart node)
         {
             foreach (var nodeDecl in node.Decls)
@@ -249,12 +263,6 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return true;
         }
 
-//        public bool Visit(InitVarDecl node)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-
         // TODO: at the end we need to add to stack new function
         public bool Visit(CallableDeclNode node)
         {
@@ -270,7 +278,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
                 _symStack.AddFunction(node.Header.CallableSymbol);
             }
 
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool Visit(CallableHeader node)
@@ -288,6 +296,8 @@ namespace FEFUPascalCompiler.Parser.Visitors
             }
 
             var retType = _symStack.FindType(node.ReturnType.ToString());
+//            if (retType != null)
+//                callable.ParametersTypes.Add(retType);
             callable.IsForward = true;
             callable.ReturnSymType = retType;
             // pop function's namespace because we want to push function in the scope upper
@@ -301,6 +311,12 @@ namespace FEFUPascalCompiler.Parser.Visitors
                     node.GetSignature()));
             }
 
+            return true;
+        }
+
+        public bool Visit(CallableCallStatement node)
+        {
+            node.Callable.Accept(this);
             return true;
         }
 
@@ -328,29 +344,73 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return true;
         }
 
-//        public bool Visit(Forward node)
-//        {
-//            throw new NotImplementedException();
-//        }
-
         public bool Visit(IfStatement node)
         {
-            throw new NotImplementedException();
+            node.Expression.Accept(this);
+            if (!node.Expression.SymType.Equals(_symStack.SymBool))
+            {
+                throw new Exception(string.Format("{0}, {1} error: '{2}' expected, but '{3}' found",
+                    node.IfToken.Line, node.IfToken.Column, _symStack.SymBool,
+                    node.Expression.SymType));
+            }
+
+            node.ThenStatement.Accept(this);
+            node.ElseStatement?.Accept(this);
+
+            return true;
         }
 
         public bool Visit(WhileStatement node)
         {
-            throw new NotImplementedException();
+            node.Expression.Accept(this);
+            if (!node.Expression.SymType.Equals(_symStack.SymBool))
+            {
+                throw new Exception(string.Format("{0}, {1} error: '{2}' expected, but '{3}' found",
+                    node.WhileToken.Line, node.WhileToken.Column, _symStack.SymBool,
+                    node.Expression.SymType));
+            }
+
+            node.Statement.Accept(this);
+
+            return true;
         }
 
         public bool Visit(ForStatement node)
         {
-            throw new NotImplementedException();
+            node.Iterator.Accept(this);
+            if (!node.Iterator.SymType.Equals(_symStack.SymInt))
+            {
+                throw new Exception(string.Format("{0}, {1} error: '{2}' expected, but '{3}' found",
+                    node.Iterator.Token.Line, node.Iterator.Token.Column, _symStack.SymInt,
+                    node.Iterator.SymType));
+            }
+
+            node.Range.Accept(this);
+            if (!node.Range.Start.SymType.Equals(_symStack.SymInt))
+            {
+                throw new Exception(string.Format("{0}, {1} error: '{2}' expected, but '{3}' found",
+                    node.ForToken.Line, node.ForToken.Column, _symStack.SymInt,
+                    node.Range.Start.SymType));
+            }
+
+            if (!node.Range.Finish.SymType.Equals(_symStack.SymInt))
+            {
+                throw new Exception(string.Format("{0}, {1} error: '{2}' expected, but '{3}' found",
+                    node.ForToken.Line, node.ForToken.Column, _symStack.SymInt,
+                    node.Range.Finish.SymType));
+            }
+
+            node.Statement.Accept(this);
+
+            return true;
         }
 
-        public bool Visit(SimpleTypeNode node)
+        public bool Visit(ForRange node)
         {
-            throw new NotImplementedException();
+            node.Start.Accept(this);
+            node.Finish.Accept(this);
+
+            return true;
         }
 
         public bool Visit(ArrayTypeNode node)
@@ -378,22 +438,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
             throw new NotImplementedException();
         }
 
-//        public bool Visit(ProcSignature node)
-//        {
-//            throw new NotImplementedException();
-//        }
-//
-//        public bool Visit(FuncSignature node)
-//        {
-//            throw new NotImplementedException();
-//        }
-
         public bool Visit(ConformantArray node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit(ForRange node)
         {
             throw new NotImplementedException();
         }
@@ -431,7 +476,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
                         node.Token.Line, node.Token.Column, node.Token.Lexeme));
             node.SymVar = sym;
             node.SymType = sym.VarSymType;
-            node.IsLValue = sym is SymConstant ? false : true;
+            node.IsLValue = !(sym is SymConstant);
 
             return true;
         }
@@ -469,7 +514,23 @@ namespace FEFUPascalCompiler.Parser.Visitors
 
         public bool Visit(FunctionCall node)
         {
-            //TODO: rewrite FunctionCall and symbol types of function and procedure
+//            TODO: rewrite FunctionCall and symbol types of function and procedure
+            if (!_symStack.FindFunc(node.Ident.ToString()))
+                throw new Exception(string.Format(
+                    "{0}, {1} : function '{2}' is not found",
+                    node.Ident.Token.Line, node.Ident.Token.Column, node.Ident.ToString()));
+            
+            var paramTypes = new List<SymType>();
+            foreach (var param in node.ParamList)
+            {
+                param.Accept(this);
+                paramTypes.Add(param.SymType);
+            }
+
+            node.SymCall= _symStack.FindFunc(node.Ident.ToString(), paramTypes);
+            node.SymType = node.SymCall.ReturnSymType;
+            node.IsLValue = false;
+            
 //            if (node.SymType != null) return true;
 //            
 //            node.FuncIdent.Accept(this);

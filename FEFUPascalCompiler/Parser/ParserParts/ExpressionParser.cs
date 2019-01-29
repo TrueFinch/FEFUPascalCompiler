@@ -189,7 +189,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             var token = PeekToken();
 
-            var left = ParseIdent();
+            AstNode left = ParseIdent();
             if (left == null)
             {
                 return null; // this is not variable ref
@@ -245,7 +245,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                                 field.Token.Line, field.Token.Column, field.Token.Lexeme));
                         }
                         
-                        left = new RecordAccess(left, field as Ident);
+                        left = new RecordAccess(left as Expression, field as Ident);
                         break;
                     }
                     case TokenType.OpenBracket:
@@ -283,7 +283,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                         }
 
                         var carriageToken = PeekAndNext();
-                        left = new DereferenceOperator(carriageToken, left);
+                        left = new DereferenceOperator(carriageToken, left as Expression);
                         break;
                     }
                     default:
@@ -294,7 +294,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 }
             }
 
-            return left;
+            return left as Expression;
         }
 
         private List<Expression> ParseParamList()
@@ -379,7 +379,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return identList;
         }
 
-        private Expression ParseIdent()
+        private Ident ParseIdent()
         {
             var token = PeekToken();
             if (token.Type != TokenType.Ident)

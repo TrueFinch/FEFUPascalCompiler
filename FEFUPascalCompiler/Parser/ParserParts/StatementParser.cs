@@ -9,7 +9,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 {
     internal partial class PascalParser
     {
-        private AstNode ParseCompoundStatement()
+        private Statement ParseCompoundStatement()
         {
             var beginToken = PeekToken();
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Begin},
@@ -34,9 +34,9 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return compoundStatement;
         }
 
-        private List<AstNode> ParseStatementsPart()
+        private List<Statement> ParseStatementsPart()
         {
-            var statements = new List<AstNode>();
+            var statements = new List<Statement>();
 
             var stmt = ParseStatement();
             if (stmt == null)
@@ -63,7 +63,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return statements;
         }
 
-        private AstNode ParseStatement()
+        private Statement ParseStatement()
         {
             var stmtStartToken = PeekToken();
             var stmt = ParseSructuredStatement();
@@ -79,7 +79,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return stmt;
         }
 
-        private AstNode ParseSimpleStatement()
+        private Statement ParseSimpleStatement()
         {
             if (PeekToken().Type == TokenType.Pass)
             {
@@ -95,7 +95,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             if (stmt.NodeType == AstNodeType.AssignmentStatement
                 || stmt.NodeType != AstNodeType.AssignmentStatement && stmt.NodeType == AstNodeType.FunctionCall)
             {
-                return stmt;
+                return new CallableCallStatement(stmt as FunctionCall);
             }
 
             return null; //this means that it is not simple statement
@@ -105,10 +105,6 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         {
             var left = ParseExpression();
             var assignToken = PeekToken();
-            if (assignToken == null)
-            {
-                return left;
-            }
 
             if (assignToken.Type != TokenType.SimpleAssignOperator
                 && assignToken.Type != TokenType.SumAssignOperator && assignToken.Type != TokenType.DifAssignOperator
@@ -122,7 +118,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new AssignStatement(assignToken as AssignToken, left as Expression, right as Expression);
         }
 
-        private AstNode ParseSructuredStatement()
+        private Statement ParseSructuredStatement()
         {
             switch (PeekToken().Type)
             {
@@ -153,7 +149,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
         }
 
-        private AstNode ParseIfStatement()
+        private Statement ParseIfStatement()
         {
             var ifToken = PeekAndNext();
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.OpenBracket},
@@ -174,7 +170,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var thenStmt = ParseStatement();
 
             Token elseToken = null;
-            AstNode elseStmt = null;
+            Statement elseStmt = null;
 
             if (PeekToken().Type == TokenType.Else)
             {
@@ -185,7 +181,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new IfStatement(ifToken, ifExpr, thenToken, thenStmt, elseToken, elseStmt);
         }
 
-        private AstNode ParseForStatement()
+        private Statement ParseForStatement()
         {
             var forToken = PeekAndNext();
 
@@ -214,7 +210,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new ForStatement(forToken, iterator, assignToken, forRange, doToken, stmt);
         }
 
-        private AstNode ParseForRange()
+        private ForRange ParseForRange()
         {
             var fromExpr = ParseExpression();
 
@@ -228,7 +224,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new ForRange(directionToken, fromExpr, toExpr);
         }
 
-        private AstNode ParseWhileDoStatement()
+        private Statement ParseWhileDoStatement()
         {
             var whileToken = PeekToken();
 
@@ -253,7 +249,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             return new WhileStatement(whileToken, conditionExpr, doToken, stmt);
         }
 
-        private AstNode ParseDoWhileStatement()
+        private Statement ParseDoWhileStatement()
         {
             var doToken = PeekAndNext();
 
