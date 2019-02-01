@@ -43,7 +43,7 @@ namespace FEFUPascalCompiler
             if (compiler.LastException == null)
                 compiler.PrintAst(output);
             
-//            compiler.CheckSemantics();
+            compiler.CheckSemantics();
             
             output.Close();
             compiler.Input.Close();
