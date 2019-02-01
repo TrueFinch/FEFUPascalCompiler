@@ -216,7 +216,6 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 
         private AstNode ParseFuncDecl()
         {
-            CallableSymbol functionSymbol;
             var funcHeader = ParseFuncHeader();
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.Semicolon},

@@ -16,7 +16,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         }
 
         private readonly SymbolStack _symStack;
-        private readonly TypeChecker _typeChecker;
+//        private readonly TypeChecker _typeChecker;
 
         private bool _inLastNamespace = false;
 
@@ -140,7 +140,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
                 }
             }
             
-            return true;
+//            return true;
         }
 
         public bool Visit(Program node)
