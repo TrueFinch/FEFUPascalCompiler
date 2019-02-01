@@ -92,13 +92,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 return null; //this is not simple statement
             }
 
-            if (stmt.NodeType == AstNodeType.AssignmentStatement
-                || stmt.NodeType != AstNodeType.AssignmentStatement && stmt.NodeType == AstNodeType.FunctionCall)
+            if (stmt.NodeType != AstNodeType.AssignmentStatement && stmt.NodeType == AstNodeType.FunctionCall)
             {
                 return new CallableCallStatement(stmt as FunctionCall);
             }
 
-            return null; //this means that it is not simple statement
+            return stmt as Statement; //
         }
 
         private AstNode ParseAssingStatement()

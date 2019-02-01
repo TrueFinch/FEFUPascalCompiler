@@ -7,6 +7,7 @@ using FEFUPascalCompiler.Tokens;
 using FEFUPascalCompiler.Parser;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.ParserParts;
+using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Visitors;
 
 //TODO: change logic of Peek Next - we want that on start we have valid token got by Peek and that already use Next
@@ -108,6 +109,11 @@ namespace FEFUPascalCompiler
             }
         }
 
+        public void CheckSemantics()
+        {
+            _ast.Accept(new SymCheckVisitor(_pascalParser.SymbolStack));
+        }
+        
         public bool Next()
         {
             try
