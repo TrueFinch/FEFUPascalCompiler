@@ -7,7 +7,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 {
     public class SimpleTypeNode : AstNode
     {
-        public SimpleTypeNode(AstNode typeIdent) : base(AstNodeType.SimpleType)
+        public SimpleTypeNode(AstNode typeIdent) : base(AstNodeType.SimpleType, typeIdent.Token)
         {
             TypeIdent = typeIdent;
         }

@@ -24,13 +24,13 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var compoundStatement = new CompoundStatement(beginToken, endToken, statements);
-            var semanticValid =
-                compoundStatement.Accept(new SymCheckVisitor(_symbolTableStack, new TypeChecker(_symbolTableStack)));
-            if (!semanticValid)
-            {
-                throw new Exception(string.Format("{0}, {1} : syntax error, semantic is invalid",
-                    beginToken.Line, beginToken.Column, beginToken.Lexeme));
-            }
+//            var semanticValid =
+//                compoundStatement.Accept(new SymCheckVisitor(_symbolTableStack, new TypeChecker(_symbolTableStack)));
+//            if (!semanticValid)
+//            {
+//                throw new Exception(string.Format("{0}, {1} : syntax error, semantic is invalid",
+//                    beginToken.Line, beginToken.Column, beginToken.Lexeme));
+//            }
             return compoundStatement;
         }
 
@@ -92,13 +92,12 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 return null; //this is not simple statement
             }
 
-            if (stmt.NodeType == AstNodeType.AssignmentStatement
-                || stmt.NodeType != AstNodeType.AssignmentStatement && stmt.NodeType == AstNodeType.FunctionCall)
+            if (stmt.NodeType != AstNodeType.AssignmentStatement && stmt.NodeType == AstNodeType.FunctionCall)
             {
                 return new CallableCallStatement(stmt as FunctionCall);
             }
 
-            return null; //this means that it is not simple statement
+            return stmt as Statement; //
         }
 
         private AstNode ParseAssingStatement()

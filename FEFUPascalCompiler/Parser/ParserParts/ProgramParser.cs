@@ -16,7 +16,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
             
             var header = ParseIdent();
-            CheckDuplicateIdentifier(header.Token);
+//            CheckDuplicateIdentifier(header.Token);
 //            _symbolTableStack.Peek().Add();
             
 

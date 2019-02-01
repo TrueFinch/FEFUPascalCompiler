@@ -60,8 +60,10 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private NextToken NextToken { get; }
         private PeekAndNext PeekAndNext { get; }
         private NextAndPeek NextAndPeek { get; }
-
+        
 //        private Stack<OrderedDictionary> _symbolTableStack = new Stack<OrderedDictionary>();
+        public SymbolStack SymbolStack => _symbolTableStack;
+
         private SymbolStack _symbolTableStack = new SymbolStack();
 //        private void InitSymbolTableStack()
 //        {

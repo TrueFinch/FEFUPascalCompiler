@@ -9,7 +9,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
     {
         private readonly SymbolStack _symStack;
 
-        public TypeChecker(SymbolStack stack)
+        public TypeChecker(in SymbolStack stack)
         {
             _symStack = stack;
         }

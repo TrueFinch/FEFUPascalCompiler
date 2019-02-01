@@ -1,11 +1,11 @@
-                                  a                                    
-                                  ┼                                    
-                              MainBlock                                
-                         ┌────────┴─────────────────────────┐          
-                        var                         CompoundStatement  
-        ┌────────────────┴───────────────┐                             
-  SimpleVarDecl    SimpleVarDecl    InitVarDecl                        
- ┌──┬───┴──┐       ┌─────┴┐       ┌──────┴───────┐                     
- a  b  SimpleType  x  SimpleType  y  SimpleType  0                     
-         ┌─┴             ┌┴            ┌─┴                             
-       float          integer        float                             
+                                 a                                  
+                                 ┼                                  
+                             MainBlock                              
+                       ┌─────────┴───────────────────────┐          
+                      var                        CompoundStatement  
+        ┌──────────────┴─┬──────────────┐                           
+  SimpleVarDecl    SimpleVarDecl  SimpleVarDecl                     
+ ┌──┬───┴──┐       ┌─────┴┐       ┌─────┴┐                          
+ a  b  SimpleType  x  SimpleType  y  SimpleType                     
+         ┌─┴             ┌┴            ┌─┴                          
+       float          integer        float                          

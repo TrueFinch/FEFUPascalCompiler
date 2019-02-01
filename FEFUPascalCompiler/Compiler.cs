@@ -7,6 +7,7 @@ using FEFUPascalCompiler.Tokens;
 using FEFUPascalCompiler.Parser;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.ParserParts;
+using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Visitors;
 
 //TODO: change logic of Peek Next - we want that on start we have valid token got by Peek and that already use Next
@@ -36,7 +37,10 @@ namespace FEFUPascalCompiler
             catch (Exception e)
             {
                 LastException = e;
-                Console.Out.WriteLine(e.Message);
+                if (WriteStackTrace)
+                    Console.Out.WriteLine(e);
+                else
+                    Console.Out.WriteLine(e.Message);
                 return null;
             }
         }
@@ -60,7 +64,10 @@ namespace FEFUPascalCompiler
             catch (Exception e)
             {
                 LastException = e;
-                Console.Out.WriteLine(e.Message);
+                if (WriteStackTrace)
+                    Console.Out.WriteLine(e);
+                else
+                    Console.Out.WriteLine(e.Message);
             }
         }
 
@@ -83,7 +90,10 @@ namespace FEFUPascalCompiler
             catch (Exception e)
             {
                 LastException = e;
-                Console.Out.WriteLine(e.Message);
+                if (WriteStackTrace)
+                    Console.Out.WriteLine(e);
+                else
+                    Console.Out.WriteLine(e.Message);
             }
         }
 
@@ -108,6 +118,22 @@ namespace FEFUPascalCompiler
             }
         }
 
+        public void CheckSemantics()
+        {
+            try
+            {
+                _ast.Accept(new SymCheckVisitor(_pascalParser.SymbolStack));
+            }
+            catch (Exception e)
+            {
+                if (WriteStackTrace)
+                    Console.Out.WriteLine(e);
+                else
+                    Console.Out.WriteLine(e.Message);
+                LastException = e;
+            }
+        }
+        
         public bool Next()
         {
             try
@@ -117,7 +143,10 @@ namespace FEFUPascalCompiler
             catch (Exception e)
             {
                 LastException = e;
-                Console.Out.WriteLine(e.Message);
+                if (WriteStackTrace)
+                    Console.Out.WriteLine(e);
+                else
+                    Console.Out.WriteLine(e.Message);
                 return false;
             }
         }
@@ -165,6 +194,7 @@ namespace FEFUPascalCompiler
             set => _lexer.TokenizeComments = value;
         }
 
+        public bool WriteStackTrace { get; set; } = false;
         private AstNode _ast;
         private LexerDfa _lexer;
         private PascalParser _pascalParser;

@@ -10,14 +10,13 @@ namespace FEFUPascalCompiler.Parser.Visitors
 {
     public class SymCheckVisitor : IAstVisitor<bool>
     {
-        public SymCheckVisitor(SymbolStack symStack, TypeChecker typeChecker)
+        public SymCheckVisitor(SymbolStack symStack)
         {
             _symStack = symStack;
-            _typeChecker = typeChecker;
         }
 
         private readonly SymbolStack _symStack;
-        private readonly TypeChecker _typeChecker;
+//        private readonly TypeChecker _typeChecker;
 
         private bool _inLastNamespace = false;
 
@@ -100,18 +99,55 @@ namespace FEFUPascalCompiler.Parser.Visitors
                     node.Right.Token.Line, node.Right.Token.Column, node.Right.ToString()));
             }
             
-            Expression nodeLeft = node.Left;
-            Expression nodeRight = node.Right;
-            _typeChecker.Assignment(ref nodeLeft, ref nodeRight, node.Token);
-
-            return true;
+            if (node.Left.SymType.Equals(_symStack.SymFloat) && node.Right.SymType.Equals(_symStack.SymInt))
+            {
+                node.Left = new Cast(node.Right) {SymType = _symStack.SymFloat, IsLValue = false};
+                return true;
+            }
+            
+            switch (node.Token.Type)
+            {
+                case TokenType.SimpleAssignOperator:
+                {
+                    if (node.Left.SymType.Equals(node.Right.SymType))
+                    {
+                        return true;
+                    }
+                    
+                    throw new Exception(string.Format(
+                        "{0}, {1} : syntax error, incompatible types: got '{2}' expected '{3}'",
+                        node.Token.Line, node.Token.Column, node.Right.SymType.ToString(), node.Left.SymType.ToString()));
+                }
+                case TokenType.SumAssignOperator:
+                case TokenType.DifAssignOperator:
+                case TokenType.MulAssignOperator:
+                case TokenType.DivAssignOperator:
+                {
+                    if (node.Left.SymType.Equals(_symStack.SymInt) && node.Right.SymType.Equals(_symStack.SymInt))
+                    {
+                        return true;
+                    }
+                    
+                    throw new Exception(string.Format(
+                        "{0}, {1} : syntax error, incompatible types to assign: got '{2}' expected '{3}'",
+                        node.Token.Line, node.Token.Column, node.Right.SymType, node.Left.SymType));
+                }
+                default:
+                {
+                    throw new Exception(string.Format(
+                        "{0}, {1} : syntax error, unknown assignment operator '{2}'",
+                        node.Token.Line, node.Token.Column, node.Token.Lexeme));
+                }
+            }
+            
+//            return true;
         }
 
         public bool Visit(Program node)
         {
-//            node.MainBlock.Accept(this);
-//            node.
-            throw new NotImplementedException();
+            _symStack.Push(); // global namespace
+            node.MainBlock.Accept(this);
+            return true;
         }
 
         public bool Visit(MainBlock node)
