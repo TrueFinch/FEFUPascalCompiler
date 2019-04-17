@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -19,6 +19,192 @@
     </ItemGroup>
 
     <ItemGroup>
+        <EmbeddedResource Include="ParserAndSemanticTests\26_ManyDeclTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\26_ManyDeclTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\27_IncorrectAssignment.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\27_IncorrectAssignment.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\28_IncorrectAssignment.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\28_IncorrectAssignment.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\29_IncorrectAssignment.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\29_IncorrectAssignment.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\30_IncorrectAssignment.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\30_IncorrectAssignment.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\31_IncorrectAssignment.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\31_IncorrectAssignment.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\32_IncorrectAssignment.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\32_IncorrectAssignment.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\33_IncorrectAssignment.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\33_IncorrectAssignment.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\34_IncorrectAssignment.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\34_IncorrectAssignment.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\35_IncorrectAssignment.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\35_IncorrectAssignment.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\36_IncorrectAssignment.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\36_IncorrectAssignment.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\37_IncorrectAssignment.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\37_IncorrectAssignment.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\38_IncorrectAssignFloatPtrToIntPtr.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\38_IncorrectAssignFloatPtrToIntPtr.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\39_IncorrectAssignment.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\39_IncorrectAssignment.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\40_IncorrectAssignment.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\40_IncorrectAssignment.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\41_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\61_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\62_IncorrectVarDeclTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\62_IncorrectVarDeclTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\63_IncorrectVarDeclTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\63_IncorrectVarDeclTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\64_IncorrectVarDeclTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\64_IncorrectVarDeclTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\65_IncorrectVarDeclTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\65_IncorrectVarDeclTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\66_IncorrectVarDeclTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\66_IncorrectVarDeclTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\67_IncorrectVarDeclTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\67_IncorrectVarDeclTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\68_IncorrectVarDeclTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\68_IncorrectVarDeclTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\69_IncorrectVarDeclTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\69_IncorrectVarDeclTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\70_IncorrectVarDeclTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\70_IncorrectVarDeclTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\71_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\71_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\72_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\72_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\73_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\73_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\74_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\74_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\75_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\75_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\76_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\94_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
       <None Remove="LexerTests\test_01.in" />
       <None Remove="LexerTests\test_01.out" />
       <None Remove="LexerTests\test_02.in" />
@@ -201,203 +387,548 @@
       </EmbeddedResource>
       <None Remove="ParserTests\VariableDeclarationTests.in" />
       <None Remove="ParserTests\1_VariableDeclarationTest.in" />
-      <EmbeddedResource Include="ParserTests\01_VariableDeclarationTest.in">
+        <EmbeddedResource Include="LexerTests\OtherTests\02_WrongLexeme.in">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="LexerTests\OtherTests\02_WrongLexeme.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="LexerTests\OtherTests\03_WrongLexeme.in">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="LexerTests\OtherTests\03_WrongLexeme.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="LexerTests\OtherTests\04_WrongLexeme.in">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="LexerTests\OtherTests\04_WrongLexeme.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\01_VariableDeclarationTest.in">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\1_VariableDeclarationTest.out" />
-      <EmbeddedResource Include="ParserTests\01_VariableDeclarationTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\01_VariableDeclarationTest.out">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\2_VariableDeclarationTest.in" />
-      <EmbeddedResource Include="ParserTests\02_VariableDeclarationTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\02_VariableDeclarationTest.in">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\2_VariableDeclarationTest.out" />
-      <EmbeddedResource Include="ParserTests\02_VariableDeclarationTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\02_VariableDeclarationTest.out">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\3_VariableDeclarationTest.in" />
-      <EmbeddedResource Include="ParserTests\03_VariableDeclarationTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\03_VariableDeclarationTest.in">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\3_VariableDeclarationTest.out" />
-      <EmbeddedResource Include="ParserTests\03_VariableDeclarationTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\03_VariableDeclarationTest.out">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\5_VariableDeclarationTest.in" />
-      <EmbeddedResource Include="ParserTests\05_AssignmentStatementTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\05_AssignmentStatementTest.in">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\5_VariableDeclarationTest.out" />
-      <EmbeddedResource Include="ParserTests\05_AssignmentStatementTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\05_AssignmentStatementTest.out">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\6_IfStatementTest.in" />
-      <EmbeddedResource Include="ParserTests\06_IfStatementTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\06_IfStatementTest.in">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\6_IfStatementTest.out" />
-      <EmbeddedResource Include="ParserTests\06_IfStatementTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\06_IfStatementTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\7_IfStatementTest.in" />
-      <EmbeddedResource Include="ParserTests\07_IfStatementTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\07_IfStatementTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\7_IfStatementTest.out" />
-      <EmbeddedResource Include="ParserTests\07_IfStatementTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\07_IfStatementTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\8_IfStatementTest.in" />
-      <EmbeddedResource Include="ParserTests\08_IfStatementTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\08_IfStatementTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\8_IfStatementTest.out" />
-      <EmbeddedResource Include="ParserTests\08_IfStatementTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\08_IfStatementTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\9_ForStatementTest.in" />
-      <EmbeddedResource Include="ParserTests\09_ForStatementTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\09_ForStatementTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\9_ForStatementTest.out" />
-      <EmbeddedResource Include="ParserTests\09_ForStatementTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\09_ForStatementTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\10_ForStatementTest.in" />
-      <EmbeddedResource Include="ParserTests\10_ForStatementTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\10_ForStatementTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\10_ForStatementTest.out" />
-      <EmbeddedResource Include="ParserTests\10_ForStatementTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\10_ForStatementTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\11_ComparingOperatorTest.in" />
-      <EmbeddedResource Include="ParserTests\11_ComparingOperatorTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\11_ComparingOperatorTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\11_ComparingOperatorTest.out" />
-      <EmbeddedResource Include="ParserTests\11_ComparingOperatorTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\11_ComparingOperatorTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\04_VariableDeclarationTest.in" />
-      <EmbeddedResource Include="ParserTests\04_VariableDeclarationTest.in">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <EmbeddedResource Include="ParserAndSemanticTests\04_VariableDeclarationTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\04_VariableDeclarationTest.out" />
-      <EmbeddedResource Include="ParserTests\04_VariableDeclarationTest.out">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <EmbeddedResource Include="ParserAndSemanticTests\04_VariableDeclarationTest.out">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\12_ArithmExpressionsTest.out" />
-      <EmbeddedResource Include="ParserTests\12_ArithmExpressionsTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\12_ArithmExpressionsTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\12_ArithmExpressionsTest.in" />
-      <EmbeddedResource Include="ParserTests\12_ArithmExpressionsTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\12_ArithmExpressionsTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\13_ArithmExpressionsTest.in" />
-      <EmbeddedResource Include="ParserTests\13_ArithmExpressionsTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\13_ArithmExpressionsTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\13_ArithmExpressionsTest.out" />
-      <EmbeddedResource Include="ParserTests\13_ArithmExpressionsTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\13_ArithmExpressionsTest.out">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\14_FunctionDeclarationTest.in" />
-      <EmbeddedResource Include="ParserTests\14_FunctionDeclarationTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\14_FunctionDeclarationTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\14_FunctionDeclarationTest.out" />
-      <EmbeddedResource Include="ParserTests\14_FunctionDeclarationTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\14_FunctionDeclarationTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\15_ProcedureDeclarationTest.in" />
-      <EmbeddedResource Include="ParserTests\15_ProcedureDeclarationTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\15_ProcedureDeclarationTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\15_ProcedureDeclarationTest.out" />
-      <EmbeddedResource Include="ParserTests\15_ProcedureDeclarationTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\15_ProcedureDeclarationTest.out">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\16_HelloWorldTest.in" />
-      <EmbeddedResource Include="ParserTests\16_HelloWorldTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\16_HelloWorldTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\16_HelloWorldTest.out" />
-      <EmbeddedResource Include="ParserTests\16_HelloWorldTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\16_HelloWorldTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\17_TypeDeclarationTest.in" />
-      <EmbeddedResource Include="ParserTests\17_TypeDeclarationTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\17_TypeDeclarationTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\17_TypeDeclarationTest.out" />
-      <EmbeddedResource Include="ParserTests\17_TypeDeclarationTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\17_TypeDeclarationTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\18_ConstDeclarationTest.in" />
-      <EmbeddedResource Include="ParserTests\18_ConstDeclarationTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\18_ConstDeclarationTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\18_ConstDeclarationTest.out" />
-      <EmbeddedResource Include="ParserTests\18_ConstDeclarationTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\18_ConstDeclarationTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\19_UnaryOperatorTest.in" />
-      <EmbeddedResource Include="ParserTests\19_UnaryOperatorTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\19_UnaryOperatorTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\19_UnaryOperatorTest.out" />
-      <EmbeddedResource Include="ParserTests\19_UnaryOperatorTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\19_UnaryOperatorTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\20_PointerTest.in" />
-      <EmbeddedResource Include="ParserTests\20_PointerTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\20_PointerTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\20_PointerTest.out" />
-      <EmbeddedResource Include="ParserTests\20_PointerTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\20_PointerTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\21_DoWhileTest.in" />
-      <EmbeddedResource Include="ParserTests\21_DoWhileTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\21_DoWhileTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\21_DoWhileTest.out" />
-      <EmbeddedResource Include="ParserTests\21_DoWhileTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\21_DoWhileTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\22_DoWhileTest.in" />
-      <EmbeddedResource Include="ParserTests\22_DoWhileTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\22_DoWhileTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\24_RecordAccess.in" />
-      <EmbeddedResource Include="ParserTests\24_RecordAccessTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\24_RecordAccessTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\24_RecordAccess.out" />
-      <EmbeddedResource Include="ParserTests\24_RecordAccessTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\24_RecordAccessTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\23_DoWhileTest.out" />
-      <EmbeddedResource Include="ParserTests\23_DoWhileTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\23_DoWhileTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\23_DoWhileTest.in" />
-      <EmbeddedResource Include="ParserTests\23_DoWhileTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\23_DoWhileTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\22_DoWhileTest.out" />
-      <EmbeddedResource Include="ParserTests\22_DoWhileTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\22_DoWhileTest.out">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\25_RecordAccess.in" />
-      <EmbeddedResource Include="ParserTests\25_RecordArrayAccessTest.in">
+        <EmbeddedResource Include="ParserAndSemanticTests\25_RecordArrayAccessTest.in">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="ParserTests\25_RecordAccess.out" />
-      <EmbeddedResource Include="ParserTests\25_RecordArrayAccessTest.out">
+        <EmbeddedResource Include="ParserAndSemanticTests\25_RecordArrayAccessTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="LexerTests\OtherTests\1_WrongLexeme.in"/>
+        <EmbeddedResource Include="LexerTests\OtherTests\01_WrongLexeme.in">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="LexerTests\OtherTests\1_WrongLexeme.out.in"/>
+        <EmbeddedResource Include="LexerTests\OtherTests\01_WrongLexeme.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\42_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\42_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\43_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\42_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\43_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\44_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\43_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\44_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\45_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\44_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\45_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\46_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\45_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\46_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\47_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\46_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\47_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\48_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\47_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\48_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\49_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\48_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\49_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\50_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\49_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\50_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\51_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\50_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\51_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\52_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\51_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\52_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\53_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\52_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\53_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\54_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\53_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\54_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\55_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\54_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\55_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\56_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\55_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\56_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\57_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\56_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\57_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\58_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\57_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\58_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\59_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\58_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\59_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\60_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\59_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\60_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\61_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\60_IncorrectLoopTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\61_IncorrectLoopTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\77_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\76_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\77_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\78_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\77_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\78_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\79_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\78_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\79_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\80_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\79_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\80_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\81_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\80_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\81_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\82_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\81_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\82_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\83_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\82_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\83_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\83_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\84_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\84_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\85_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\84_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\85_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\86_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\85_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\86_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\87_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\86_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\87_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\88_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\87_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\88_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\89_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\88_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\89_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\90_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\89_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\90_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\91_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\90_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\91_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\92_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\91_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\92_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\93_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\92_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\93_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="ParserAndSemanticTests\94_IncorrectFunctionTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\93_IncorrectFunctionTest.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ParserAndSemanticTests\94_IncorrectFunctionTest.in">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="AssemblyTests\AssignTest1.in"/>
+        <None Remove="AssemblyTests\06_AdditiveOpersTest1.in"/>
+        <EmbeddedResource Include="AssemblyTests\06_AdditiveOpersTest1.in">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="AssemblyTests\06_AdditiveOpersTest1.out"/>
+        <EmbeddedResource Include="AssemblyTests\06_AdditiveOpersTest1.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="AssemblyTests\05_AssignTest5.out"/>
+        <EmbeddedResource Include="AssemblyTests\05_AssignTest5.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="AssemblyTests\05_AssignTest5.in"/>
+        <EmbeddedResource Include="AssemblyTests\05_AssignTest5.in">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="AssemblyTests\04_AssignTest4.out"/>
+        <EmbeddedResource Include="AssemblyTests\04_AssignTest4.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="AssemblyTests\04_AssignTest4.in"/>
+        <EmbeddedResource Include="AssemblyTests\04_AssignTest4.in">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="AssemblyTests\03_AssignTest3.out"/>
+        <EmbeddedResource Include="AssemblyTests\03_AssignTest3.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="AssemblyTests\03_AssignTest3.in"/>
+        <EmbeddedResource Include="AssemblyTests\03_AssignTest3.in">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="AssemblyTests\02_AssignTest2.out"/>
+        <EmbeddedResource Include="AssemblyTests\02_AssignTest2.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="AssemblyTests\02_AssignTest2.in"/>
+        <EmbeddedResource Include="AssemblyTests\02_AssignTest2.in">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="AssemblyTests\01_AssignTest1.out"/>
+        <EmbeddedResource Include="AssemblyTests\01_AssignTest1.out">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="AssemblyTests\01_AssignTest1.in"/>
+        <EmbeddedResource Include="AssemblyTests\01_AssignTest1.in">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="ParserAndSemanticTests\41_IncorrectLoopTest.in"/>
+        <EmbeddedResource Include="ParserAndSemanticTests\41_IncorrectLoopTest.in">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
     </ItemGroup>

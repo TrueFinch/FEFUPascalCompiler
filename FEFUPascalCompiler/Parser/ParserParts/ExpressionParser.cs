@@ -121,8 +121,8 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 if (operatorToken.Type == TokenType.AtSign &&
                     !(factor is Ident || factor is ArrayAccess || factor is RecordAccess))
                 {
-                    
                 }
+
                 return new UnaryOperator(operatorToken, factor);
             }
 
@@ -171,11 +171,11 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                     NextToken();
                     var expression = ParseExpression();
                     token = PeekToken();
-                    
+
                     CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseBracket},
-                        string.Format("{0}, {1} : syntax error, ')' expected, but {2} found",
+                        string.Format("({0}, {1}) syntax error: ')' expected, but {2} found",
                             PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
-                    
+
                     return expression;
                 }
                 default:
@@ -208,23 +208,23 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                         if (paramList == null || paramList.Count == 0)
                         {
                             throw new Exception(string.Format(
-                                "{0}, {1} : syntax error, indexes expected, but {2} found",
+                                "({0}, {1}) syntax error: indexes expected, but {2} found",
                                 PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
                         }
 
                         token = PeekToken();
                         CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseSquareBracket},
-                            string.Format("{0}, {1} : syntax error, ']' expected, but {2} found",
+                            string.Format("({0}, {1}) syntax error: ']' expected, but {2} found",
                                 PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
-                        if (!(left is Ident))
+                        if (!(left is Ident || left is RecordAccess || left is ArrayAccess))
                         {
                             throw new Exception(string.Format(
-                                "{0}, {1} : syntax error, accessing array must be identifier",
+                                "({0}, {1}) syntax error: accessing array must be identifier",
                                 left.Token.Line, left.Token.Column, left.Token.Lexeme));
                         }
-                        
-                        left = new ArrayAccess(left as Ident, paramList);
+
+                        left = new ArrayAccess(left as Expression, paramList);
                         break;
                     }
                     case TokenType.Dot:
@@ -234,7 +234,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                         if (field == null)
                         {
                             throw new Exception(string.Format(
-                                "{0}, {1} : syntax error, field ident expected, but {2} found",
+                                "({0}, {1}) syntax error: field ident expected, but {2} found",
                                 PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
                         }
 
@@ -244,7 +244,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
 //                                "{0}, {1} : syntax error, accessing field must be identifier",
 //                                field.Token.Line, field.Token.Column, field.Token.Lexeme));
 //                        }
-                        
+
                         left = new RecordAccess(left as Expression, field as Ident);
                         break;
                     }
@@ -256,29 +256,32 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                         if (paramList == null)
                         {
                             throw new Exception(string.Format(
-                                "{0}, {1} : syntax error, parameters list expected, but {2} found",
+                                "({0}, {1}) syntax error: parameters list expected, but {2} found",
                                 PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
                         }
 
                         CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseBracket},
-                            string.Format("{0}, {1} : syntax error, ')' expected, but {2} found",
+                            string.Format("({0}, {1}) syntax error: ')' expected, but {2} found",
                                 PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
                         if (!(left is Ident))
                         {
                             throw new Exception(string.Format(
-                                "{0}, {1} : syntax error, accessing field must be identifier",
+                                "({0}, {1}) syntax error: accessing field must be identifier",
                                 left.Token.Line, left.Token.Column, left.Token.Lexeme));
                         }
-                        
-                        left = new FunctionCall(left as Ident, paramList);
+
+                        left = left.Token.Type == TokenType.Write || left.Token.Type == TokenType.WriteLn
+                            ? (AstNode) new WriteFunctionCall((Ident) left, paramList,
+                                left.Token.Type == TokenType.WriteLn)
+                            : new UserFunctionCall((Ident) left, paramList);
                         break;
                     }
                     case TokenType.Carriage:
                     {
                         if (left.NodeType == AstNodeType.DereferenceOperator)
                         {
-                            throw new Exception(string.Format("{0}, {1} : syntax error, double carriage found",
+                            throw new Exception(string.Format("({0}, {1}) syntax error: double carriage found",
                                 PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
                         }
 
@@ -319,15 +322,14 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 }
 
                 NextToken();
-                
+
                 expr = ParseExpression();
                 if (expr == null)
                 {
                     break; //
                 }
-                paramList.Add(expr);
 
-                
+                paramList.Add(expr);
             }
 
             return paramList;
@@ -343,7 +345,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 return new ConformantArray(arrayToken, ofToken, simpleType);
             }
 
-            throw new Exception(string.Format("{0}, {1} : syntax error, conformat array type expected, but {2} found",
+            throw new Exception(string.Format("({0}, {1}) syntax error: conformat array type expected, but {2} found",
                 PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
         }
 
@@ -381,19 +383,22 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private Ident ParseIdent()
         {
             var token = PeekToken();
-            if (token.Type != TokenType.Ident)
+            if (!new List<TokenType> {TokenType.Ident, TokenType.WriteLn, TokenType.Write}.Contains(token.Type))
             {
-                //this is not ident, may be this is key word? Think about it
                 return null;
             }
+//            if (token.Type != TokenType.Ident)
+//            {
+//                //this is not ident, may be this is key word? Think about it
+//            }
 
             return new Ident(PeekAndNext());
         }
 
-        private Expression ParseConstIntegerLiteral()
+        private ConstIntegerLiteral ParseConstIntegerLiteral()
         {
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.IntegerNumber},
-                string.Format("{0} {1} : syntax error, integer expected, but {2} found",
+                string.Format("({0} {1}) syntax error: integer expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
             return new ConstIntegerLiteral(PeekAndNext());
         }
@@ -401,9 +406,9 @@ namespace FEFUPascalCompiler.Parser.ParserParts
         private Expression ParseConstFloatLiteral()
         {
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.FloatNumber},
-                string.Format("{0} {1} : syntax error, float expected, but {2} found",
+                string.Format("({0} {1}) syntax error: float expected, but {2} found",
                     PeekToken().Line, PeekToken().Column, PeekToken().Lexeme));
-            return new ConstIntegerLiteral(PeekAndNext());
+            return new ConstFloatLiteral(PeekAndNext());
         }
     }
 }

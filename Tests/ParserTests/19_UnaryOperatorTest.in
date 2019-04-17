@@ -1,6 +1,0 @@
-program a;
-var 
-    a : integer;
-begin
-    writeln(-1);
-end.

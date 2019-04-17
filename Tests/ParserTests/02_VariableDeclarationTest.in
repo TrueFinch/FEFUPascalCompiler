@@ -1,8 +1,0 @@
-program a;
-var
-    e: array [0..5] of integer;
-    ee: array [0..5, 0..5] of integer;
-    eee: array [0..5] of array [0..5] of integer;
-    eeee: array [0..5, 0..5] of array [0..5, 0..5] of integer;
-begin
-end.

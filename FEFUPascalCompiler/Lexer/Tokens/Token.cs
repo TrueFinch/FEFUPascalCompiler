@@ -302,5 +302,10 @@ namespace FEFUPascalCompiler.Tokens
         }
 
         public new bool Value { get; }
+
+        public override string ToString()
+        {
+            return base.ToString() + $"{Value,-30}" + '|';
+        }
     }
 }

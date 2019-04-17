@@ -1,7 +1,0 @@
-program Project1;
-begin
-  do begin
-    pass;
-  end
-  while (i < 2);
-end.

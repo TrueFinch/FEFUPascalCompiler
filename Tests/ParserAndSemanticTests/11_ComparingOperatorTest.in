@@ -1,0 +1,72 @@
+program a;
+Const 
+    s1 = '2 > 1';
+    s2 = '1 < 2';
+    s3 = '2 <> 1';
+    s4 = '2 = 2';
+    s5 = '1 <= 2';
+    s6 = '2 >= 1';
+    s7 = '2.1 > 1';
+    s8 = '1.1 < 2';
+    s9 = '2.1 <> 1';
+    s10 = '2.1 = 2.1';
+    s11 = '1.1 <= 2';
+    s12 = '2.1 >= 1';
+    s13 = '2.1 > 1.1';
+    s14 = '1.1 < 2.1';
+    s15 = '2.1 <> 1.1';
+    s16 = '1.1 <= 2.1';
+    s17 = '2.1 >= 1.1';
+    s18 = 'true = true';
+    s19 = 'true <> false';
+    s20 = '"c" = "c"';
+    s21 = '"c" <> "a"';
+begin
+    if (2 > 1) then
+        writeln(s1);
+    if (1 < 2) then
+        writeln(s2);
+    if (2 <> 1) then 
+        writeln(s3);
+    if (2 = 2) then
+        writeln(s4);
+    if (1 <= 2) then
+        writeln(s5);
+    if (2 >= 1) then
+        writeln(s6);
+    
+    
+    if (2.1 > 1) then
+        writeln(s7);
+    if (1.1 < 2) then
+        writeln(s8);
+    if (2.1 <> 1) then 
+        writeln(s9);
+    if (2.1 = 2.1) then
+        writeln(s10);
+    if (1.1 <= 2) then
+        writeln(s11);
+    if (2.1 >= 1) then
+        writeln(s12);
+    
+    if (2.1 > 1.1) then
+        writeln(s13);
+    if (1.1 < 2.1) then
+        writeln(s14);
+    if (2.1 <> 1.1) then 
+        writeln(s15);
+    if (1.1 <= 2.1) then
+        writeln(s16);
+    if (2.1 >= 1.1) then
+        writeln(s17);
+        
+    if (true = true) then
+        writeln(s18);
+    if (true <> false) then
+        writeln(s19);
+    
+    if ('c' = 'c') then
+        writeln(s20);
+    if ('c' <> 'a') then
+        writeln(s21);
+end.

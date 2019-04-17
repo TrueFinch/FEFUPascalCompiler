@@ -37,7 +37,7 @@ namespace FEFUPascalCompiler.Lexer
             GreaterOperator,
             GreaterOrEqualOperator,
 
-//            DoubleNumberStart,
+            DoubleNumberStart,
             DoubleNumber,
             ExpDoubleStart,
             ExpDoubleMinus,
@@ -86,46 +86,45 @@ namespace FEFUPascalCompiler.Lexer
         private static readonly Dictionary<LexerState, TokenType> LexerStateTypeToTokenType
             = new Dictionary<LexerState, TokenType>
             {
-                // @formatter:off
-                {LexerState.MultiLineCommentFinish, TokenType.MultiLineComment  },
-                {LexerState.CloseSquareBracket    , TokenType.Separator},
-                {LexerState.SingleLineComment     , TokenType.SingleLineComment },
-                {LexerState.SumArithmOperator     , TokenType.BinOperator       },
-                {LexerState.DifArithmOperator     , TokenType.BinOperator       },
-                {LexerState.MulArithmOperator     , TokenType.BinOperator       },
-                {LexerState.DivArithmOperator     , TokenType.BinOperator       },
-                {LexerState.PowArithmOperator     , TokenType.BinOperator       },
-                {LexerState.DoubleDotOperator     , TokenType.BinOperator       },
-                {LexerState.NotEqualOperator      , TokenType.BinOperator       },
-                {LexerState.EqualOperator         , TokenType.BinOperator       },
-                {LexerState.LessOperator          , TokenType.BinOperator       },
-                {LexerState.LessOrEqualOperator   , TokenType.BinOperator       },
-                {LexerState.GreaterOperator       , TokenType.BinOperator       },
-                {LexerState.GreaterOrEqualOperator, TokenType.BinOperator       },
-                {LexerState.OpenSquareBracket     , TokenType.Separator },         
+                {LexerState.MultiLineCommentFinish, TokenType.MultiLineComment},
+                {LexerState.CloseSquareBracket, TokenType.Separator},
+                {LexerState.SingleLineComment, TokenType.SingleLineComment},
+                {LexerState.SumArithmOperator, TokenType.BinOperator},
+                {LexerState.DifArithmOperator, TokenType.BinOperator},
+                {LexerState.MulArithmOperator, TokenType.BinOperator},
+                {LexerState.DivArithmOperator, TokenType.BinOperator},
+                {LexerState.PowArithmOperator, TokenType.BinOperator},
+                {LexerState.DoubleDotOperator, TokenType.BinOperator},
+                {LexerState.NotEqualOperator, TokenType.BinOperator},
+                {LexerState.EqualOperator, TokenType.BinOperator},
+                {LexerState.LessOperator, TokenType.BinOperator},
+                {LexerState.LessOrEqualOperator, TokenType.BinOperator},
+                {LexerState.GreaterOperator, TokenType.BinOperator},
+                {LexerState.GreaterOrEqualOperator, TokenType.BinOperator},
+                {LexerState.OpenSquareBracket, TokenType.Separator},
 //                {LexerState.SignCodeFinish        , TokenType.StringConst       },
-                {LexerState.DoubleNumber          , TokenType.FloatNumber      },
-                {LexerState.CloseBracket          , TokenType.Separator         },
-                {LexerState.OpenBracket           , TokenType.Separator         },
-                {LexerState.ExpDouble             , TokenType.FloatNumber      },
-                {LexerState.BinNumber             , TokenType.IntegerNumber  },
-                {LexerState.OctNumber             , TokenType.IntegerNumber  },
-                {LexerState.DecNumber             , TokenType.IntegerNumber  },
-                {LexerState.HexNumber             , TokenType.IntegerNumber  },
-                {LexerState.SemiColon             , TokenType.Separator         },
-                {LexerState.Assign                , TokenType.AssignOperator    },
-                {LexerState.Colon                 , TokenType.Separator         },
-                {LexerState.Ident                 , TokenType.Ident             },
-                {LexerState.Comma                 , TokenType.Separator         },
-                {LexerState.Dot                   , TokenType.Separator         },
-                {LexerState.SignCodeFinish        , TokenType.CharConst         },
-                {LexerState.CharFinish            , TokenType.CharConst         },
-                {LexerState.ControlStringFinish   , TokenType.StringConst         },
-                {LexerState.CharStringFinish      , TokenType.StringConst         },
-                {LexerState.Carriage              , TokenType.Separator         },
-                {LexerState.AtSign                , TokenType.Separator         },
+                {LexerState.DoubleNumber, TokenType.FloatNumber},
+                {LexerState.DoubleNumberStart, TokenType.FloatNumber},
+                {LexerState.CloseBracket, TokenType.Separator},
+                {LexerState.OpenBracket, TokenType.Separator},
+                {LexerState.ExpDouble, TokenType.FloatNumber},
+                {LexerState.BinNumber, TokenType.IntegerNumber},
+                {LexerState.OctNumber, TokenType.IntegerNumber},
+                {LexerState.DecNumber, TokenType.IntegerNumber},
+                {LexerState.HexNumber, TokenType.IntegerNumber},
+                {LexerState.SemiColon, TokenType.Separator},
+                {LexerState.Assign, TokenType.AssignOperator},
+                {LexerState.Colon, TokenType.Separator},
+                {LexerState.Ident, TokenType.Ident},
+                {LexerState.Comma, TokenType.Separator},
+                {LexerState.Dot, TokenType.Separator},
+                {LexerState.SignCodeFinish, TokenType.CharConst},
+                {LexerState.CharFinish, TokenType.CharConst},
+                {LexerState.ControlStringFinish, TokenType.StringConst},
+                {LexerState.CharStringFinish, TokenType.StringConst},
+                {LexerState.Carriage, TokenType.Separator},
+                {LexerState.AtSign, TokenType.Separator},
 //                {LexerState.                , TokenType.Separator         },
-                // @formatter:on
             };
 
         private class Pair<T1, T2>
@@ -155,6 +154,13 @@ namespace FEFUPascalCompiler.Lexer
             {
                 if (!currState.Transitions.ContainsKey(_inputStream.Peek()))
                 {
+                    if (currState.Type == LexerState.Start && !currState.Transitions.ContainsKey(_inputStream.Peek()))
+                    {
+                        lexeme.Append(_inputStream.Peek());
+                        throw new UnclosedStringConstException(
+                            $"({line},{column}) Unexpected symbol in lexeme {lexeme}");
+                    }
+
                     if ((_inputStream.Peek() != '\uffff')
                         && (((currState.Type == LexerState.CharStringStart) && (_inputStream.Peek() != '\n'))
                             || (currState.Type == LexerState.CharStart) && (_inputStream.Peek() != '\n')
@@ -208,7 +214,7 @@ namespace FEFUPascalCompiler.Lexer
                     lastState = currState;
                     currState = _statesList[transition.StateType];
                     if ((currState.Type == LexerState.Start) &&
-                        ((_inputStream.Peek() == 10) || _inputStream.Peek() == 32))
+                        ((_inputStream.Peek() == 10) || _inputStream.Peek() == 32 || _inputStream.Peek() == 13))
                     {
                         line += _inputStream.Peek() == 10 ? 1 : 0;
                         column = _inputStream.Peek() == 10 ? 1 : _column + 1;

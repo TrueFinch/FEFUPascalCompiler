@@ -6,6 +6,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
         {
             VarSymType = varSymType;
         }
+
         public SymType VarSymType { get; }
     }
 
@@ -15,14 +16,14 @@ namespace FEFUPascalCompiler.Parser.Semantics
         {
         }
     }
-    
+
     public class SymGlobal : SymVar
     {
         public SymGlobal(SymType varSymType) : base("Global", varSymType)
         {
         }
     }
-    
+
     public class SymParameter : SymVar
     {
         public SymParameter(SymType varSymType, string modifier = "") : base("Parameter", varSymType)
@@ -35,7 +36,7 @@ namespace FEFUPascalCompiler.Parser.Semantics
 
     public class SymConstant : SymVar
     {
-        public SymConstant(string ident, SymType varSymType = null) : base(ident, varSymType)
+        public SymConstant(string ident, SymType varSymType) : base(ident, varSymType)
         {
         }
     }

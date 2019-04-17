@@ -1,0 +1,8 @@
+program Project1;
+var i: float;
+begin
+  do begin
+    pass;
+  end
+  while (i < 2);
+end.

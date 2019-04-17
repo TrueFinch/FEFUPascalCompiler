@@ -11,14 +11,15 @@ namespace FEFUPascalCompiler.Parser.Semantics
         {
             Ident = ident.ToLower();
         }
-        
-        public string Ident { get; set; }
+
+        public string Ident { get; }
+
         public override string ToString()
         {
             return Ident.ToString();
         }
     }
-    
+
 //    public class FunctionSymbol : CallableSymbol
 //    {
 //        public FunctionSymbol(/*Type returnType, OrderedDictionary parameters, OrderedDictionary local, AstNode body,*/ string ident = "") : base(ident)

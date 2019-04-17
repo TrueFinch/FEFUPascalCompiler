@@ -14,7 +14,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             var token = PeekToken();
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.OpenBracket},
-                string.Format("{0} {1} : syntax error, '(' expected, but {2} found",
+                string.Format("({0}, {1}) syntax error: '(' expected, but '{2}' found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             var paramSections = new List<FormalParamSection>();
@@ -38,7 +38,7 @@ namespace FEFUPascalCompiler.Parser.ParserParts
             }
 
             CheckToken(PeekToken().Type, new List<TokenType> {TokenType.CloseBracket},
-                string.Format("{0} {1} : syntax error, ')' expected, but {2} found",
+                string.Format("({0}, {1}) syntax error: ')' expected, but '{2}' found",
                     PeekToken().Line, PeekToken().Column, PeekAndNext().Lexeme));
 
             return paramSections;
@@ -83,7 +83,8 @@ namespace FEFUPascalCompiler.Parser.ParserParts
                 }
                 default:
                 {
-                    throw new Exception(string.Format("{0}, {1} : syntax error, parameter type expected, but {2} found",
+                    throw new Exception(string.Format(
+                        "({0}, {1}) syntax error: parameter type expected, but '{2}' found",
                         PeekToken().Line, PeekToken().Column, NextAndPeek().Lexeme));
                 }
             }

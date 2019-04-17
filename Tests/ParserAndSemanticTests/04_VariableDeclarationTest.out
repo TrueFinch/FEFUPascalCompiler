@@ -1,0 +1,17 @@
+                         a                           
+                         ┼                           
+                     MainBlock                       
+                ┌────────┴────────────────┐          
+               var                CompoundStatement  
+                ┼                                    
+          SimpleVarDecl                              
+ ┌──────────────┴┐                                   
+ e           RecordType                              
+           ┌─────┴────────┐                          
+           :              :                          
+    ┌──────┴─┐        ┌───┴─┐                        
+    a    ArrayType    l  integer                     
+          ┌──┴───┐                                   
+         ..     char                                 
+       ┌──┴┐                                         
+       0  1000                                       

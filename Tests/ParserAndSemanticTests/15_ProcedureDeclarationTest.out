@@ -1,0 +1,15 @@
+                                                                  a                                                                    
+                                                                  ┼                                                                    
+                                                              MainBlock                                                                
+                       ┌──────────────────────────────────────────┴──────────────┬──────────────────────────────────────────┐          
+                    ProcDecl                                                 ProcDecl                               CompoundStatement  
+                       ┼                                               ┌─────────┴───────────────────────┐                             
+                 CallableHeader                                  CallableHeader                   SubroutineBlock                      
+  ┌─────────────┬──────┴─────────────┐            ┌─────────────┬──────┴─────────────┐                   ┼                             
+ add1   FormalParamSection   FormalParamSection  add1   FormalParamSection   FormalParamSection  CompoundStatement                     
+         ┌────┬─┴┬─────┐      ┌────┬─┴────┐              ┌────┬─┴┬─────┐      ┌────┬─┴────┐          ┌───┴                             
+       const  a  b  integer  var  res  integer         const  a  b  integer  var  res  integer      :=                                 
+                                                                                                  ┌──┴─┐                               
+                                                                                                 res   +                               
+                                                                                                      ┌┴─┐                             
+                                                                                                      a  b                             

@@ -18,7 +18,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             BeginToken = beginToken;
             EndToken = endToken;
-        Statements =  statements;
+            Statements = statements;
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -61,7 +61,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public Expression Left { get; set; }
         public Expression Right { get; set; }
     }
-    
+
     public class CallableCallStatement : Statement
     {
         public CallableCallStatement(FunctionCall callable) : base(AstNodeType.CallableCallStatement)
@@ -73,7 +73,7 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         {
             return visitor.Visit(this);
         }
-        
+
         public Expression Callable { get; set; }
     }
 

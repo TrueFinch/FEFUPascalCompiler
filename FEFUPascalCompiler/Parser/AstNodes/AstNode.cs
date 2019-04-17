@@ -16,14 +16,10 @@ namespace FEFUPascalCompiler.Parser.AstNodes
                     TypeDecl,
                 VarDeclsPart,
                     SimpleVarDecl,
-                    InitVarDecl,
-                ProcFuncDeclsPart,
-                    ProcDecl,
-                        ProcHeader,
-                    FuncDecl,
-                        FuncHeader,
+                ProcDecl,
+                FuncDecl,
+                    CallableHeader,
                     SubroutineBlock,
-                    Forward,
         //Types
             SimpleType,
             ArrayType,
@@ -31,8 +27,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             RecordType,
                 FieldSection,
             PointerType,
-            ProcSignature,
-            FuncSignature,
         //Statements
         CompoundStatement,
             EmptyStatement,
@@ -56,12 +50,10 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         Cast,
         //Other
         FormalParamSection,
-            Modifier,
             ConformantArray,
-        IdentList,
             Ident,
         ConstIntegerLiteral,
-        ConstDoubleLiteral,
+        ConstFloatLiteral,
         ConstCharLiteral,
         ConstStringLiteral,
         BooleanLiteral,
@@ -98,7 +90,8 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public abstract T Accept<T>(IAstVisitor<T> visitor);
 
         public Token Token { get; protected set; }
-        public AstNodeType NodeType { get; set;  }
+        public AstNodeType NodeType { get; set; }
+
         protected string Value { get; set; }
 //        protected List<AstNode> _children = new List<AstNode>();
     }

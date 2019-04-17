@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using FEFUPascalCompiler.Lexer;
@@ -9,8 +10,6 @@ using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.ParserParts;
 using FEFUPascalCompiler.Parser.Semantics;
 using FEFUPascalCompiler.Parser.Visitors;
-
-//TODO: change logic of Peek Next - we want that on start we have valid token got by Peek and that already use Next
 
 namespace FEFUPascalCompiler
 {
@@ -38,9 +37,14 @@ namespace FEFUPascalCompiler
             {
                 LastException = e;
                 if (WriteStackTrace)
-                    Console.Out.WriteLine(e);
-                else
+                    if (_output == null)
+                        Console.Out.WriteLine(e);
+                    else
+                        _output.WriteLine(e);
+                else if (_output == null)
                     Console.Out.WriteLine(e.Message);
+                else
+                    _output.WriteLine(e.Message);
                 return null;
             }
         }
@@ -65,9 +69,14 @@ namespace FEFUPascalCompiler
             {
                 LastException = e;
                 if (WriteStackTrace)
-                    Console.Out.WriteLine(e);
-                else
+                    if (_output == null)
+                        Console.Out.WriteLine(e);
+                    else
+                        _output.WriteLine(e);
+                else if (_output == null)
                     Console.Out.WriteLine(e.Message);
+                else
+                    _output.WriteLine(e.Message);
             }
         }
 
@@ -91,9 +100,14 @@ namespace FEFUPascalCompiler
             {
                 LastException = e;
                 if (WriteStackTrace)
-                    Console.Out.WriteLine(e);
-                else
+                    if (_output == null)
+                        Console.Out.WriteLine(e);
+                    else
+                        _output.WriteLine(e);
+                else if (_output == null)
                     Console.Out.WriteLine(e.Message);
+                else
+                    _output.WriteLine(e.Message);
             }
         }
 
@@ -126,14 +140,74 @@ namespace FEFUPascalCompiler
             }
             catch (Exception e)
             {
-                if (WriteStackTrace)
-                    Console.Out.WriteLine(e);
-                else
-                    Console.Out.WriteLine(e.Message);
                 LastException = e;
+                if (WriteStackTrace)
+                    if (_output == null)
+                        Console.Out.WriteLine(e);
+                    else
+                        _output.WriteLine(e);
+                else if (_output == null)
+                    Console.Out.WriteLine(e.Message);
+                else
+                    _output.WriteLine(e.Message);
             }
         }
-        
+
+        public void GenerateAssembly()
+        {
+            try
+            {
+                var asm = new AsmGenVisitor(_pascalParser.SymbolStack);
+                _ast.Accept(asm);
+                Assembly = asm;
+            }
+            catch (Exception e)
+            {
+                LastException = e;
+                if (WriteStackTrace)
+                    if (_output == null)
+                        Console.Out.WriteLine(e);
+                    else
+                        _output.WriteLine(e);
+                else if (_output == null)
+                    Console.Out.WriteLine(e.Message);
+                else
+                    _output.WriteLine(e.Message);
+            }
+        }
+
+        public void Compile(string path)
+        {
+            Assembly.SaveAssembly(new StreamWriter(path));
+
+            var fileName = Path.GetFileNameWithoutExtension(Path.GetFullPath(path));
+            var nasmProcess = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "C:\\Program Files (x86)\\SASM\\NASM\\nasm.exe",
+                    Arguments = $@"-g -f win64 {fileName}.asm -o {fileName}.obj",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+            nasmProcess.Start();
+            nasmProcess.WaitForExit();
+
+            var gccProcess = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "C:\\Program Files (x86)\\SASM\\MinGW64\\bin\\gcc.exe",
+                    Arguments = $@"{fileName}.obj -g -o {fileName}.exe -m64",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+            gccProcess.Start();
+            gccProcess.WaitForExit();
+        }
+
         public bool Next()
         {
             try
@@ -144,9 +218,14 @@ namespace FEFUPascalCompiler
             {
                 LastException = e;
                 if (WriteStackTrace)
-                    Console.Out.WriteLine(e);
-                else
+                    if (_output == null)
+                        Console.Out.WriteLine(e);
+                    else
+                        _output.WriteLine(e);
+                else if (_output == null)
                     Console.Out.WriteLine(e.Message);
+                else
+                    _output.WriteLine(e.Message);
                 return false;
             }
         }
@@ -180,6 +259,12 @@ namespace FEFUPascalCompiler
             }
         }
 
+        public StreamWriter Output
+        {
+            get => _output;
+            set { _output = value; }
+        }
+
         public Compiler()
         {
             _lexer = new LexerDfa();
@@ -199,5 +284,7 @@ namespace FEFUPascalCompiler
         private LexerDfa _lexer;
         private PascalParser _pascalParser;
         private StreamReader _input;
+        private StreamWriter _output = null;
+        public AsmGenVisitor Assembly = null;
     } // FEFUPascalCompiler class
 } // FEFUPascalCompiler namespace

@@ -35,7 +35,7 @@ namespace FEFUPascalCompiler.Lexer
         {
             return _sr.ReadLine();
         }
-        
+
         private StreamReader _sr;
         private Stack<char> _buffer = new Stack<char>();
     }

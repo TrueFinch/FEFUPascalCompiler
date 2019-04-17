@@ -1,0 +1,12 @@
+program a;
+
+procedure add1(const a, b: integer; var res: integer);
+forward;
+
+procedure add1(const a, b: integer; var res: integer);
+begin
+    res := a + b;
+end;
+
+begin
+end.

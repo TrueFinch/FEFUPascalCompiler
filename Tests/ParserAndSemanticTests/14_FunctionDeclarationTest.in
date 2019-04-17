@@ -1,0 +1,12 @@
+program a;
+
+function add1(const a, b: integer; var res: integer) : integer;
+forward;
+
+function add1(const a, b: integer; var res: integer) : integer;
+begin
+    res := a + b;
+end;
+
+begin
+end.

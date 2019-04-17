@@ -1,0 +1,7 @@
+program p;
+var
+    a: integer;
+    b:^integer;
+begin
+    b := @a;
+end.

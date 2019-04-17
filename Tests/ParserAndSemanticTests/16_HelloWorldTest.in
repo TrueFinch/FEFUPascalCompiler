@@ -1,0 +1,6 @@
+program HelloWorld;
+const 
+hello = 'Hello, world!';
+begin
+    writeln(hello);
+end.

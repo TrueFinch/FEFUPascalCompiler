@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Linq;
 using FEFUPascalCompiler.Parser.AstNodes;
 using FEFUPascalCompiler.Parser.ParserParts;
 using FEFUPascalCompiler.Parser.Semantics;
@@ -13,26 +13,35 @@ namespace FEFUPascalCompiler.Parser.Sematics
     {
         public SymbolStack()
         {
-            _stack.Push(new SymbolTable());
+            _stack.Push(new SymbolTable()); // standard types namespace
             AddType(SymInt);
             AddType(SymString);
             AddType(SymFloat);
             AddType(SymChar);
             AddType(SymBool);
             AddType(SymNil);
-            
-            SymIntPtr.ReferencedSymType = SymInt;
-            SymIntPtr.Ident = string.Concat(SymInt.Ident, "_ptr");
-            SymFloatPtr.ReferencedSymType = SymFloat;
-            SymFloatPtr.Ident = string.Concat(SymInt.Ident, "_ptr");
-            SymCharPtr.ReferencedSymType = SymChar;
-            SymCharPtr.Ident = string.Concat(SymInt.Ident, "_ptr");
-            SymStringPtr.ReferencedSymType = SymString;
-            SymStringPtr.Ident = string.Concat(SymInt.Ident, "_ptr");
-            SymBoolPtr.ReferencedSymType = SymBool;
-            SymBoolPtr.Ident = string.Concat(SymInt.Ident, "_ptr");
-            SymNilPtr.ReferencedSymType = SymNil;
-            SymNilPtr.Ident = string.Concat(SymInt.Ident, "_ptr");
+
+//            AddFunction(WriteFunction);
+
+//            SymIntPtr.ReferencedSymType = SymInt;
+//            SymIntPtr.Ident = string.Concat("^", SymInt.Ident);
+//            SymFloatPtr.ReferencedSymType = SymFloat;
+//            SymFloatPtr.Ident = string.Concat("^", SymFloat.Ident);
+//            SymCharPtr.ReferencedSymType = SymChar;
+//            SymCharPtr.Ident = string.Concat("^", SymChar.Ident);
+//            SymStringPtr.ReferencedSymType = SymString;
+//            SymStringPtr.Ident = string.Concat("^", SymString.Ident);
+//            SymBoolPtr.ReferencedSymType = SymBool;
+//            SymBoolPtr.Ident = string.Concat("^", SymBool.Ident);
+//            SymNilPtr.ReferencedSymType = SymNil;
+//            SymNilPtr.Ident = string.Concat("^", SymNil.Ident);
+
+            AddType(SymIntPtr);
+            AddType(SymStringPtr);
+            AddType(SymFloatPtr);
+            AddType(SymCharPtr);
+            AddType(SymBoolPtr);
+            AddType(SymNilPtr);
         }
 
         public void Push()
@@ -44,7 +53,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
         {
             _stack.Push(table);
         }
-        
+
         public SymbolTable Peek()
         {
             return _stack.Peek();
@@ -67,29 +76,21 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return null;
         }
 
-        internal void CheckIdentifierDuplicate(Token ident)
+        internal bool ContainIdent(string identName)
         {
-            if (Find(ident.Value) != null)
-            {
-                throw new Exception(string.Format("{0}, {1} : Duplicate identifier '{2}'",
-                    ident.Line, ident.Column, ident.Lexeme));
-            }
+            return Find(identName) != null;
         }
-        
+
+        internal bool ContainIdentInScope(string identName)
+        {
+            return FindInScope(identName) != null;
+        }
+
         public Symbol FindInScope(string identifier)
         {
             return _stack.Peek().Find(identifier);
         }
 
-        internal void CheckIdentifierDuplicateInScope(Token ident)
-        {
-            if (FindInScope(ident.Value) != null)
-            {
-                throw new Exception(string.Format("{0}, {1} : Duplicate identifier '{2}'",
-                    ident.Line, ident.Column, ident.Lexeme));
-            }
-        }
-        
         public SymVar FindIdentInScope(string identifier)
         {
             return _stack.Peek().Find(identifier) as SymVar;
@@ -109,11 +110,11 @@ namespace FEFUPascalCompiler.Parser.Sematics
             }
         }
 
-        internal SymType CheckTypeDeclared(Token type)
+        internal SymType CheckTypeDeclared(String type)
         {
-            var symType = FindType(type.Value);
+            var symType = FindType(type);
 
-            if (FindType(type.Value) == null)
+            if (FindType(type) == null)
             {
                 return null;
 //                throw new Exception(string.Format("{0}, {1} : Undeclared type identifier '{2}'",
@@ -123,11 +124,6 @@ namespace FEFUPascalCompiler.Parser.Sematics
             return symType;
         }
 
-        internal SymType CheckTypeDeclaredInScope(Token type)
-        {
-            return _stack.Peek().Find(type.Value) is SymType symbol ? symbol : null;
-        }
-        
         public SymVar FindIdent(string identifier)
         {
             if (Find(identifier) is SymVar variable)
@@ -151,19 +147,36 @@ namespace FEFUPascalCompiler.Parser.Sematics
 
             return null;
         }
-        
+
+        public List<CallableSymbol> FindFunc(string identifier)
+        {
+            var callables = new List<CallableSymbol>();
+
+            foreach (var table in _stack)
+            {
+                var c = table.FindCallable(identifier);
+                if (c == null) continue;
+                foreach (var callableSymbol in c)
+                {
+                    callables.Add(callableSymbol);
+                }
+            }
+
+            return callables;
+        }
+
         //TODO: rename with callable
-        public bool FindFunc(string identifier)
+        public bool IsFuncExist(string identifier)
         {
             foreach (var table in _stack)
             {
-                if (table.FindCallable(identifier))
+                if (table.IsCallableExist(identifier))
                     return true;
             }
 
             return false;
         }
-        
+
         public void AddType(SymType type)
         {
             _stack.Peek().AddType(type);
@@ -193,7 +206,7 @@ namespace FEFUPascalCompiler.Parser.Sematics
         {
             _stack.Peek().AddVariable(identifier, new SymParameter(type, modifier));
         }
-        
+
         public void AddAlias(string aliasIdentifier, SymType typeToAias)
         {
             _stack.Peek().AddAlias(aliasIdentifier, new SymAliasType(aliasIdentifier, typeToAias));
@@ -202,21 +215,23 @@ namespace FEFUPascalCompiler.Parser.Sematics
         //TODO: rename with callable
         public bool PrepareFunction(CallableSymbol funcSym)
         {
-            var existCallable = _stack.Peek().FindCallable(funcSym.Ident, funcSym.ParametersTypes);
+            var existCallable = _stack.Peek().FindCallable(funcSym.Ident,
+                new List<SymType>(from type in funcSym.ParametersTypes select type.Item2));
             if (existCallable != null && existCallable.IsForward)
             {
                 return true; // function header already prepared by forward
             }
-            return _stack.Peek().AddFunction(funcSym.Ident, funcSym);
+
+            return _stack.Peek().AddCallable(funcSym.Ident, funcSym);
         }
-        
+
         //TODO: rename with callable
         public void AddFunction(CallableSymbol funcSym)
         {
 //            funcSym.Local = Pop();
 //            funcSym.Parameters = Pop();
-            _stack.Peek().RemoveFunction(funcSym.Ident, funcSym); // remove prepared callable
-            _stack.Peek().AddFunction(funcSym.Ident, funcSym); // add full callable
+            _stack.Peek().RemoveCallable(funcSym.Ident, funcSym); // remove prepared callable
+            _stack.Peek().AddCallable(funcSym.Ident, funcSym); // add full callable
         }
 
         public IEnumerator<SymbolTable> GetEnumerator()
@@ -231,144 +246,49 @@ namespace FEFUPascalCompiler.Parser.Sematics
 
         private Stack<SymbolTable> _stack = new Stack<SymbolTable>();
 
-        // default types
-        public SymType SymInt = new SymIntegerType();
-        public SymType SymFloat = new SymFloatType();
-        public SymType SymChar = new SymCharType();
-        public SymType SymString = new SymStringType();
-        public SymType SymBool = new SymBoolType();
-        public SymType SymNil = new SymNilConst();
-        public SymPointerType SymIntPtr = new SymPointerType();
-        public SymPointerType SymFloatPtr = new SymPointerType();
-        public SymPointerType SymCharPtr = new SymPointerType();
-        public SymPointerType SymStringPtr = new SymPointerType();
-        public SymPointerType SymBoolPtr = new SymPointerType();
-        public SymPointerType SymNilPtr = new SymPointerType();
-    }
+        // default types`
+        public static readonly SymType SymInt = new SymIntegerType();
+        public static readonly SymType SymFloat = new SymFloatType();
+        public static readonly SymType SymChar = new SymCharType();
+        public static readonly SymType SymString = new SymStringType();
+        public static readonly SymType SymBool = new SymBoolType();
+        public static readonly SymType SymNil = new SymNilConst();
+        public SymPointerType SymIntPtr = new SymPointerType(SymInt);
+        public SymPointerType SymFloatPtr = new SymPointerType(SymFloat);
+        public SymPointerType SymCharPtr = new SymPointerType(SymChar);
+        public SymPointerType SymStringPtr = new SymPointerType(SymString);
+        public SymPointerType SymBoolPtr = new SymPointerType(SymBool);
+        public SymPointerType SymNilPtr = new SymPointerType(SymNil);
 
-    public class SymbolTable: IEnumerable 
-    {
-        private OrderedDictionary _table = new OrderedDictionary();
-
-        public Symbol Find(string symbolIdentifier)
+        public SymPointerType SymTypeToSymPointerType(SymType symType)
         {
-            return _table.Contains(symbolIdentifier) ? _table[symbolIdentifier] as Symbol : null;
-        }
-
-        public void AddVariable(bool local, string identifier, SymType type)
-        {
-            if (local)
-                _table.Add(identifier.ToLower(), new SymLocal(type));
-            else
-                _table.Add(identifier.ToLower(), new SymGlobal(type));
-        }
-        
-        public void AddVariable(string identifier, SymVar ident)
-        {
-            _table.Add(identifier.ToLower(), ident);
-        }
-
-        public void AddType(SymType sym)
-        {
-            _table.Add(sym.Ident.ToLower(), sym);
-        }
-
-        public void AddType(string identifier, SymType sym)
-        {
-            _table.Add(identifier.ToLower(), sym);
-        }
-
-        public void AddAlias(string identifier, SymAliasType symbol)
-        {
-            _table.Add(identifier.ToLower(), symbol);
-        }
-
-        public CallableSymbol FindCallable(string identifier, List<SymType> parametersTypes)
-        {
-            if (!_table.Contains(identifier) || !(_table[identifier] is List<CallableSymbol> callables)) return null;
-            if (parametersTypes == null)
+            switch (symType)
             {
-                return callables[0];
-            }
-            
-            foreach (var callableSymbol in callables)
-            {
-                if (parametersTypes.Count != callableSymbol.ParametersTypes.Count)
-                    continue;
-                bool found = true;
-                for (int i = 0; i < parametersTypes.Count; ++i)
-                {
-                    if (!parametersTypes[i].Equals(callableSymbol.ParametersTypes[i]))
-                    {
-                        found = false;
-                    }
-                }
-
-                if (found)
-                    return callableSymbol;
+                case SymAliasType symAliasType:
+                    return SymTypeToSymPointerType(symAliasType.Alias);
+                case SymArrayType symArrayType:
+                    return new SymPointerType(symArrayType);
+                case SymBoolType symBoolType:
+                    return SymBoolPtr;
+                case SymCharType symCharType:
+                    return SymCharPtr;
+                case SymConformatArrayType symConformatArrayType:
+                    return new SymPointerType(symConformatArrayType);
+                case SymFloatType symFloatType:
+                    return SymFloatPtr;
+                case SymIntegerType symIntegerType:
+                    return SymIntPtr;
+                case SymNilConst symNilConst:
+                    return SymNilPtr;
+                case SymPointerType symPointerType:
+                    return new SymPointerType(symPointerType);
+                case SymRecordType symRecordType:
+                    return new SymPointerType(symRecordType);
+                case SymStringType symStringType:
+                    return SymStringPtr;
             }
 
             return null;
-        }
-
-        public bool FindCallable(string identifier)
-        {
-            return FindCallable(identifier, null) == null ? false : true;
-        }
-        
-        //TODO: rename with callable
-        public bool AddFunction(string identifier, CallableSymbol callable)
-        {
-            if (FindCallable(identifier, callable.ParametersTypes) != null)
-            {
-                return false;
-            }
-            
-            if (_table.Contains(identifier))
-                if (_table[identifier] is List<CallableSymbol> callableSymbols && !callableSymbols.Contains(callable))
-                    callableSymbols.Add(callable);
-            else
-                _table.Add(identifier.ToLower(), new List<CallableSymbol>{callable});
-
-            return true;
-        }
-
-        //TODO: rename with callable
-        public void RemoveFunction(string identifier, CallableSymbol callable)
-        {
-            if (!_table.Contains(identifier) || !(_table[identifier] is List<CallableSymbol> callables)) return;
-            foreach (var callableSymbol in callables)
-            {
-                if (callable.ParametersTypes.Count != callableSymbol.ParametersTypes.Count)
-                    continue;
-                bool found = true;
-                for (int i = 0; i < callable.ParametersTypes.Count; ++i)
-                {
-                    if (!callable.ParametersTypes[i].Equals(callableSymbol.ParametersTypes[i]))
-                    {
-                        found = false;
-                    }
-                }
-
-                if (found)
-                    callables.Remove(callableSymbol);
-            }
-        }
-        
-        
-        public void Remove(string identifier)
-        {
-            _table.Remove(identifier.ToLower());
-        }
-        
-        public IDictionaryEnumerator GetEnumerator()
-        {
-            return _table.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }
