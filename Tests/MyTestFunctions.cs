@@ -36,9 +36,9 @@ namespace Tests
         public static void ParseAndPrint(ref Compiler compiler, ref StreamWriter output)
         {
             while (compiler.Next())
-            {                                                                
+            {
                 output.WriteLine(compiler.Peek().ToString());
-            } 
+            }
         }
 
         public static void CheckResult(in string filePathToExpected, in string filePathToActual)

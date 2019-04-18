@@ -113,42 +113,11 @@ public class SimpleVarDecl : AstNode
     public AstNode IdentsType { get; set; }
 }
 
-//public class InitVarDecl : AstNode
-//{
-//    public InitVarDecl(AstNode ident, AstNode identsType, AstNode expression)
-//        : base(AstNodeType.InitVarDecl)
-//    {
-//        Ident = ident;
-//        IdentType = identsType;
-//        Expression = expression;
-//    }
-//
-//    public override T Accept<T>(IAstVisitor<T> visitor)
-//    {
-//        return visitor.Visit(this);
-//    }
-//
-//    public AstNode Ident { get; set; }
-//    public AstNode IdentType { get; set; }
-//    public AstNode Expression { get; set; }
-//}
-
-
-//public class ProcFuncDeclsPart : DeclsPart
-//{
-//    public ProcFuncDeclsPart(List<AstNode> decls) : base(decls, AstNodeType.ProcFuncDeclsPart)
-//    {
-//    }
-//
-//    public override T Accept<T>(IAstVisitor<T> visitor)
-//    {
-//        return visitor.Visit(this);
-//    }
-//}
-
 public class CallableDeclNode : AstNode
 {
-    public CallableDeclNode(CallableHeader header, AstNode block = null) : base(AstNodeType.ProcDecl)
+    public CallableDeclNode(CallableHeader header, AstNode block = null) : base(header.ReturnType == null
+        ? AstNodeType.ProcDecl
+        : AstNodeType.FuncDecl)
     {
         Header = header;
         Block = block;
@@ -163,15 +132,15 @@ public class CallableDeclNode : AstNode
         return visitor.Visit(this);
     }
 
-    public bool IsForward { get; set; }
-    public CallableHeader Header { get; set; }
-    public AstNode Block { get; set; }
+    public bool IsForward { get; }
+    public CallableHeader Header { get; }
+    public AstNode Block { get; }
 }
 
 public class CallableHeader : AstNode
 {
     public CallableHeader(Ident name, List<FormalParamSection> paramList, AstNode returnType = null)
-        : base(AstNodeType.FuncHeader)
+        : base(AstNodeType.CallableHeader)
     {
         Name = name;
         ParamList = paramList;
@@ -185,8 +154,8 @@ public class CallableHeader : AstNode
 
     public string GetSignature()
     {
-        var signature = Name.ToString() + "("; 
-        for(int i = 0; i < CallableSymbol.ParametersTypes.Count - 1; ++i)
+        var signature = Name.ToString() + "(";
+        for (int i = 0; i < CallableSymbol.ParametersTypes.Count - 1; ++i)
         {
             signature += CallableSymbol.ParametersTypes[i].ToString() + ", ";
         }
@@ -199,82 +168,12 @@ public class CallableHeader : AstNode
         signature += ");";
         return signature;
     }
+
     public CallableSymbol CallableSymbol { get; set; }
     public Ident Name { get; set; }
     public List<FormalParamSection> ParamList { get; set; }
     public AstNode ReturnType { get; set; }
 }
-
-//public class ProcDecl : AstNode
-//{
-//    public ProcDecl(AstNode procHeader, AstNode block) : base(AstNodeType.ProcDecl)
-//    {
-//        ProcHeader = procHeader;
-//        Block = block;
-//    }
-//
-//    public override T Accept<T>(IAstVisitor<T> visitor)
-//    {
-//        return visitor.Visit(this);
-//    }
-//
-//    public AstNode ProcHeader { get; set; }
-//    public AstNode Block { get; set; }
-//}
-//
-//public class ProcHeader : AstNode
-//{
-//    public ProcHeader(AstNode name, List<AstNode> paramList) : base(AstNodeType.ProcHeader)
-//    {
-//        Name = name;
-//        ParamList = paramList;
-//    }
-//
-//    public override T Accept<T>(IAstVisitor<T> visitor)
-//    {
-//        return visitor.Visit(this);
-//    }
-//
-//    public AstNode Name { get; set; }
-//    public List<AstNode> ParamList { get; set; }
-//}
-//
-//public class FuncDecl : AstNode
-//{
-//    public FuncDecl(AstNode funcHeader, AstNode block) : base(AstNodeType.FuncDecl)
-//    {
-//        FuncHeader = funcHeader;
-//        Block = block;
-//    }
-//
-//    public override T Accept<T>(IAstVisitor<T> visitor)
-//    {
-//        return visitor.Visit(this);
-//    }
-//
-//    public AstNode FuncHeader { get; set; }
-//    public AstNode Block { get; set; }
-//}
-//
-//public class FuncHeader : AstNode
-//{
-//    public FuncHeader(AstNode name, List<AstNode> paramList, AstNode returnType)
-//        : base(AstNodeType.FuncHeader)
-//    {
-//        Name = name;
-//        ParamList = paramList;
-//        ReturnType = returnType;
-//    }
-//
-//    public override T Accept<T>(IAstVisitor<T> visitor)
-//    {
-//        return visitor.Visit(this);
-//    }
-//
-//    public AstNode Name {get; set;}
-//    public List<AstNode> ParamList {get; set;}
-//    public AstNode ReturnType {get; set;}
-//}
 
 public class SubroutineBlock : AstNode
 {
@@ -293,15 +192,3 @@ public class SubroutineBlock : AstNode
     public List<AstNode> DeclParts { get; set; }
     public AstNode CompoundStatement { get; set; }
 }
-
-//public class Forward : AstNode
-//{
-//    public Forward(Token token) : base(AstNodeType.Forward, token)
-//    {
-//    }
-//
-//    public override T Accept<T>(IAstVisitor<T> visitor)
-//    {
-//        return visitor.Visit(this);
-//    }
-//}

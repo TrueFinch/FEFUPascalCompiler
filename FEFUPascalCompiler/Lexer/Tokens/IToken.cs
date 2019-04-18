@@ -7,6 +7,7 @@ namespace FEFUPascalCompiler.Tokens
         //TODO: add tests for carriage and at_sign
         AtSign,
         Carriage,
+
         //TODO: add tests for comparing_operators operators
         //logic operators
         NotEqualOperator,
@@ -15,8 +16,8 @@ namespace FEFUPascalCompiler.Tokens
         LessOrEqualOperator,
         GreaterOperator,
         GreaterOrEqualOperator,
-        
-        
+
+
         // arithmetic Operators
         BinOperator,
         SumOperator,
@@ -48,18 +49,18 @@ namespace FEFUPascalCompiler.Tokens
 
         //Identifiers
         Ident,
-        
+
         //Comments
         MultiLineComment,
         SingleLineComment,
-        
+
         //Brackets
         Bracket,
         OpenBracket,
         CloseBracket,
         OpenSquareBracket,
         CloseSquareBracket,
-        
+
         // keywords
         And,
         Array,
@@ -106,7 +107,6 @@ namespace FEFUPascalCompiler.Tokens
         //standard names
         Abs,
         Arctan,
-        Char,
         Chr,
         Cos,
         Dispose,
@@ -141,6 +141,9 @@ namespace FEFUPascalCompiler.Tokens
         True,
         Trunc,
         Unpack,
+
+        Write,
+        WriteLn
     }
 
     internal static class Dictionaries
@@ -170,7 +173,6 @@ namespace FEFUPascalCompiler.Tokens
             {"not", TokenType.Not},
             {"of", TokenType.Of},
             {"or", TokenType.Or},
-            {"out", TokenType.Out}, //TODO add out keyword to tests
             {"packed", TokenType.Packed},
             {"pass", TokenType.Pass},
             {"procedure", TokenType.Procedure},
@@ -189,7 +191,6 @@ namespace FEFUPascalCompiler.Tokens
             {"with", TokenType.With},
             {"abs", TokenType.Abs},
             {"arctan", TokenType.Arctan},
-            {"char", TokenType.Char},
             {"chr", TokenType.Chr},
             {"cos", TokenType.Cos},
             {"dispose", TokenType.Dispose},
@@ -224,6 +225,9 @@ namespace FEFUPascalCompiler.Tokens
             {"true", TokenType.True},
             {"trunc", TokenType.Trunc},
             {"unpack", TokenType.Unpack},
+
+            {"write", TokenType.Write},
+            {"writeln", TokenType.WriteLn},
         };
 
         internal static readonly Dictionary<string, TokenType> LexemeToTokenType = new Dictionary<string, TokenType>

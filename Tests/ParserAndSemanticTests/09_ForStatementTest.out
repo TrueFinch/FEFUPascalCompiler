@@ -1,0 +1,11 @@
+                a                  
+                ┼                  
+            MainBlock              
+       ┌────────┴───────┐          
+      var       CompoundStatement  
+       ┼              ┌─┴          
+ SimpleVarDecl   ForStatement      
+ ┌─────┼        ┌───┬─┴────┐       
+ i  integer     i   to   write     
+                   ┌┴─┐  ┌─┴       
+                   0  5  i         

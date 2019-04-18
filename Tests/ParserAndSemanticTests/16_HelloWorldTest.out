@@ -1,0 +1,9 @@
+               helloworld                 
+                    ┼                     
+                MainBlock                 
+          ┌─────────┴──────────┐          
+        const          CompoundStatement  
+          ┼               ┌────┴          
+          =            writeln            
+   ┌──────┴───┐          ┌┴               
+ hello  Hello, world!  hello              

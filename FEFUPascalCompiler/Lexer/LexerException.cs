@@ -10,15 +10,25 @@ namespace FEFUPascalCompiler.Lexer
         private string Lexeme { get; }
         public abstract override string Message { get; }
 
-        protected LexerException(): base() {}
-        protected LexerException(string message) : base(message) { }
-        protected LexerException(string message, System.Exception inner) : base(message, inner) { }
+        protected LexerException() : base()
+        {
+        }
+
+        protected LexerException(string message) : base(message)
+        {
+        }
+
+        protected LexerException(string message, System.Exception inner) : base(message, inner)
+        {
+        }
 
         // A constructor is needed for serialization when an
         // exception propagates from a remoting server to the client. 
         protected LexerException(System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
-        
+            System.Runtime.Serialization.StreamingContext context) : base(info, context)
+        {
+        }
+
         protected LexerException(int line, int column, string lexeme)
         {
             Line = line;
@@ -26,7 +36,7 @@ namespace FEFUPascalCompiler.Lexer
             Lexeme = lexeme;
         }
     }
-    
+
     [Serializable]
     public class UnexpectedSymbolException : LexerException
     {
@@ -34,6 +44,7 @@ namespace FEFUPascalCompiler.Lexer
         {
             Message = message;
         }
+
         public override string Message { get; }
     }
 
@@ -47,7 +58,7 @@ namespace FEFUPascalCompiler.Lexer
 
         public override string Message { get; }
     }
-    
+
     [Serializable]
     public class StrToIntConvertException : LexerException
     {
@@ -58,7 +69,7 @@ namespace FEFUPascalCompiler.Lexer
 
         public override string Message { get; }
     }
-    
+
     [Serializable]
     public class UnclosedMultilineCommentException : LexerException
     {

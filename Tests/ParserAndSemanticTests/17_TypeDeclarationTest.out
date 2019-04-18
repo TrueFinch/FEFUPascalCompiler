@@ -1,0 +1,19 @@
+                                                             a                                                               
+                                                             ┼                                                               
+                                                         MainBlock                                                           
+                                     ┌───────────────────────┴───────────────────────────┬────────────────────────┐          
+                                   type                                                 var               CompoundStatement  
+                   ┌─────────────────┴───────┬─────────────────┐                  ┌──────┴───────┐                           
+               TypeDecl                   TypeDecl          TypeDecl        SimpleVarDecl  SimpleVarDecl                     
+  ┌────────────────┴─┐                   ┌───┴──┐        ┌─────┴────┐       ┌───┬─┴         ┌────┴─┐                         
+ rec             RecordType             int  integer  recarr15  ArrayType   i  int         arr  recarr15                     
+               ┌─────┴──────────┐                                 ┌─┴───┐                                                    
+               :                :                                ..    rec                                                   
+      ┌────────┴─┐          ┌───┴─┐                             ┌─┴┐                                                         
+      a      ArrayType      i  integer                          0  15                                                        
+          ┌──────┴──┐                                                                                                        
+          ..    ArrayType                                                                                                    
+         ┌┴─┐    ┌──┴──┐                                                                                                     
+         0  5   ..    char                                                                                                   
+               ┌─┴┐                                                                                                          
+               5  10                                                                                                         

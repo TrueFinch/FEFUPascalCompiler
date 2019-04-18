@@ -1,0 +1,13 @@
+                                                  project1                                                    
+                                                      ┼                                                       
+                                                  MainBlock                                                   
+             ┌───────────────────────────┬────────────┴───────────────────────────┐                           
+           type                         var                               CompoundStatement                   
+             ┼                    ┌──────┴───────┐               ┌────────────┬───┴────────┬────────────┐     
+         TypeDecl           SimpleVarDecl  SimpleVarDecl        :=         writeln        :=         writeln  
+ ┌───────────┴┐             ┌──┬──┴        ┌─────┼        ┌──────┴┐        ┌──┴     ┌──────┴┐        ┌──┴     
+ a        RecordType        i  a           r  integer     r  RecordAccess  r        r  RecordAccess  r        
+        ┌─────┴─────┐                                        ┌──┬─┴                    ┌──┬─┴                 
+        :           :                                        i  k                      i  l                   
+    ┌───┴─┐     ┌───┴─┐                                                                                       
+    k  integer  l  integer                                                                                    

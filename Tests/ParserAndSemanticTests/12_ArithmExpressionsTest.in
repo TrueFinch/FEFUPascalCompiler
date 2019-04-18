@@ -1,0 +1,12 @@
+program a;
+var
+    I: float;
+    D: integer;
+    C: integer;
+begin
+    i := 1.1;
+    d := 2;
+    c := 3;
+    I := (5 * D + C - (C shl 15) / ( (+8 shr 1) * (I + 2) * ((D - -10) div 10))) + C mod 10000;
+    Write(I);
+end.

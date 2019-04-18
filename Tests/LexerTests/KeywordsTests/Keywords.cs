@@ -19,18 +19,18 @@ namespace Tests.LexerTests.KeywordsTests
             const string inPathFile = @"LexerTests/KeywordsTests/AllKeywordsTest.in";
             const string outPathFile = @"LexerTests/KeywordsTests/AllKeywordsTest.out";
             const string resPathFile = @"LexerTests/KeywordsTests/AllKeywordsTest.res";
-            
+
             TestFunctions.InitStreamReader(out var input, inPathFile);
             TestFunctions.InitStreamWriter(out var result, resPathFile);
             _compiler.Input = input;
-            
+
             TestFunctions.ParseAndPrint(ref _compiler, ref result);
-            
+
             result.Close();
             _compiler.Input.Close();
-            
+
             TestFunctions.CheckResult(outPathFile, resPathFile);
-            
+
             Assert.Pass();
         }
     }

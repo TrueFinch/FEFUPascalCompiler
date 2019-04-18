@@ -1,0 +1,11 @@
+                project1                 
+                   ┼                     
+               MainBlock                 
+       ┌───────────┴───────┐             
+      var          CompoundStatement     
+       ┼                   ┼             
+ SimpleVarDecl     DoWhileStatement      
+ ┌────┬┴         ┌─────────┴──┐          
+ i  float        <    CompoundStatement  
+                ┌┴─┐   ┌──────┴          
+                i  2  pass               

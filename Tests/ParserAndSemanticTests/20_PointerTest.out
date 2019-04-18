@@ -1,0 +1,11 @@
+                        p                         
+                        ┼                         
+                    MainBlock                     
+              ┌─────────┴──────────────┐          
+             var               CompoundStatement  
+       ┌──────┴───────┐         ┌──────┴          
+ SimpleVarDecl  SimpleVarDecl   :=                
+ ┌─────┼        ┌─────┼        ┌┴─┐               
+ a  integer     b  ^integer    b  @               
+                                  ┼               
+                                  a               

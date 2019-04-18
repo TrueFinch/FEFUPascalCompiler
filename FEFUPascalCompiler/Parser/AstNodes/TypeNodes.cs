@@ -1,11 +1,21 @@
 using System.Collections.Generic;
 using FEFUPascalCompiler.Parser.Semantics;
+using FEFUPascalCompiler.Parser.Sematics;
 using FEFUPascalCompiler.Parser.Visitors;
 using FEFUPascalCompiler.Tokens;
 
 namespace FEFUPascalCompiler.Parser.AstNodes
 {
-    public class SimpleTypeNode : AstNode
+    public abstract class TypeNode : AstNode
+    {
+        protected TypeNode(AstNodeType nodeType, Token token = null) : base(nodeType, token)
+        {
+        }
+
+        public SymType SymType;
+    }
+
+    public class SimpleTypeNode : TypeNode
     {
         public SimpleTypeNode(AstNode typeIdent) : base(AstNodeType.SimpleType, typeIdent.Token)
         {
@@ -20,12 +30,12 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         public AstNode TypeIdent { get; set; }
     }
 
-    public class ArrayTypeNode : AstNode
+    public class ArrayTypeNode : TypeNode
     {
-        public ArrayTypeNode(List<IndexRangeNode> indexRanges, AstNode arrayType) : base(AstNodeType.ArrayType)
+        public ArrayTypeNode(IndexRangeNode indexRange, TypeNode arrayNodeArrayElemType) : base(AstNodeType.ArrayType)
         {
-            IndexRanges = indexRanges;
-            TypeOfArray = arrayType;
+            IndexRange = indexRange;
+            ArrayElemType = arrayNodeArrayElemType;
             Value = NodeType.ToString();
         }
 
@@ -34,13 +44,14 @@ namespace FEFUPascalCompiler.Parser.AstNodes
             return visitor.Visit(this);
         }
 
-        public List<IndexRangeNode> IndexRanges { get; set; }
-        public AstNode TypeOfArray { get; set; }
+        public IndexRangeNode IndexRange { get; set; }
+        public TypeNode ArrayElemType { get; set; }
     }
 
     public class IndexRangeNode : AstNode
     {
-        public IndexRangeNode(Token doubleDot, AstNode leftBound, AstNode rightBound) : base(AstNodeType.IndexRange)
+        public IndexRangeNode(Token doubleDot, ConstIntegerLiteral leftBound, ConstIntegerLiteral rightBound) : base(
+            AstNodeType.IndexRange)
         {
             DoubleDot = doubleDot;
             LeftBound = leftBound;
@@ -54,11 +65,11 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public Token DoubleDot { get; }
-        public AstNode LeftBound { get; set; }
-        public AstNode RightBound { get; set; }
+        public ConstIntegerLiteral LeftBound { get; set; }
+        public ConstIntegerLiteral RightBound { get; set; }
     }
 
-    public class RecordTypeNode : AstNode
+    public class RecordTypeNode : TypeNode
     {
         public RecordTypeNode(List<FieldSectionNode> fieldsList) : base(AstNodeType.RecordType)
         {
@@ -72,15 +83,16 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public List<FieldSectionNode> FieldsList { get; set; }
+        public SymbolTable SymbolTable;
     }
 
-    public class FieldSectionNode : AstNode
+    public class FieldSectionNode : TypeNode
     {
-        public FieldSectionNode(Token colon, List<Ident> identList, AstNode identsType) : base(AstNodeType.FieldSection,
+        public FieldSectionNode(Token colon, List<Ident> identList, TypeNode identsType) : base(
+            AstNodeType.FieldSection,
             colon)
         {
             Colon = colon;
-
             Idents = identList;
             IdentsType = identsType;
         }
@@ -91,17 +103,17 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public Token Colon { get; }
-        public List<Ident> Idents { get; set;}
-        public AstNode IdentsType { get; set;}
+        public List<Ident> Idents { get; set; }
+        public TypeNode IdentsType { get; set; }
     }
 
-    public class PointerTypeNode : AstNode
+    public class PointerTypeNode : TypeNode
     {
-        public PointerTypeNode(Token carriage, AstNode simpleType) : base(AstNodeType.PointerType, carriage)
+        public PointerTypeNode(Token carriage, TypeNode simpleType) : base(AstNodeType.PointerType, carriage)
         {
             Carriage = carriage;
             SimpleType = simpleType;
-            Value = Carriage.Value;
+            Value = Carriage.Value + simpleType.ToString();
         }
 
         public override T Accept<T>(IAstVisitor<T> visitor)
@@ -110,43 +122,10 @@ namespace FEFUPascalCompiler.Parser.AstNodes
         }
 
         public Token Carriage { get; }
-        public AstNode SimpleType { get; set;}
+        public TypeNode SimpleType { get; set; }
     }
 
-//    public class ProcSignature : AstNode
-//    {
-//        public ProcSignature(Token token, List<AstNode> paramSections) : base(AstNodeType.ProcSignature, token)
-//        {
-//            ParamList = paramSections;
-//        }
-//
-//        public override T Accept<T>(IAstVisitor<T> visitor)
-//        {
-//            return visitor.Visit(this);
-//        }
-//
-//        public List<AstNode> ParamList  { get; set;}
-//    }
-
-//    public class FuncSignature : AstNode
-//    {
-//        public FuncSignature(Token token, List<AstNode> paramSections, AstNode returnType)
-//            : base(AstNodeType.FuncSignature, token)
-//        {
-//            ParamList = paramSections;
-//            ReturnType = returnType;
-//        }
-//
-//        public override T Accept<T>(IAstVisitor<T> visitor)
-//        {
-//            return visitor.Visit(this);
-//        }
-//
-//        public List<AstNode> ParamList { get; set;}
-//        public AstNode ReturnType { get; set;}
-//    }
-
-    public class ConformantArray : AstNode
+    public class ConformantArray : TypeNode
     {
         public ConformantArray(Token arrayToken, Token ofToken, AstNode arrayType) : base(AstNodeType.ConformantArray)
         {
@@ -163,6 +142,6 @@ namespace FEFUPascalCompiler.Parser.AstNodes
 
         public Token ArrayToken { get; }
         public Token OfToken { get; }
-        public AstNode ArrayType { get; set;}
+        public AstNode ArrayType { get; set; }
     }
 }

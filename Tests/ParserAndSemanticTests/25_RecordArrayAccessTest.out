@@ -1,0 +1,17 @@
+                                                                       project1                                                                         
+                                                                           ┼                                                                            
+                                                                       MainBlock                                                                        
+                ┌──────────────────────────────┬───────────────────────────┴──────────────────────────────┐                                             
+              type                            var                                                 CompoundStatement                                     
+                ┼                       ┌──────┴───────┐                ┌──────────────────┬──────────────┴──┬─────────────┬───────────┬───────────┐    
+            TypeDecl              SimpleVarDecl  SimpleVarDecl          :=                :=                 :=          write        :=         write  
+ ┌──────────────┴┐                ┌──┬──┴        ┌─────┼               ┌┴────────┐       ┌─┴──────┐  ┌───────┴─┐         ┌─┴    ┌──────┴┐        ┌─┴    
+ a           RecordType           i  a           r  integer       ArrayAccess    0  RecordAccess  4  r    ArrayAccess    r      r  RecordAccess  r      
+           ┌─────┴────────┐                                          ┌─┴──────┐     ┌──┬─┴                   ┌─┴──────┐            ┌──┬─┴               
+           :              :                                     RecordAccess  0     i  l                RecordAccess  2            i  l                 
+    ┌──────┴─┐        ┌───┴─┐                                   ┌──┬─┴                                  ┌──┬─┴                                          
+    k    ArrayType    l  integer                                i  k                                    i  k                                            
+        ┌────┴──┐                                                                                                                                       
+        ..   integer                                                                                                                                    
+       ┌┴─┐                                                                                                                                             
+       0  5                                                                                                                                             

@@ -1,0 +1,11 @@
+                a                  
+                ┼                  
+            MainBlock              
+       ┌────────┴───────┐          
+      var       CompoundStatement  
+       ┼         ┌──────┴┐         
+ SimpleVarDecl   :=   writeln      
+ ┌─────┼        ┌┴─┐  ┌──┴         
+ a  integer     a  -  a            
+                   ┼               
+                   1               

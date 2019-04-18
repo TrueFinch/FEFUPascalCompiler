@@ -1,0 +1,17 @@
+program Project1;
+
+type 
+    a = record
+        k: integer;
+        l: integer;
+    end;
+  
+var 
+    i: a;
+    r: integer;
+begin
+    r := i.k;
+    writeln(r);
+    r := i.l;
+    writeln(r);
+end.

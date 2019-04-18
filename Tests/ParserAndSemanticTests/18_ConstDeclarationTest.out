@@ -1,0 +1,13 @@
+                               a                                 
+                               ┼                                 
+                           MainBlock                             
+             ┌─────────────────┴───┬─────────────────┐           
+           const                  var        CompoundStatement   
+          ┌──┴──────────┐          ┼                 ┼           
+          =             =    SimpleVarDecl     ForStatement      
+   ┌──────┴───┐        ┌┴─┐  ┌─────┼        ┌─────┬──┴─────┐     
+ hello  Hello, world!  n  5  i  integer     i    to     writeln  
+                                               ┌──┴┐      ┌┴     
+                                               0   -    hello    
+                                                  ┌┴─┐           
+                                                  n  1           

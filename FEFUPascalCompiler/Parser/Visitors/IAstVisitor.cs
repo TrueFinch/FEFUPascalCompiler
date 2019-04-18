@@ -2,11 +2,13 @@ using FEFUPascalCompiler.Parser.AstNodes;
 
 namespace FEFUPascalCompiler.Parser.Visitors
 {
-    public interface IAstVisitor <T>
+    public interface IAstVisitor<T>
     {
         T Visit(Ident node);
         T Visit(ConstIntegerLiteral node);
+
         T Visit(ConstFloatLiteral node);
+
 //        T Visit(BinOperator node);
         T Visit(AssignStatement node);
         T Visit(Program node);
@@ -16,7 +18,9 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(TypeDecl node);
         T Visit(ConstDecl node);
         T Visit(VarDeclsPart node);
+
         T Visit(SimpleVarDecl node);
+
 //        T Visit(InitVarDecl node);
 //        T Visit(ProcFuncDeclsPart node);
 //        T Visit(ProcDecl node);
@@ -24,11 +28,13 @@ namespace FEFUPascalCompiler.Parser.Visitors
 //        T Visit(FuncDecl node);
 //        T Visit(FuncHeader node);
         T Visit(SubroutineBlock node);
+
 //        T Visit(Forward node);
         T Visit(UnaryOperator node);
         T Visit(ArrayAccess node);
         T Visit(RecordAccess node);
-        T Visit(FunctionCall node);
+        T Visit(UserFunctionCall node);
+        T Visit(WriteFunctionCall node);
         T Visit(FormalParamSection node);
         T Visit(ConstCharLiteral node);
         T Visit(ConstStringLiteral node);
@@ -43,7 +49,9 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(IndexRangeNode node);
         T Visit(RecordTypeNode node);
         T Visit(FieldSectionNode node);
+
         T Visit(PointerTypeNode node);
+
 //        T Visit(ProcSignature node);
 //        T Visit(FuncSignature node);
         T Visit(ConformantArray node);
@@ -56,6 +64,8 @@ namespace FEFUPascalCompiler.Parser.Visitors
         T Visit(MultiplyingOperator node);
         T Visit(CallableDeclNode node);
         T Visit(CallableHeader node);
+
         T Visit(CallableCallStatement node);
+//        T Visit(FunctionCall node);
     }
 }

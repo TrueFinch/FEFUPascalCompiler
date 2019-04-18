@@ -225,6 +225,30 @@ namespace FEFUPascalCompiler.Parser.Visitors
             return printer;
         }
 
+        public AstPrinterNode Visit(UserFunctionCall node)
+        {
+            var printer = new AstPrinterNode(node.ToString());
+//            printer.AddChild(node.FuncIdent.Accept(this));
+            foreach (var param in node.ParamList)
+            {
+                printer.AddChild(param.Accept(this));
+            }
+
+            return printer;
+        }
+
+        public AstPrinterNode Visit(WriteFunctionCall node)
+        {
+            var printer = new AstPrinterNode(node.ToString());
+//            printer.AddChild(node.FuncIdent.Accept(this));
+            foreach (var param in node.ParamList)
+            {
+                printer.AddChild(param.Accept(this));
+            }
+
+            return printer;
+        }
+
         public AstPrinterNode Visit(FunctionCall node)
         {
             var printer = new AstPrinterNode(node.ToString());
@@ -316,19 +340,15 @@ namespace FEFUPascalCompiler.Parser.Visitors
         public AstPrinterNode Visit(SimpleTypeNode node)
         {
             var printer = new AstPrinterNode(node.ToString());
-            printer.AddChild(node.TypeIdent.Accept(this));
+//            printer.AddChild(node.TypeIdent.Accept(this));
             return printer;
         }
 
         public AstPrinterNode Visit(ArrayTypeNode node)
         {
             var printer = new AstPrinterNode(node.ToString());
-            foreach (var range in node.IndexRanges)
-            {
-                printer.AddChild(range.Accept(this));
-            }
-
-            printer.AddChild(node.TypeOfArray.Accept(this));
+            printer.AddChild(node.IndexRange.Accept(this));
+            printer.AddChild(node.ArrayElemType.Accept(this));
             return printer;
         }
 
@@ -366,7 +386,7 @@ namespace FEFUPascalCompiler.Parser.Visitors
         public AstPrinterNode Visit(PointerTypeNode node)
         {
             var printer = new AstPrinterNode(node.ToString());
-            printer.AddChild(node.SimpleType.Accept(this));
+//            printer.AddChild(node.SimpleType.Accept(this));
             return printer;
         }
 

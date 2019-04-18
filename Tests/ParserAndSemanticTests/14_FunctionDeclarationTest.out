@@ -1,0 +1,15 @@
+                                                                           a                                                                             
+                                                                           ┼                                                                             
+                                                                       MainBlock                                                                         
+                            ┌──────────────────────────────────────────────┴──────────────────┬───────────────────────────────────────────────┐          
+                        FuncDecl                                                           FuncDecl                                   CompoundStatement  
+                            ┼                                                        ┌────────┴────────────────────────────┐                             
+                     CallableHeader                                           CallableHeader                        SubroutineBlock                      
+  ┌─────────────┬───────────┴────────┬──────────────┐      ┌─────────────┬───────────┴────────┬──────────────┐             ┼                             
+ add1   FormalParamSection   FormalParamSection  integer  add1   FormalParamSection   FormalParamSection  integer  CompoundStatement                     
+         ┌────┬─┴┬─────┐      ┌────┬─┴────┐                       ┌────┬─┴┬─────┐      ┌────┬─┴────┐                   ┌───┴                             
+       const  a  b  integer  var  res  integer                  const  a  b  integer  var  res  integer               :=                                 
+                                                                                                                    ┌──┴─┐                               
+                                                                                                                   res   +                               
+                                                                                                                        ┌┴─┐                             
+                                                                                                                        a  b                             

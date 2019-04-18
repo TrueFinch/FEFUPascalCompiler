@@ -1,0 +1,13 @@
+                                                a                                                  
+                                                ┼                                                  
+                                            MainBlock                                              
+                                       ┌────────┴───────────────────────────────────────┐          
+                                      var                                       CompoundStatement  
+       ┌──────────────┬────────────────┴───────────────────────┐                                   
+ SimpleVarDecl  SimpleVarDecl    SimpleVarDecl           SimpleVarDecl                             
+ ┌─────┴┐       ┌─────┴─┐        ┌─────┴─┐        ┌────────────┴──┐                                
+ e  RecordType  ee  RecordType  eee  RecordType  eeee        RecordType                            
+                        ┼                ┼                  ┌─────┴─────┐                          
+                        :                :                  :           :                          
+                    ┌───┴─┐          ┌───┴─┐           ┌──┬─┴──┐    ┌───┴─┐                        
+                    i  integer       i  integer        i  f  float  b  integer                     
